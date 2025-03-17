@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icons/adaptive-icon.png",
-    "scheme": "myapp",
+    "scheme": "routinetrace",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -14,7 +14,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/icons/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#fffaec"
       },
       "package": "com.kaanguru.routinetrace"
     },
@@ -29,12 +29,17 @@
         "expo-splash-screen",
         {
           "image": "./assets/splash.png",
+          "dark": {
+            "image": "./assets/splash-d.png",
+            "backgroundColor": "#00173D"
+          },
           "resizeMode": "contain",
           "backgroundColor": "#fffaec",
           "imageWidth": 720,
           "imageHeight": 1280
         }
-      ]
+      ],
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true

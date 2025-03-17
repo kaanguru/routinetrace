@@ -9,7 +9,7 @@
     "lint": "expo lint",
     "logs": "react-native log-android",
     "reset-project": "node ./scripts/reset-project.js",
-    "start": "expo start",
+    "start": "expo start --android -c",
     "test": "jest --watchAll",
     "web": "expo start --web"
   },
@@ -59,19 +59,25 @@
     "react-native-screens": "~4.4.0",
     "react-native-url-polyfill": "^2.0.0",
     "react-native-web": "~0.19.13",
-    "react-native-webview": "13.12.5",
-    "expo-dev-client": "~5.0.14"
+    "react-native-webview": "13.12.5"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
+    "@react-native-community/cli": "latest",
     "@types/jest": "^29.5.12",
     "@types/ramda": "^0.30.2",
     "@types/react": "~18.3.12",
     "@types/react-test-renderer": "^18.3.0",
-    "@react-native-community/cli": "latest",
     "jest": "^29.2.1",
     "jest-expo": "~52.0.6",
     "react-test-renderer": "18.3.1",
     "typescript": "^5.3.3"
+  },
+  "expo": {
+    "doctor": {
+      "reactNativeDirectoryCheck": {
+        "listUnknownPackages": false
+      }
+    }
   }
 }
