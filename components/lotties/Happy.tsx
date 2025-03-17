@@ -1,0 +1,33 @@
+import LottieView from 'lottie-react-native';
+import React from 'react';
+import { StyleProp, ViewStyle } from 'react-native';
+
+interface HappyProps {
+  height?: number;
+  width?: number;
+  style?: StyleProp<ViewStyle>;
+}
+
+export default function Happy({ height = 530, width = 199, style }: Readonly<HappyProps>) {
+  return (
+    <LottieView
+      autoPlay
+      loop={true}
+      speed={0.4}
+      key="happy"
+      cacheComposition={true}
+      enableMergePathsAndroidForKitKatAndAbove={true}
+      style={[
+        {
+          width: width,
+          height: height,
+          alignSelf: 'center',
+          zIndex: 10,
+        },
+        style,
+      ]}
+      source={require('~/assets/lottie/happy.json')}
+      resizeMode="cover"
+    />
+  );
+}

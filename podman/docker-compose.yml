@@ -1,0 +1,13 @@
+services:
+  expo-builder:
+    image: docker.io/kaanguru/expo-android-builder:latest
+    container_name: expo-android-builder
+    volumes:
+      - ../:/app
+    ports:
+      - "19000:19000"
+      - "19001:19001"
+      - "8081:8081"
+    environment:
+      - REACT_NATIVE_PACKAGER_HOSTNAME=192.168.1.141
+    command: tail -f /dev/null

@@ -40,3 +40,4 @@ android/*
 ios/*
 web-build/*
 dist/*
+.env
