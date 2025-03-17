@@ -11,7 +11,7 @@ export default function DrawerLayout() {
   const { initialized } = useInitializationContext(); // Use the context
   if (isLoading || !initialized) {
     return (
-      <View className="flex-1 justify-center">
+      <View>
         <ActivityIndicator size="large" />
       </View>
     );

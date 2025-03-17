@@ -16,15 +16,13 @@ export default function SplashScreen() {
   }, []);
 
   return (
-    <View className="flex-1 items-center justify-center bg-background-light dark:bg-background-dark">
+    <View>
       <Pressable
         onPress={() => router.replace("/(onboarding)/tutorial" as Href)}
       >
         <LogoPortrait />
       </Pressable>
-      <Text className="m-3 p-3 font-delaGothicOne text-5xl text-secondary">
-        GorevIzi
-      </Text>
+      <Text>GorevIzi</Text>
     </View>
   );
 }

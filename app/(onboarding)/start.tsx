@@ -8,12 +8,10 @@ export default function StartScreen() {
   const router = useRouter();
 
   return (
-    <View className="flex-1 justify-center bg-background-light px-5 dark:bg-background-dark">
+    <View>
       <LogoPortrait />
-      <Text className="m-3 p-3 text-center font-delaGothicOne text-4xl text-secondary">
-        GorevIzi
-      </Text>
-      <View className=" ">
+      <Text>GorevIzi</Text>
+      <View>
         <Button title="Register" onPress={() => router.push("/register")} />
         <Button
           title="Login"

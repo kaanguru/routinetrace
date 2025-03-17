@@ -1,9 +1,9 @@
-import { CheckBox } from '@rneui/themed';
-import { useEffect } from 'react';
-import { View } from 'react-native';
+import { CheckBox } from "@rneui/themed";
+import { useEffect } from "react";
+import { View } from "react-native";
 
-import { DayOfWeek } from '~/types';
-import getCurrentDayOfWeek from '~/utils/dates/getCurrentDayOfWeek';
+import { DayOfWeek } from "~/types";
+import getCurrentDayOfWeek from "~/utils/dates/getCurrentDayOfWeek";
 
 const WeekdaySelector = ({
   selectedDays,
@@ -20,18 +20,20 @@ const WeekdaySelector = ({
   }, []);
 
   return (
-    <View className="flex-wrap">
-      {(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] as DayOfWeek[]).map((day) => (
-        <CheckBox
-          key={day}
-          checked={selectedDays.includes(day)}
-          onPress={() => {
-            const isSelected = !selectedDays.includes(day); // Toggle the current state
-            onDayToggle(day, isSelected);
-          }}
-          title={day}
-        />
-      ))}
+    <View>
+      {(["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"] as DayOfWeek[]).map(
+        (day) => (
+          <CheckBox
+            key={day}
+            checked={selectedDays.includes(day)}
+            onPress={() => {
+              const isSelected = !selectedDays.includes(day); // Toggle the current state
+              onDayToggle(day, isSelected);
+            }}
+            title={day}
+          />
+        )
+      )}
     </View>
   );
 };

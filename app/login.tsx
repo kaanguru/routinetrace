@@ -35,7 +35,7 @@ export default function Login() {
       <LogoPortrait />
       <Text>Welcome Back</Text>
       {loading && <ActivityIndicator />}
-      <View className="my-4">
+      <View>
         <Input
           placeholder="Enter your email"
           value={email}
@@ -48,7 +48,7 @@ export default function Login() {
           onChangeText={setPassword}
         />
       </View>
-      <View className="flex-row justify-center space-y-4">
+      <View>
         <Button
           disabled={loading}
           className={styles.registerButton}

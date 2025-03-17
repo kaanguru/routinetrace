@@ -1,10 +1,10 @@
-import { FontAwesome6 } from '@expo/vector-icons';
-import { Button, useThemeMode } from '@rneui/themed';
-import { useState, useEffect, useCallback } from 'react';
-import { View } from 'react-native';
+import { FontAwesome6 } from "@expo/vector-icons";
+import { Button, useThemeMode } from "@rneui/themed";
+import { useState, useEffect, useCallback } from "react";
+import { View } from "react-native";
 
-import DraggableItem from '~/components/DraggableItem';
-import { TaskFormData } from '~/types';
+import DraggableItem from "~/components/DraggableItem";
+import { TaskFormData } from "~/types";
 
 export default function ChecklistSection({
   items,
@@ -13,7 +13,7 @@ export default function ChecklistSection({
   onUpdate,
   setFormData,
 }: Readonly<{
-  items: TaskFormData['checklistItems'];
+  items: TaskFormData["checklistItems"];
   onAdd: () => void;
   onRemove: (index: number) => void;
   onUpdate: (index: number, content: string) => void;
@@ -35,7 +35,9 @@ export default function ChecklistSection({
 
   const handleDragEnd = useCallback(
     (index: number, translationY: number) => {
-      const newIndex = Math.round((translationY + index * ITEM_HEIGHT) / ITEM_HEIGHT);
+      const newIndex = Math.round(
+        (translationY + index * ITEM_HEIGHT) / ITEM_HEIGHT
+      );
       const validIndex = Math.max(0, Math.min(newIndex, items.length - 1));
 
       if (validIndex !== index) {
@@ -60,18 +62,22 @@ export default function ChecklistSection({
 
   return (
     <View
-      className="mb-20 pb-20"
       style={{
         height: ITEM_HEIGHT * items.length * 1.66,
-      }}>
+      }}
+    >
       <Button onPress={onAdd} title="Add Routines" />
-      <FontAwesome6 name="add" size={16} color={mode === 'dark' ? '#FFFAEB' : '#051824'} />
+      <FontAwesome6
+        name="add"
+        size={16}
+        color={mode === "dark" ? "#FFFAEB" : "#051824"}
+      />
 
       <View
-        className="pb-9"
         style={{
           height: ITEM_HEIGHT * items.length,
-        }}>
+        }}
+      >
         {items.map((item, index) => (
           <DraggableItem
             key={item.id}

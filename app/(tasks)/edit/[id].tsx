@@ -136,17 +136,17 @@ const EditTask = () => {
 
   if (loading) {
     return (
-      <View className="flex-1 items-center justify-center">
+      <View>
         <ActivityIndicator size="large" />
       </View>
     );
   }
 
   return (
-    <View className="bg-background-light  dark:bg-background-dark flex-1">
+    <View>
       <Header headerTitle={formData.title} />
-      <ScrollView className="my-4 pb-6">
-        <View className="flex-1  p-4">
+      <ScrollView>
+        <View>
           <View>
             <FormInput
               title={formData.title}
@@ -181,9 +181,9 @@ const EditTask = () => {
             )}
 
             {formData.repeatPeriod === "Weekly" && (
-              <View className="mt-4 p-2">
-                <View className="mb-4 flex-row space-x-4">
-                  <Text className="w-1/6">Repeat Every</Text>
+              <View>
+                <View>
+                  <Text>Repeat Every</Text>
                   <RepeatFrequencySlider
                     period={formData.repeatPeriod}
                     frequency={formData.repeatFrequency}
@@ -196,8 +196,8 @@ const EditTask = () => {
                   />
                 </View>
 
-                <View className="mb-4 flex-row space-x-4">
-                  <Text className="mb-2">Repeat on</Text>
+                <View>
+                  <Text>Repeat on</Text>
                 </View>
                 <WeekdaySelector
                   selectedDays={formData.repeatOnWk}
@@ -214,15 +214,15 @@ const EditTask = () => {
             )}
 
             {formData.repeatPeriod === "Yearly" && (
-              <View className="mt-4">
-                <View className="mb-4 flex-row space-x-4">
+              <View>
+                <View>
                   <Text>Repeat Every Year</Text>
                 </View>
               </View>
             )}
 
-            <View className="mt-4">
-              <View className="mb-4 flex-row space-x-4">
+            <View>
+              <View>
                 <CheckBox
                   checked={formData.isCustomStartDateEnabled}
                   title="Custom Start Date"
@@ -237,14 +237,10 @@ const EditTask = () => {
             </View>
 
             {formData.isCustomStartDateEnabled && (
-              <View className="mt-4">
-                <View className="mb-4 flex-row space-x-4">
-                  <Text className="text-typography-black my-auto">
-                    Start Date
-                  </Text>
-                  <Text className="my-auto">
-                    {formData.customStartDate?.toDateString()}
-                  </Text>
+              <View>
+                <View>
+                  <Text>Start Date</Text>
+                  <Text>{formData.customStartDate?.toDateString()}</Text>
                   <Button
                     title="Change Date"
                     onPress={() => setShowDatePicker(true)}
@@ -283,13 +279,12 @@ const EditTask = () => {
           </View>
         </View>
       </ScrollView>
-      <View className="mx-5 mb-4 flex-row justify-between space-x-4">
-        <Button onPress={handleDelete} className="flex-1" title="Delete" />
+      <View>
+        <Button onPress={handleDelete} title="Delete" />
         <Ionicons name="trash-bin" size={24} color="white" />
         <Button
           onPress={handleSave}
           testID="save-task-button"
-          className="flex-1"
           disabled={updateTaskMutation.isPending}
           title={updateTaskMutation.isPending ? "Saving..." : "Save"}
         />

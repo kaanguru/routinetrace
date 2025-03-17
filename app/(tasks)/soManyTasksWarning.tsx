@@ -15,7 +15,7 @@ export default function soManyTasksWarning() {
           You have so much uncompleted tasks. Please go back and finish some
           tasks before adding more.
         </Text>
-        <Text className="m-5">
+        <Text>
           Tasks are daily jobs or activities that will take more than 40
           minutes...
         </Text>

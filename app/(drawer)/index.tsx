@@ -155,7 +155,7 @@ export default function Index() {
           headerRight: () => (
             <>
               {reorderedTasks.length > 0 && (
-                <Pressable onPress={handleFilterTodayPress} className="p-5">
+                <Pressable onPress={handleFilterTodayPress}>
                   {isFiltered ? (
                     <FontAwesome6
                       name="calendar-days"
@@ -175,9 +175,9 @@ export default function Index() {
           ),
         }}
       />
-      <View className="bg-background-light dark:bg-background-dark  flex-1 p-5">
+      <View>
         {showLoading ? (
-          <View className="flex-1 items-center justify-center">
+          <View>
             {showConfetti ? <Confetti /> : <ActivityIndicator size="large" />}
           </View>
         ) : (
@@ -193,7 +193,6 @@ export default function Index() {
           </>
         )}
         <FAB
-          className="absolute bottom-5 right-5 "
           onPress={() => {
             if (tasks.filter(isTaskDueToday).length > 8) {
               router.push("/(tasks)/soManyTasksWarning");

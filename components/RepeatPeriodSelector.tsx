@@ -1,12 +1,12 @@
-import { FontAwesome6 } from '@expo/vector-icons';
-import { Picker } from '@react-native-picker/picker';
-import { View, StyleSheet } from 'react-native';
+import { FontAwesome6 } from "@expo/vector-icons";
+import { Picker } from "@react-native-picker/picker";
+import { View, StyleSheet } from "react-native";
 
-import { RepeatPeriod } from '~/types';
+import { RepeatPeriod } from "~/types";
 
 interface RepeatPeriodSelectorProps {
-  repeatPeriod: RepeatPeriod | null | '';
-  setRepeatPeriod: (value: RepeatPeriod | null | '') => void;
+  repeatPeriod: RepeatPeriod | null | "";
+  setRepeatPeriod: (value: RepeatPeriod | null | "") => void;
 }
 
 export default function RepeatPeriodSelector({
@@ -14,13 +14,16 @@ export default function RepeatPeriodSelector({
   setRepeatPeriod,
 }: Readonly<RepeatPeriodSelectorProps>) {
   return (
-    <View className="my-4" style={styles.container}>
+    <View style={styles.container}>
       <Picker
         selectedValue={repeatPeriod}
-        onValueChange={(itemValue) => setRepeatPeriod(itemValue as RepeatPeriod | '' | null)}
+        onValueChange={(itemValue) =>
+          setRepeatPeriod(itemValue as RepeatPeriod | "" | null)
+        }
         mode="dropdown"
         dropdownIconColor="black"
-        style={styles.picker}>
+        style={styles.picker}
+      >
         <Picker.Item label="No Repeat" value="" />
         <Picker.Item label="Daily" value="Daily" />
         <Picker.Item label="Weekly" value="Weekly" />
@@ -36,8 +39,8 @@ export default function RepeatPeriodSelector({
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   picker: {
     flex: 1,

@@ -30,11 +30,9 @@ export default function TasksOfYesterday() {
 
   if (!tasksDueYesterday || tasksDueYesterday.length === 0) {
     return (
-      <View className="bg-background-light dark:bg-background-dark flex-1 flex-col items-center justify-center p-4">
+      <View>
         <WellDone />
-        <Text className=" text-typography-black dark:text-typography-white my-10 text-center">
-          No tasks to complete from yesterday!
-        </Text>
+        <Text>No tasks to complete from yesterday!</Text>
         <Button onPress={() => router.push("/")} title="Go to Today's Tasks" />
       </View>
     );
@@ -43,9 +41,7 @@ export default function TasksOfYesterday() {
     return (
       <Pressable onPress={() => router.push(`/(tasks)/${item.id}`)}>
         <Card>
-          <Text className="text-typography-black dark:text-typography-white text-center">
-            {item.title}
-          </Text>
+          <Text>{item.title}</Text>
         </Card>
       </Pressable>
     );
@@ -53,20 +49,18 @@ export default function TasksOfYesterday() {
   return (
     <SafeAreaView>
       <Header headerTitle=" 🎶    🎵 Tasklist Tune-Up! 🎹" />
-      <View className="bg-background-light dark:bg-background-dark h-full p-4">
-        <Text className="text-typography-black dark:text-typography-white text-center">
+      <View>
+        <Text>
           Deadlines sound like heavy metal 🎸 and your brain’s stuck on elevator
           music 🎵
         </Text>
-        <Text className="bold text-typography-black dark:text-typography-white my-10 text-center">
+        <Text>
           Your to-do list hit a sour note yesterday—no worries, we’ll remix it!
           🎶
         </Text>
-        <Text className="text-typography-black dark:text-typography-white m-5 text-center text-sm">
-          🎧 Check your tasks before you turn into a human metronome
-        </Text>
+        <Text>🎧 Check your tasks before you turn into a human metronome</Text>
         <TuneUp />
-        <Divider className="my-4" />
+        <Divider />
         <FlatList
           data={tasksDueYesterday}
           renderItem={taskOfYesterday}

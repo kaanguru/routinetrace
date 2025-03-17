@@ -1,19 +1,19 @@
-import { Input } from '@rneui/themed';
-import { View } from 'react-native';
+import { Input } from "@rneui/themed";
+import { View } from "react-native";
 
-import MarkdownInput from './MarkdownInput';
+import MarkdownInput from "./MarkdownInput";
 
-import { FormInputProps } from '@/types';
+import { FormInputProps } from "@/types";
 
-export function FormInput({ title, notes, setTitle, setNotes }: Readonly<FormInputProps>) {
+export function FormInput({
+  title,
+  notes,
+  setTitle,
+  setNotes,
+}: Readonly<FormInputProps>) {
   return (
     <>
-      <Input
-        placeholder="Task title"
-        value={title}
-        onChangeText={setTitle}
-        className="min-h-[40px] py-2 text-black"
-      />
+      <Input placeholder="Task title" value={title} onChangeText={setTitle} />
 
       <View>
         <MarkdownInput notes={notes} setNotes={setNotes} />

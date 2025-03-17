@@ -1,11 +1,19 @@
-import { FontAwesome5, Ionicons } from '@expo/vector-icons';
-import { useThemeMode, Input } from '@rneui/themed';
-import { useEffect, memo } from 'react';
-import { Pressable, View } from 'react-native';
-import { Gesture, GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler';
-import Animated, { useSharedValue, useAnimatedStyle, runOnJS } from 'react-native-reanimated';
+import { FontAwesome5, Ionicons } from "@expo/vector-icons";
+import { useThemeMode, Input } from "@rneui/themed";
+import { useEffect, memo } from "react";
+import { Pressable, View } from "react-native";
+import {
+  Gesture,
+  GestureDetector,
+  GestureHandlerRootView,
+} from "react-native-gesture-handler";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  runOnJS,
+} from "react-native-reanimated";
 
-import { TaskFormData } from '~/types';
+import { TaskFormData } from "~/types";
 
 const ITEM_HEIGHT = 42;
 
@@ -20,7 +28,7 @@ const DraggableItem = memo(
     onDragStart,
     onDragEnd,
   }: Readonly<{
-    item: TaskFormData['checklistItems'][number];
+    item: TaskFormData["checklistItems"][number];
     index: number;
     isDragging: boolean;
     onUpdate: (index: number, content: string) => void;
@@ -50,7 +58,7 @@ const DraggableItem = memo(
     const animatedStyle = useAnimatedStyle(() => ({
       transform: [{ translateY: animatedValue.value }],
       zIndex: isDragging ? 1 : 0,
-      position: 'relative',
+      position: "relative",
       left: 0,
       right: 0,
     }));
@@ -58,14 +66,14 @@ const DraggableItem = memo(
     return (
       <GestureHandlerRootView>
         <Animated.View style={animatedStyle}>
-          <View className="my-1px-2 py-1">
-            <View className="items-center">
+          <View>
+            <View>
               <GestureDetector gesture={panGesture}>
                 <Animated.View>
                   <FontAwesome5
                     name="grip-vertical"
                     size={18}
-                    color={mode === 'dark' ? '#FFFAEB' : '#051824'}
+                    color={mode === "dark" ? "#FFFAEB" : "#051824"}
                   />
                 </Animated.View>
               </GestureDetector>
@@ -75,18 +83,15 @@ const DraggableItem = memo(
                 onChangeText={(text) => {
                   onUpdate(index, text);
                 }}
-                className="text-typography-black min-h-[40px] py-2"
                 placeholderTextColor="#9CA3AF"
                 autoFocus
               />
 
-              <Pressable
-                className="bg-background-light dark:bg-background-dark rounded-full p-1"
-                onPress={() => onRemove(index)}>
+              <Pressable onPress={() => onRemove(index)}>
                 <Ionicons
                   name="trash-bin"
                   size={24}
-                  color={mode === 'dark' ? '#FFFAEB' : '#051824'}
+                  color={mode === "dark" ? "#FFFAEB" : "#051824"}
                 />
               </Pressable>
             </View>

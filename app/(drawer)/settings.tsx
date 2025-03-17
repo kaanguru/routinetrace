@@ -38,10 +38,9 @@ export default function SettingsScreen() {
     // TODO  send the new email to your backend for verification and update
   };
   return (
-    <View className="flex-1 flex-col bg-background-light  p-5 dark:bg-background-dark">
+    <View>
       <View
         id="theme-toggle"
-        className=" bg-background-dark p-0"
         style={{ position: "absolute", top: -40, right: 1, zIndex: 1 }}
       >
         <Button
@@ -55,25 +54,18 @@ export default function SettingsScreen() {
         </Button>
       </View>
       <LogoPortrait scale={0.66} />
-      <View className="mb-5 flex-1 flex-col items-center justify-items-start gap-9 p-12 ">
-        <Button
-          className="mt-5 "
-          onPress={() => router.push("/(tasks)/completed-tasks")}
-        >
+      <View>
+        <Button onPress={() => router.push("/(tasks)/completed-tasks")}>
           <Ionicons name="checkmark-done-sharp" size={24} color="black" />
         </Button>
         <Button
-          className="mt-1"
           onPress={() => router.push("/(tasks)/tasks-of-yesterday")}
           title="Yesterday's"
           icon={<FontAwesome5 name="history" size={24} color="black" />}
         />
-        <View className="ml-4 flex-row items-center justify-center gap-2">
-          <Text className="text-typography-black dark:text-typography-white">
-            {" "}
-            {userEmail}
-          </Text>
-          <Button className="m-2" onPress={() => setShowModal(true)}>
+        <View>
+          <Text> {userEmail}</Text>
+          <Button onPress={() => setShowModal(true)}>
             <FontAwesome6 name="user-pen" size={16} color="black" />
           </Button>
         </View>
@@ -146,8 +138,8 @@ export default function SettingsScreen() {
           />
         </Dialog.Actions>
       </Dialog>
-      <View className="mt-5 flex-row items-center justify-between rounded-lg bg-background-dark p-2 dark:bg-background-light">
-        <View className="flex-row items-center">
+      <View>
+        <View>
           {isSoundEnabled ? (
             <FontAwesome6
               name="volume-high"
@@ -162,9 +154,7 @@ export default function SettingsScreen() {
             />
           )}
 
-          <Text className="text-typography-white dark:text-typography-white ms-4">
-            {isSoundEnabled ? "Enabled" : "Disabled"}
-          </Text>
+          <Text>{isSoundEnabled ? "Enabled" : "Disabled"}</Text>
         </View>
         <Switch
           value={isSoundEnabled}

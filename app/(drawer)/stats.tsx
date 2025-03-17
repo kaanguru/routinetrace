@@ -42,7 +42,7 @@ export default function Stats() {
 
   if (isLoading || isLoadingHealthAndHappiness) {
     return (
-      <View className="flex-1 items-center justify-center">
+      <View>
         <ActivityIndicator size="large" />
       </View>
     );
@@ -63,39 +63,23 @@ export default function Stats() {
   );
 
   return (
-    <View className="bg-background-light dark:bg-background-dark flex-1 justify-evenly">
-      <Text className="font-delaGothicOne text-typography-black dark:text-typography-white text-center text-2xl">
-        Level {level}
-      </Text>
-      <View className="m-2 flex-1 items-center justify-center pb-3">
+    <View>
+      <Text>Level {level}</Text>
+      <View>
         <LinearProgress value={Number(untilNext.toFixed(2))} />
       </View>
-      <View className="basis-6/6 justify-evenly">
+      <View>
         <Card>
           <Healthy height={100} width={120} />
-          <Text className="text-typography-white dark:text-typography-black justify-between text-center">
-            Health
-          </Text>
-          <Card.Divider
-            orientation="horizontal"
-            className="bg-background-500 my-2 flex w-full self-center"
-          />
-          <Text className="p-3 text-center font-mono text-3xl text-[#FFCA3A]">
-            {healthAndHappiness?.health || 0}
-          </Text>
+          <Text>Health</Text>
+          <Card.Divider orientation="horizontal" />
+          <Text>{healthAndHappiness?.health || 0}</Text>
         </Card>
         <Card>
           <Happy height={100} width={120} />
-          <Text className="text-typography-white dark:text-typography-black justify-between text-center">
-            Happiness
-          </Text>
-          <Card.Divider
-            orientation="horizontal"
-            className="bg-background-500 my-2 flex w-full self-center"
-          />
-          <Text className="p-3 text-center font-mono text-4xl text-[#FFCA3A]">
-            {healthAndHappiness?.happiness || 0}
-          </Text>
+          <Text>Happiness</Text>
+          <Card.Divider orientation="horizontal" />
+          <Text>{healthAndHappiness?.happiness || 0}</Text>
         </Card>
       </View>
       <FlatList

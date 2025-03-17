@@ -1,8 +1,8 @@
-import { Slider, Text } from '@rneui/themed';
-import { View } from 'react-native';
+import { Slider, Text } from "@rneui/themed";
+import { View } from "react-native";
 
-import { RepeatPeriod } from '~/types';
-import { calculateRepeatText } from '~/utils/tasks/calculateRepeatText';
+import { RepeatPeriod } from "~/types";
+import { calculateRepeatText } from "~/utils/tasks/calculateRepeatText";
 
 export const RepeatFrequencySlider = ({
   period,
@@ -13,17 +13,17 @@ export const RepeatFrequencySlider = ({
   frequency: number | null;
   onChange: (value: number) => void;
 }>) => (
-  <View className="mt-4">
+  <View>
     <View>
       <Text>Repeat Every</Text>
-      <Text className="my-auto">{calculateRepeatText(period, frequency as number)}</Text>
+      <Text>{calculateRepeatText(period, frequency as number)}</Text>
     </View>
     <View>
-      <View className="m-auto h-1/6 w-4/6">
+      <View>
         <Slider
           value={1}
           minimumValue={1}
-          maximumValue={period === 'Monthly' ? 6 : 15}
+          maximumValue={period === "Monthly" ? 6 : 15}
           onValueChange={onChange}
           orientation="horizontal"
         />

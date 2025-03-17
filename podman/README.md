@@ -15,9 +15,10 @@ Docker image for Expo builds to build android apps
 3. Get into container bash `podman exec -it expo-android-builder bash`
 4. Add 'android/\*' to .gitignore file
 5. Login to expo `eas login`
-6. Run prebuild `podman exec -it expo-android-builder npx expo prebuild -p android`
-7. Build `npx eas build --local --platform android --profile preview`
-8. Turn off `podman compose down`
+6. Build `EAS_NO_VCS=1 npx eas build --local --platform android --profile development`
+7. Run prebuild `podman exec -it expo-android-builder npx expo prebuild -p android`
+8. Build preview `podman exec -it expo-android-builder EAS_NO_VCS=1 npx eas build --local --platform android --profile preview`
+9. Turn off `podman compose down`
 
 ---
 

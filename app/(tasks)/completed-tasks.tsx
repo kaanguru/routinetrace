@@ -31,22 +31,18 @@ export default function CompletedTasks() {
             });
           }}
         >
-          <View className="flex flex-row items-start justify-between">
-            <View className="flex-1">
-              <Text className=" text-typography-gray ">{item.title}</Text>
-              {item.notes && (
-                <Text className="mt-1 py-3 text-white dark:text-black">
-                  {item.notes}
-                </Text>
-              )}
+          <View>
+            <View>
+              <Text>{item.title}</Text>
+              {item.notes && <Text>{item.notes}</Text>}
               {item.repeat_period && (
-                <Text className="mt-2 text-xs text-white dark:text-black">
+                <Text>
                   Repeats: {item.repeat_frequency} times{" "}
                   {item.repeat_period.toLowerCase()}
                 </Text>
               )}
               {item.updated_at && (
-                <Text className="mt-2 text-xs text-white dark:text-black">
+                <Text>
                   Completed on: {new Date(item.updated_at).toLocaleDateString()}
                 </Text>
               )}
@@ -64,17 +60,13 @@ export default function CompletedTasks() {
   }
 
   return (
-    <View className="bg-background-light dark:bg-background-dark flex-1 p-4">
+    <View>
       <Header headerTitle="Completed Tasks" />
       <FlatList
         data={tasks}
         renderItem={renderItem}
         keyExtractor={(item) => item.id.toString()}
-        ListEmptyComponent={
-          <Text className="m-4 text-center text-gray-500">
-            No completed tasks found
-          </Text>
-        }
+        ListEmptyComponent={<Text>No completed tasks found</Text>}
         onRefresh={refetch}
         refreshing={isLoading}
         contentContainerStyle={{ paddingBottom: 20, paddingEnd: 20 }}

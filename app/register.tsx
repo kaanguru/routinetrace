@@ -45,16 +45,13 @@ export default function Register() {
   };
 
   return (
-    <View className="bg-background-light dark:bg-background-dark flex-1 px-5 pt-12">
+    <View>
       <LogoPortrait scale={0.3} />
-      <Text className="text-typography-black dark:text-typography-white mb-8 text-2xl font-bold">
-        Create Account
-      </Text>
+      <Text>Create Account</Text>
       {loading && <ActivityIndicator />}
 
-      <View className="space-y-4">
+      <View>
         <Input
-          className="bg-background-light py-3"
           placeholder="Enter your email"
           value={email}
           onChangeText={setEmail}
@@ -69,10 +66,9 @@ export default function Register() {
             secureTextEntry
           />
         </View>
-        <View className="mb-8">
+        <View>
           <Text className={styles.text}>Confirm Password</Text>
           <TextInput
-            className="border-primary-400 bg-background-light w-full rounded-lg border px-4 py-3"
             placeholder="Confirm your password"
             value={confirmPassword}
             onChangeText={setConfirmPassword}

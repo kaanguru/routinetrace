@@ -94,9 +94,9 @@ export default function CreateTask() {
     []
   );
   return (
-    <View className="flex-1 bg-background-light dark:bg-background-dark">
+    <View>
       <Header headerTitle="Create Task" />
-      <ScrollView className="my-0 px-4">
+      <ScrollView>
         <View>
           <FormInput
             title={formData.title}
@@ -130,9 +130,9 @@ export default function CreateTask() {
           )}
 
           {formData.repeatPeriod === "Weekly" && (
-            <View className="mt-4 p-2">
-              <View className="mb-4">
-                <Text className="w-1/6">Repeat Every</Text>
+            <View>
+              <View>
+                <Text>Repeat Every</Text>
                 <RepeatFrequencySlider
                   period={formData.repeatPeriod}
                   frequency={formData.repeatFrequency}
@@ -142,7 +142,7 @@ export default function CreateTask() {
                 />
               </View>
               <View>
-                <Text className="mb-2">Repeat on</Text>
+                <Text>Repeat on</Text>
               </View>
               <WeekdaySelector
                 selectedDays={formData.repeatOnWk}
@@ -159,15 +159,15 @@ export default function CreateTask() {
           )}
 
           {formData.repeatPeriod === "Yearly" && (
-            <View className="mt-4">
+            <View>
               <View>
                 <Text>Repeat Every Year</Text>
               </View>
             </View>
           )}
 
-          <View className="my-4">
-            <View className="items-center">
+          <View>
+            <View>
               <CheckBox
                 checked={formData.isCustomStartDateEnabled}
                 title="Custom Start Date"
@@ -185,14 +185,10 @@ export default function CreateTask() {
           </View>
 
           {formData.isCustomStartDateEnabled && (
-            <View className="mt-4">
+            <View>
               <View>
-                <Text className="text-typography-black my-auto">
-                  Start Date
-                </Text>
-                <Text className="my-auto">
-                  {formData.customStartDate?.toDateString()}
-                </Text>
+                <Text>Start Date</Text>
+                <Text>{formData.customStartDate?.toDateString()}</Text>
                 <Button
                   onPress={() => setShowDatePicker(true)}
                   title="Change Date"
@@ -226,7 +222,7 @@ export default function CreateTask() {
           />
         </View>
       </ScrollView>
-      <View className="my-0 px-4">
+      <View>
         <Button
           onPress={handleCreate}
           testID="create-task-button"
