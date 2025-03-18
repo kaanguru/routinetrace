@@ -39,7 +39,15 @@
           "imageHeight": 1280
         }
       ],
-      "expo-font"
+      "expo-font",
+      [
+        "@sentry/react-native/expo",
+        {
+          "organization": "cemkaanguru",
+          "project": "routinetrace",
+          "url": "https://sentry.io/"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
