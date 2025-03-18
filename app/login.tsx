@@ -47,7 +47,7 @@ export default function Login() {
         Welcome Back
       </Text>
       {loading && <ActivityIndicator />}
-      <View style={{ marginTop: 10 }}>
+      <View style={{ marginTop: 30 }}>
         <Input
           placeholder="Enter your email"
           value={email}
@@ -62,12 +62,32 @@ export default function Login() {
       </View>
       <View style={{ marginTop: 10 }}>
         <Button disabled={loading} onPress={handleLogin} title="Login" />
-
-        <Button
-          type="outline"
-          onPress={() => router.push("/register")}
-          title=" Register"
-        />
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "center",
+            marginTop: 10,
+          }}
+        >
+          <Text
+            h4
+            style={{
+              textAlign: "center",
+              textAlignVertical: "center",
+            }}
+          >
+            Don't have an account?
+          </Text>
+          <Button
+            type="clear"
+            onPress={() => router.push("/register")}
+            title="Register"
+            titleStyle={{
+              fontSize: 14,
+              fontFamily: "Ubuntu_700Bold",
+            }}
+          />
+        </View>
       </View>
       <View style={{ position: "absolute", bottom: 10, right: 10 }}>
         <NativeButton color="#F04F05" onPress={resetFirstVisit} title="R-F-W" />

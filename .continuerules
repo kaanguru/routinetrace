@@ -136,9 +136,14 @@ const task: Tables<"tasks"> = {
   `import { Button, Text, View, Box } from '@gluestack-ui/themed';`
   format
 
-## Font
+## Fonts
 
-Dela Gothic One
+    Inter_900Black,
+    DelaGothicOne_400Regular,
+    UbuntuMono_400Regular,
+    Ubuntu_400Regular,
+    Ubuntu_500Medium,
+    Ubuntu_700Bold,
 
 ## Colors
 

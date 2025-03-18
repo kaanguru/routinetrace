@@ -1,11 +1,17 @@
 // context/AuthenticationContext.tsx
-import { Session } from '@supabase/supabase-js';
-import { useRouter } from 'expo-router';
-import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { ToastAndroid } from 'react-native';
+import { Session } from "@supabase/supabase-js";
+import { useRouter } from "expo-router";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from "react";
+import { ToastAndroid } from "react-native";
 
-import { useSession } from '~/hooks/useSession';
-import { useAuth } from '~/utils/auth/auth';
+import { useSession } from "~/hooks/useSession";
+import { useAuth } from "~/utils/auth/auth";
 
 type SessionContextType = {
   session: Session | null;
@@ -22,12 +28,14 @@ export function useSessionContext() {
   const context = useContext(SessionContext);
 
   if (!context) {
-    throw new Error('useSessionContext must be used within a SessionProvider');
+    throw new Error("useSessionContext must be used within a SessionProvider");
   }
   return context;
 }
 
-export default function SessionProvider({ children }: Readonly<{ children: ReactNode }>) {
+export default function SessionProvider({
+  children,
+}: Readonly<{ children: ReactNode }>) {
   const { data, isLoading: queryIsLoading, refetch } = useSession();
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
@@ -51,18 +59,19 @@ export default function SessionProvider({ children }: Readonly<{ children: React
   const signIn = async (email: string, password: string) => {
     const result = await signInWithEmail(email, password);
     if (result && result.error) {
-      showToast('Sign in error: ' + result.error.message);
-      console.error('Sign in error:', result.error.message);
+      showToast("Sign in error: " + result.error.message);
+      console.error("Sign in error:", result.error.message);
       return;
     }
     await refetch();
+    console.log("Session after signIn:", data?.session); // Add this line
   };
 
   const signUp = async (email: string, password: string) => {
     const result = await signUpWithEmail(email, password);
     if (result && result.error) {
-      showToast('Sign up error: ' + result.error.message);
-      console.error('Sign up error:', result.error.message);
+      showToast("Sign up error: " + result.error.message);
+      console.error("Sign up error:", result.error.message);
 
       return;
     }
@@ -73,7 +82,7 @@ export default function SessionProvider({ children }: Readonly<{ children: React
     await authSignOut();
     await refetch();
     if (router.canGoBack()) {
-      router.replace('/login');
+      router.replace("/login");
     }
   };
 
@@ -88,7 +97,8 @@ export default function SessionProvider({ children }: Readonly<{ children: React
         signOut,
         isLoading: combinedLoading,
         authError,
-      }}>
+      }}
+    >
       {children}
     </SessionContext.Provider>
   );

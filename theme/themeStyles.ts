@@ -60,7 +60,7 @@ const themeStyles = {
         color: "#00173D",
       },
       containerStyle: {
-        marginVertical: 12,
+        marginVertical: 2,
       },
     },
     Text: {
