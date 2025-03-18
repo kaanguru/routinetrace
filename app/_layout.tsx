@@ -1,5 +1,5 @@
 import { createTheme, ThemeProvider } from "@rneui/themed";
-import { Slot, useNavigationContainerRef } from "expo-router";
+import { useNavigationContainerRef } from "expo-router";
 import { useEffect } from "react";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";

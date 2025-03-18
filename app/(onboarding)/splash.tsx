@@ -14,7 +14,7 @@ export default function SplashScreen() {
     }, 6500);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [router]);
 
   return (
     <Background style={{ justifyContent: "center", alignItems: "center" }}>

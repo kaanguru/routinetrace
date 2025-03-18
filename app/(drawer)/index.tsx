@@ -102,7 +102,14 @@ export default function Index() {
         }
       );
     },
-    [toggleComplete, playSound, isSoundEnabled]
+    [
+      toggleComplete,
+      playSound,
+      isSoundEnabled,
+      healthAndHappiness,
+      updateHealthAndHappiness,
+      user,
+    ]
   );
 
   useFocusEffect(

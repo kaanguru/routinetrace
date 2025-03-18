@@ -53,7 +53,7 @@ export default function SettingsScreen() {
           )}
         </Button>
       </View>
-      <LogoPortrait scale={0.66} />
+      <LogoPortrait scale={0.33} />
       <View>
         <Button onPress={() => router.push("/(tasks)/completed-tasks")}>
           <Ionicons name="checkmark-done-sharp" size={24} color="black" />

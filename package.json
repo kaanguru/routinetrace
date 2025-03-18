@@ -75,7 +75,9 @@
     "jest-expo": "~52.0.6",
     "react-test-renderer": "18.3.1",
     "reactotron-react-native": "^5.1.12",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "eslint": "^8.57.0",
+    "eslint-config-expo": "~8.0.1"
   },
   "expo": {
     "doctor": {
