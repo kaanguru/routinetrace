@@ -1,3 +1,4 @@
+import Background from "@/components/Background";
 import { Button } from "@rneui/themed";
 import { FlashList } from "@shopify/flash-list";
 import { Video, ResizeMode } from "expo-av";
@@ -64,7 +65,7 @@ export default function TutorialScreen() {
   };
 
   return (
-    <View>
+    <Background>
       <View>
         <FlashList
           ref={flashListRef}
@@ -103,6 +104,6 @@ export default function TutorialScreen() {
           }
         />
       </View>
-    </View>
+    </Background>
   );
 }

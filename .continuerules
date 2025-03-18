@@ -86,13 +86,12 @@ create index IF not exists idx_task_completion_history_task_id on public.task_co
 ## Tech Stack
 
 - react-native + expo
-- pnpm packageManager
+- npm packageManager
 - [expo-router](https://docs.expo.dev/router/installation/#quick-start)
 - [drawer+tabs](https://docs.expo.dev/router/advanced/drawer/)
 - [React Native Elements](https://reactnativeelements.com/)
 - [Supabase Database](https://supabase.com/database): Open source, scalable PostgreSQL database trusted by millions; built-in auth, realtime capabilities, branching, and read replicas.
 - [Supabase Auth](https://supabase.com/blog/supabase-auth): Supabase Auth: Open-source Firebase alternative for user authentication and authorization with PostgreSQL Row Level Security and policies.
-- [eslint9 + functional lite](https://github.com/eslint-functional/eslint-plugin-functional)
 - [TanStack Query (FKA React Query)](https://tanstack.com/query/latest/docs/framework/react/overview)
 - [TanStack Form](https://tanstack.com/form/latest)
 
@@ -105,11 +104,15 @@ create index IF not exists idx_task_completion_history_task_id on public.task_co
 
 ## Syntax and Formatting
 
+- Use funtional paradigm for all components and hooks.
+- No Mutations
 - Use "function" keyword for pure functions(not an Asynchronous function and does not have side effects).
-- Disallow use of rest parameters, the arguments keyword and enforces that functions take at least 1 parameter.
-- Disallow the throw keyword.
+- Require function parameters to be typed as certain immutability
 - Don't use syntax that mutates existing objects and arrays via assignment to or deletion of their properties/elements. Use **Readonly** like `export default function Root({ children }: Readonly<{ children: React.ReactNode }>) {...}`
 - Use `const` instead of `let`
+- Enforce the immutability of types based on patterns
+- do not inheritance in classes.
+- Restrict types so that only members of the same kind are allowed in them.
 - Use the generated types provided by Supabase shorthands for accessing tables and enums.
   like:
 

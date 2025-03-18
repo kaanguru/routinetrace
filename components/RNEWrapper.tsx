@@ -38,6 +38,7 @@ SplashScreen.setOptions({
   duration: 1000,
   fade: true,
 });
+
 export default function RNEWrapper() {
   const [fontsLoaded, fontError] = useFonts({
     Inter_900Black,

@@ -1,8 +1,9 @@
 import { Href, useRouter } from "expo-router";
 import { useEffect } from "react";
-import { Text, Pressable, View } from "react-native";
-
+import { Pressable } from "react-native";
+import { Text } from "@rneui/themed";
 import LogoPortrait from "@/components/lotties/LogoPortrait";
+import Background from "@/components/Background";
 
 export default function SplashScreen() {
   const router = useRouter();
@@ -16,13 +17,24 @@ export default function SplashScreen() {
   }, []);
 
   return (
-    <View>
+    <Background style={{ justifyContent: "center", alignItems: "center" }}>
       <Pressable
         onPress={() => router.replace("/(onboarding)/tutorial" as Href)}
+        style={{
+          margin: 50,
+        }}
       >
-        <LogoPortrait />
+        <LogoPortrait scale={0.5} style={{ marginRight: 45 }} />
       </Pressable>
-      <Text>GorevIzi</Text>
-    </View>
+      <Text
+        style={{
+          fontFamily: "DelaGothicOne_400Regular",
+          fontSize: 30,
+          marginTop: 10,
+        }}
+      >
+        RoutineTrace
+      </Text>
+    </Background>
   );
 }

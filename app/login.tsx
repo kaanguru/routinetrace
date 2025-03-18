@@ -49,29 +49,11 @@ export default function Login() {
         />
       </View>
       <View>
-        <Button
-          disabled={loading}
-          className={styles.registerButton}
-          onPress={handleLogin}
-          title="Login"
-        />
+        <Button disabled={loading} onPress={handleLogin} title="Login" />
 
-        <Button
-          className={styles.registerButton}
-          onPress={() => router.push("/register")}
-          title=" Register"
-        />
+        <Button onPress={() => router.push("/register")} title=" Register" />
       </View>
-      <Button
-        className={styles.registerButton}
-        onPress={resetFirstVisit}
-        title="R-F-W"
-      />
+      <Button onPress={resetFirstVisit} title="R-F-W" />
     </View>
   );
 }
-
-const styles = {
-  registerButton: "mt-8 bg-background-dark dark:bg-background-light rounded ",
-  buttonText: " text-center text-typography-white dark:text-typography-black",
-};

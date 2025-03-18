@@ -10,7 +10,7 @@ export default function StartScreen() {
   return (
     <View>
       <LogoPortrait />
-      <Text>GorevIzi</Text>
+      <Text>RoutineTrace</Text>
       <View>
         <Button title="Register" onPress={() => router.push("/register")} />
         <Button
