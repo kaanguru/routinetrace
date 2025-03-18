@@ -1,10 +1,10 @@
 import Background from "@/components/Background";
-import { Button } from "@rneui/themed";
+import { Button, Text } from "@rneui/themed";
 import { FlashList } from "@shopify/flash-list";
 import { Video, ResizeMode } from "expo-av";
 import { Href, useRouter } from "expo-router";
 import { useState, useRef } from "react";
-import { View, Text, Dimensions } from "react-native";
+import { View, Dimensions } from "react-native";
 
 interface TutorialItem {
   id: number;
@@ -29,7 +29,7 @@ const tutorials: TutorialItem[] = [
     title: "Track your progress",
   },
 ];
-const { width: SCREEN_WIDTH } = Dimensions.get("window");
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 export default function TutorialScreen() {
   const router = useRouter();
@@ -38,7 +38,15 @@ export default function TutorialScreen() {
 
   // Specify type for renderItem
   const renderItem = ({ item }: Readonly<{ item: TutorialItem }>) => (
-    <View style={{ width: SCREEN_WIDTH }}>
+    <View
+      style={{
+        width: SCREEN_WIDTH - 20,
+        height: SCREEN_HEIGHT - 100,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "flex-start",
+      }}
+    >
       <Video
         source={item.image}
         style={{ width: SCREEN_WIDTH, height: 700 }}
@@ -48,7 +56,17 @@ export default function TutorialScreen() {
         isMuted
         rate={0.5}
       />
-      <Text>{item.title}</Text>
+      <Text
+        h4
+        style={{
+          marginTop: -160,
+          color: "#ff006e",
+          fontWeight: "bold",
+          textAlign: "center",
+        }}
+      >
+        {item.title}
+      </Text>
     </View>
   );
 
@@ -63,10 +81,26 @@ export default function TutorialScreen() {
       router.replace("/(onboarding)/start" as Href);
     }
   };
-
+  const styles = {
+    dot: {
+      margin: 4,
+      height: 8,
+      width: 8,
+      borderRadius: 4,
+    },
+    activeDot: {
+      backgroundColor: "#ff006e", // Primary color
+    },
+    inactiveDot: {
+      backgroundColor: "#00173D", // Black
+    },
+    inactiveDotDark: {
+      backgroundColor: "#FFE499", // White
+    },
+  };
   return (
     <Background>
-      <View>
+      <View style={{ flex: 1, justifyContent: "space-around" }}>
         <FlashList
           ref={flashListRef}
           data={tutorials}
@@ -82,18 +116,19 @@ export default function TutorialScreen() {
             setCurrentIndex(newIndex);
           }}
         />
-      </View>
-
-      <View>
-        <View id="paginator">
+        <View
+          id="paginator"
+          style={{ flexDirection: "row", marginInline: "auto", maxHeight: 20 }}
+        >
           {tutorials.map((_, index) => (
             <View
               key={index}
-              className={`m-1 h-2 w-2 rounded-full ${
+              style={[
+                styles.dot,
                 index === currentIndex
-                  ? "bg-background-primary"
-                  : "bg-background-dark dark:bg-background-light"
-              }`}
+                  ? styles.activeDot
+                  : styles.inactiveDotDark,
+              ]}
             />
           ))}
         </View>

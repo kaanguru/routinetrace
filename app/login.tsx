@@ -1,11 +1,12 @@
-import { Button, Input } from "@rneui/themed";
+import { Button, Input, Text } from "@rneui/themed";
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { View, Text, ActivityIndicator } from "react-native";
+import { View, ActivityIndicator, Button as NativeButton } from "react-native";
 
 import LogoPortrait from "@/components/lotties/LogoPortrait";
 import { useSessionContext } from "@/context/AuthenticationContext";
 import { resetFirstVisit } from "@/utils/isFirstVisit";
+import Background from "@/components/Background";
 
 export default function Login() {
   const router = useRouter();
@@ -31,11 +32,22 @@ export default function Login() {
   };
 
   return (
-    <View>
-      <LogoPortrait />
-      <Text>Welcome Back</Text>
+    <Background>
+      <LogoPortrait style={{ transform: [{ rotate: "60deg" }] }} />
+      <Text
+        style={{
+          marginHorizontal: "auto",
+          fontFamily: "Ubuntu_400Regular",
+          fontSize: 36,
+          paddingHorizontal: 80,
+          textAlign: "center",
+          color: "#3E0C83",
+        }}
+      >
+        Welcome Back
+      </Text>
       {loading && <ActivityIndicator />}
-      <View>
+      <View style={{ marginTop: 10 }}>
         <Input
           placeholder="Enter your email"
           value={email}
@@ -48,12 +60,18 @@ export default function Login() {
           onChangeText={setPassword}
         />
       </View>
-      <View>
+      <View style={{ marginTop: 10 }}>
         <Button disabled={loading} onPress={handleLogin} title="Login" />
 
-        <Button onPress={() => router.push("/register")} title=" Register" />
+        <Button
+          type="outline"
+          onPress={() => router.push("/register")}
+          title=" Register"
+        />
       </View>
-      <Button onPress={resetFirstVisit} title="R-F-W" />
-    </View>
+      <View style={{ position: "absolute", bottom: 10, right: 10 }}>
+        <NativeButton color="#F04F05" onPress={resetFirstVisit} title="R-F-W" />
+      </View>
+    </Background>
   );
 }
