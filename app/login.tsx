@@ -27,7 +27,7 @@ export default function Login() {
         } else {
           router.replace("/");
         }
-      }, 200);
+      }, 2000);
     }
   };
 

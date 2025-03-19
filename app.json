@@ -43,9 +43,9 @@
       [
         "@sentry/react-native/expo",
         {
-          "organization": "cemkaanguru",
+          "url": "https://sentry.io/",
           "project": "routinetrace",
-          "url": "https://sentry.io/"
+          "organization": "cemkaanguru"
         }
       ]
     ],

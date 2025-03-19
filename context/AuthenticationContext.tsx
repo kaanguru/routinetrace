@@ -64,7 +64,9 @@ export default function SessionProvider({
       return;
     }
     await refetch();
-    console.log("Session after signIn:", data?.session); // Add this line
+    setTimeout(() => {
+      console.log("Session after signIn:", data?.session);
+    }, 200);
   };
 
   const signUp = async (email: string, password: string) => {
