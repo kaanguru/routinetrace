@@ -1,19 +1,20 @@
-// app\(drawer)\_layout.tsx
+// app/(drawer)/_layout.tsx
 import { Redirect } from "expo-router";
-import { ActivityIndicator, View } from "react-native";
+import { ActivityIndicator } from "react-native";
 
 import DrawerMenuAndScreens from "@/components/DrawerMenuAndScreens";
 import { useInitializationContext } from "@/components/RNEWrapper";
-import { useSessionContext } from "@/context/AuthenticationContext";
+import { useAuth } from "@/context/AuthenticationProvider";
+import Background from "@/components/Background";
 
 export default function DrawerLayout() {
-  const { session, isLoading } = useSessionContext();
+  const { session, isLoading } = useAuth();
   const { initialized } = useInitializationContext(); // Use the context
   if (isLoading || !initialized) {
     return (
-      <View>
+      <Background>
         <ActivityIndicator size="large" />
-      </View>
+      </Background>
     );
   }
 

@@ -15,12 +15,14 @@ import { useEffect, useState, createContext, useContext } from "react";
 import { ActivityIndicator, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
-import { useSessionContext } from "~/context/AuthenticationContext";
+import { useAuth } from "@/context/AuthenticationProvider";
 import { SoundProvider } from "~/context/SoundContext";
 import useInitializeDailyTasks from "~/hooks/useInitializeDailyTasks";
 import { isFirstLaunchToday } from "~/utils/isFirstLaunchToday";
 import { isFirstVisit } from "~/utils/isFirstVisit";
 import { supabase } from "~/utils/supabase";
+import { Result, ok, err, errAsync, ResultAsync } from "neverthrow";
+import reportError from "@/utils/reportError";
 
 const InitializationContext = createContext<
   Readonly<{
@@ -51,21 +53,21 @@ export default function RNEWrapper() {
   const [isSupabaseInitialized, setSupabaseInitialized] = useState(false);
   const segments = useSegments();
   const router = useRouter();
-  const { session, isLoading: sessionLoading } = useSessionContext();
+  const { session, isLoading: sessionLoading } = useAuth();
   const { initialized, hasTasksFromYesterday } = useInitializeDailyTasks();
   const [isAppReady, setIsAppReady] = useState(false);
 
   useEffect(() => {
-    const initializeSupabase = async () => {
-      try {
-        // eslint-disable-next-line no-unused-expressions
-        supabase; // Ensure supabase is initialized
-        setSupabaseInitialized(true);
-      } catch (error) {
-        console.error("Failed to initialize Supabase:", error);
-      }
+    const initializeSupabase = (): Result<void, Error> => {
+      // eslint-disable-next-line no-unused-expressions
+      supabase; // Ensure supabase is initialized
+      setSupabaseInitialized(true);
+      return ok(undefined);
     };
-    initializeSupabase();
+    const result = initializeSupabase();
+    if (result.isErr()) {
+      reportError(result);
+    }
   }, []);
 
   useEffect(() => {
@@ -117,6 +119,8 @@ export default function RNEWrapper() {
     session,
     initialized,
     hasTasksFromYesterday,
+    sessionLoading,
+    router,
   ]);
 
   useEffect(() => {

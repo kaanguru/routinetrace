@@ -1,10 +1,16 @@
+// app/login.tsx
 import { Button, Input, Text } from "@rneui/themed";
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { View, ActivityIndicator, Button as NativeButton } from "react-native";
+import {
+  View,
+  ActivityIndicator,
+  Button as NativeButton,
+  Alert,
+} from "react-native";
 
 import LogoPortrait from "@/components/lotties/LogoPortrait";
-import { useSessionContext } from "@/context/AuthenticationContext";
+import { useAuth } from "@/context/AuthenticationProvider";
 import { resetFirstVisit } from "@/utils/isFirstVisit";
 import Background from "@/components/Background";
 
@@ -13,22 +19,30 @@ export default function Login() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading] = useState(false);
-  const { signIn, authError } = useSessionContext();
+  const [loading, setLoading] = useState(false);
+  const { signInWithEmail } = useAuth();
 
   const handleLogin = async function () {
     if (email.length < 5 || !email.includes("@")) {
+      Alert.alert("Validation Error", "Please enter a valid email address.");
+      return;
     } else if (password.length < 8) {
-    } else {
-      await signIn(email, password);
-      setTimeout(() => {
-        if (authError) {
-          router.replace("/login");
-        } else {
-          router.replace("/");
-        }
-      }, 2000);
+      Alert.alert(
+        "Validation Error",
+        "Password must be at least 8 characters."
+      );
+      return;
     }
+
+    setLoading(true);
+    const result = await signInWithEmail({ email, password });
+    // TODO: Add error handling for login failure   Sentry.captureException(err);
+
+    result.mapErr((err) => {
+      Alert.alert("Login Failed", err.message);
+    });
+
+    setLoading(false);
   };
 
   return (

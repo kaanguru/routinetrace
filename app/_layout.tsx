@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useReactQueryDevTools } from "@dev-plugins/react-query";
 
 import RNEWrapper from "@/components/RNEWrapper";
-import SessionProvider from "@/context/AuthenticationContext";
+import AuthProvider from "@/context/AuthenticationProvider";
 import themeStyles from "@/theme/themeStyles";
 import { useColorScheme } from "react-native";
 import * as Sentry from "@sentry/react-native";
@@ -26,9 +26,9 @@ export default Sentry.wrap(function RootLayout() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={theme}>
-        <SessionProvider>
+        <AuthProvider>
           <RNEWrapper />
-        </SessionProvider>
+        </AuthProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );

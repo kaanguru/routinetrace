@@ -112,7 +112,63 @@ create index IF not exists idx_task_completion_history_task_id on public.task_co
 - Use `const` instead of `let`
 - Enforce the immutability of types based on patterns
 - do not inheritance in classes.
-- Restrict types so that only members of the same kind are allowed in them.
+
+### Neverthrow
+
+- Use Neverthrow and sentry for error handling.
+  Neverthrow contains a `Result` type that represents either success (`Ok`) or failure (`Err`).
+
+For asynchronous tasks, `neverthrow` offers a `ResultAsync` class which wraps a `Promise<Result<T, E>>` and gives you the same level of expressivity and control as a regular `Result<T, E>`.
+
+`ResultAsync` is `thenable` meaning it **behaves exactly like a native `Promise<Result>`** ... except you have access to the same methods that `Result` provides without having to `await` or `.then` the promise!
+
+#### Top-Level API
+
+`neverthrow` exposes the following:
+
+- `ok` convenience function to create an `Ok` variant of `Result`
+- `err` convenience function to create an `Err` variant of `Result`
+- `Result` Type as well as namespace / object from which to call `Result.fromThrowable`, Result.combine.
+- `okAsync` convenience function to create a `ResultAsync` containing an `Ok` type `Result`
+- `errAsync` convenience function to create a `ResultAsync` containing an `Err` type `Result`
+
+Example Error Handling:
+
+```ts
+// Example Error Handling
+import { Result, ok, err, errAsync, ResultAsync } from "neverthrow";
+import reportError from "utils/reportError.ts";
+
+function divide(x: number, y: number): Result<number, Error> {
+  return y === 0 ? err(new Error("Cannot divide by zero.")) : ok(x / y);
+}
+
+// Sync usage
+const syncResult = divide(10, 0);
+reportError(syncResult);
+
+// Async usage
+// We can create a synchronous method that returns a ResultAsync
+function addUserToDatabase(user: User): ResultAsync<User, Error> {
+  if (user.name.length < 3) {
+    // Throw a async result from a synchronous block thanks to the errAsync helper
+    return errAsync(new Error("Username is too short"));
+  }
+
+  // Wrap the async method into a ResultAsync thanks to fromPromise
+  // The seconds argument catches the error from the promise
+  return ResultAsync.fromPromise(
+    insertIntoDb(user),
+    () => new Error("Database error")
+  );
+}
+const asyncResult = addUserToDatabase({ name: "John" });
+reportError(asyncResult);
+// Continue processing with `syncResult or asyncResult`...
+```
+
+## Database Types
+
 - Use the generated types provided by Supabase shorthands for accessing tables and enums.
   like:
 
