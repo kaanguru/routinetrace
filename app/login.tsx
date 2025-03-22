@@ -8,37 +8,47 @@ import {
   Button as NativeButton,
   Alert,
 } from "react-native";
+import { useForm } from "@tanstack/react-form";
+import { z } from "zod";
+import FormFieldInfo from "@/components/FormFieldInfo";
 
 import LogoPortrait from "@/components/lotties/LogoPortrait";
-import { useAuth } from "@/context/AuthenticationProvider";
+import { useAuth, AuthCredentials } from "@/context/AuthenticationProvider";
 import { resetFirstVisit } from "@/utils/isFirstVisit";
 import Background from "@/components/Background";
+
+const userSchema = z.object({
+  email: z.string().email({ message: "Invalid email address" }),
+  password: z.string().min(8, "PASSWORD must be at least 8 characters"),
+});
 
 export default function Login() {
   const router = useRouter();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const { signInWithEmail } = useAuth();
-
+  const form = useForm({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+    validators: {
+      onChange: userSchema,
+    },
+    onSubmit: async ({ value }) => {
+      handleLogin(value);
+    },
+  });
   const handleLogin = useCallback(
-    async function () {
-      if (email.length < 5 || !email.includes("@")) {
-        Alert.alert("Validation Error", "Please enter a valid email address.");
-        return;
-      } else if (password.length < 8) {
-        Alert.alert(
-          "Validation Error",
-          "Password must be at least 8 characters."
-        );
-        return;
-      }
+    async function (val: AuthCredentials) {
       setLoading(true);
-      const signInResult = await signInWithEmail({ email, password });
+      const signInResult = await signInWithEmail({
+        email: val.email,
+        password: val.password,
+      });
       signInResult.match(
         () => {
-          resetFirstVisit();
+          console.log("Login Successful");
         },
         (transformedError) => {
           Alert.alert("Login Failed", transformedError.message);
@@ -46,7 +56,7 @@ export default function Login() {
       );
       setLoading(false);
     },
-    [email, password, signInWithEmail]
+    [form, signInWithEmail]
   );
 
   return (
@@ -66,21 +76,60 @@ export default function Login() {
       </Text>
       {loading && <ActivityIndicator />}
       <View style={{ marginTop: 30 }}>
-        <Input
+        <form.Field name="email">
+          {(field) => (
+            <>
+              <Input
+                placeholder="Enter your email"
+                keyboardType="email-address"
+                value={field.state.value != null ? field.state.value : ""}
+                onBlur={field.handleBlur}
+                onChangeText={(text) => field.handleChange(text)}
+                autoCapitalize="none"
+              />
+              <FormFieldInfo field={field} />
+            </>
+          )}
+        </form.Field>
+        {/* <Input
           placeholder="Enter your email"
           value={email}
           onChangeText={setEmail}
           autoCapitalize="none"
-        />
-        <Input
+        /> */}
+        <form.Field name="password">
+          {(field) => (
+            <>
+              <Input
+                placeholder="Enter your password"
+                keyboardType="ascii-capable"
+                secureTextEntry
+                autoCapitalize="none"
+                autoCorrect={false}
+                textContentType="password"
+                value={
+                  field.state.value != null ? field.state.value.toString() : ""
+                }
+                onBlur={field.handleBlur}
+                onChangeText={(text) => field.handleChange(text)}
+              />
+              <FormFieldInfo field={field} />
+            </>
+          )}
+        </form.Field>
+        {/* <Input
           placeholder="Enter your password"
           secureTextEntry
           value={password}
           onChangeText={setPassword}
-        />
+        /> */}
       </View>
       <View style={{ marginTop: 10 }}>
-        <Button disabled={loading} onPress={handleLogin} title="Login" />
+        <Button
+          disabled={loading}
+          onPress={() => form.handleSubmit()}
+          title="Login"
+        />
 
         <View
           style={{

@@ -5,7 +5,7 @@ import { supabase } from "~/utils/supabase";
 import { Session } from "@supabase/supabase-js";
 import React, { createContext, useContext, ReactNode } from "react";
 
-type AuthCredentials = { email: string; password: string };
+export type AuthCredentials = { email: string; password: string };
 
 const authKeys = {
   session: ["auth", "session"],

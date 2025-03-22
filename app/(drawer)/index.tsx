@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { useThemeMode, FAB } from "@rneui/themed";
 import { Stack, useFocusEffect, useRouter } from "expo-router";
@@ -22,6 +21,7 @@ import { Task } from "@/types";
 import genRandomInt from "@/utils/genRandomInt";
 import isTaskDueToday from "@/utils/tasks/isTaskDueToday";
 import reOrder from "@/utils/tasks/reOrder";
+import Background from "@/components/Background";
 
 export default function Index() {
   const [isFiltered, setIsFiltered] = useState<boolean>(true);
@@ -162,7 +162,10 @@ export default function Index() {
           headerRight: () => (
             <>
               {reorderedTasks.length > 0 && (
-                <Pressable onPress={handleFilterTodayPress}>
+                <Pressable
+                  onPress={handleFilterTodayPress}
+                  style={{ marginRight: 16 }}
+                >
                   {isFiltered ? (
                     <FontAwesome6
                       name="calendar-days"
@@ -182,9 +185,19 @@ export default function Index() {
           ),
         }}
       />
-      <View>
+      <Background
+        style={{
+          flex: 1,
+          padding: 16,
+        }}
+      >
         {showLoading ? (
-          <View>
+          <View
+            style={{
+              flex: 1,
+              padding: 16,
+            }}
+          >
             {showConfetti ? <Confetti /> : <ActivityIndicator size="large" />}
           </View>
         ) : (
@@ -200,6 +213,12 @@ export default function Index() {
           </>
         )}
         <FAB
+          style={{
+            position: "absolute",
+            margin: 16,
+            right: 0,
+            bottom: 0,
+          }}
           onPress={() => {
             if (tasks.filter(isTaskDueToday).length > 8) {
               router.push("/(tasks)/soManyTasksWarning");
@@ -210,7 +229,7 @@ export default function Index() {
         >
           <FontAwesome6 name="add" size={24} color="#ff006e" />
         </FAB>
-      </View>
+      </Background>
     </>
   );
 }
