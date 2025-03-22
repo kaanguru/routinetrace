@@ -186,11 +186,9 @@ const task: Tables<"tasks"> = {
 
 ## UI and Styling
 
-- Use the following format for importing components:
-  `import { Button, ButtonText } from "@/components/ui/button"`
-  Never use :
-  `import { Button, Text, View, Box } from '@gluestack-ui/themed';`
-  format
+- Use React Native Elements (RNE) for UI components.
+  `import { Button } from '@rneui/themed';`
+- Use the `@rneui/themed` package for UI components.
 
 ## Fonts
 

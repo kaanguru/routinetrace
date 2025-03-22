@@ -1,53 +1,38 @@
-import { Result, ok, err } from "neverthrow";
+import { Result, ok, err, ResultAsync, okAsync } from "neverthrow";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { supabase } from "~/utils/supabase";
 import { Session } from "@supabase/supabase-js";
 import React, { createContext, useContext, ReactNode } from "react";
 
-type AuthError = { message: string };
 type AuthCredentials = { email: string; password: string };
 
-// Query keys
 const authKeys = {
   session: ["auth", "session"],
 };
 
-// Combined API functions with neverthrow
 const authAPI = {
   async signInWithEmail(
     creds: AuthCredentials
-  ): Promise<Result<Session, AuthError>> {
-    try {
-      const { data, error } = await supabase.auth.signInWithPassword(creds);
-      if (error) return err({ message: error.message });
-      return ok(data.session!);
-    } catch (e) {
-      return err({ message: (e as Error).message });
-    }
+  ): Promise<ResultAsync<Session, Error>> {
+    const { data, error } = await supabase.auth.signInWithPassword(creds);
+    if (error) return err(error);
+    return ok(data.session!);
   },
 
   async signUpWithEmail(
     creds: AuthCredentials
-  ): Promise<Result<Session, AuthError>> {
-    try {
-      const { data, error } = await supabase.auth.signUp(creds);
-      if (error) return err({ message: error.message });
-      return ok(data.session!);
-    } catch (e) {
-      return err({ message: (e as Error).message });
-    }
+  ): Promise<ResultAsync<Session, Error>> {
+    const { data, error } = await supabase.auth.signUp(creds);
+    if (error) return err(error);
+    return ok(data.session!);
   },
 
-  async signOut(): Promise<Result<void, AuthError>> {
-    try {
-      const { error } = await supabase.auth.signOut();
-      await AsyncStorage.removeItem("@gorevizi:supabase.auth.token");
-      if (error) return err({ message: error.message });
-      return ok(undefined);
-    } catch (e) {
-      return err({ message: (e as Error).message });
-    }
+  async signOut(): Promise<ResultAsync<void, Error>> {
+    const { error } = await supabase.auth.signOut();
+    await AsyncStorage.removeItem("@gorevizi:supabase.auth.token");
+    if (error) return err(error);
+    return ok(undefined);
   },
 };
 
@@ -55,11 +40,11 @@ type AuthContextType = {
   session: Session | null;
   signInWithEmail: (
     creds: AuthCredentials
-  ) => Promise<Result<Session, AuthError>>;
+  ) => Promise<ResultAsync<Session, Error>>;
   signUpWithEmail: (
     creds: AuthCredentials
-  ) => Promise<Result<Session, AuthError>>;
-  signOut: () => Promise<Result<void, AuthError>>;
+  ) => Promise<ResultAsync<Session, Error>>;
+  signOut: () => Promise<ResultAsync<void, Error>>;
   isLoading: boolean;
 };
 
@@ -71,7 +56,9 @@ export function useAuth() {
   return context;
 }
 
-export default function AuthProvider({ children }: { children: ReactNode }) {
+export default function AuthProvider({
+  children,
+}: Readonly<{ children: ReactNode }>) {
   const queryClient = useQueryClient();
 
   const { data: session, isLoading: isSessionLoading } = useQuery({
@@ -84,18 +71,21 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
 
   const signInMutation = useMutation({
     mutationFn: authAPI.signInWithEmail,
-    onSuccess: (result) => {
-      if (result.isOk()) {
-        queryClient.setQueryData(authKeys.session, result.value);
+    onSuccess: async (result) => {
+      if ((await result).isOk()) {
+        queryClient.setQueryData(authKeys.session, result);
       }
+    },
+    onError: (error) => {
+      console.error("Sign in error:", error);
     },
   });
 
   const signUpMutation = useMutation({
     mutationFn: authAPI.signUpWithEmail,
-    onSuccess: (result) => {
-      if (result.isOk()) {
-        queryClient.setQueryData(authKeys.session, result.value);
+    onSuccess: async (result) => {
+      if ((await result).isOk()) {
+        queryClient.setQueryData(authKeys.session, result);
       }
     },
     onError: (error) => {
@@ -105,30 +95,31 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
 
   const signOutMutation = useMutation({
     mutationFn: authAPI.signOut,
-    onSuccess: (result) => {
-      if (result.isOk()) {
+    onSuccess: async (result) => {
+      if ((await result).isOk()) {
         queryClient.removeQueries({ queryKey: authKeys.session });
       }
     },
+    onError: (error) => {
+      console.error("Sign out error:", error);
+    },
   });
 
-  const isLoading =
-    isSessionLoading ||
+  const isLoading = isSessionLoading;
+
+  const isMutating =
     signInMutation.isPending ||
     signUpMutation.isPending ||
     signOutMutation.isPending;
 
+  const contextValue: AuthContextType = {
+    session: session || null,
+    isLoading: isLoading || isMutating,
+    signInWithEmail: (creds) => signInMutation.mutateAsync(creds),
+    signUpWithEmail: (creds) => signUpMutation.mutateAsync(creds),
+    signOut: () => signOutMutation.mutateAsync(),
+  };
   return (
-    <AuthContext.Provider
-      value={{
-        session: session || null,
-        isLoading,
-        signInWithEmail: (creds) => signInMutation.mutateAsync(creds),
-        signUpWithEmail: (creds) => signUpMutation.mutateAsync(creds),
-        signOut: () => signOutMutation.mutateAsync(),
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
   );
 }

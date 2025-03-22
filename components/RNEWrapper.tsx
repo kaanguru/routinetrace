@@ -153,7 +153,7 @@ export default function RNEWrapper() {
           <Stack
             screenOptions={{
               headerShown: false,
-              animation: "slide_from_right",
+              animation: "none",
             }}
           >
             <Stack.Screen name="(drawer)" />

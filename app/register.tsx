@@ -37,9 +37,9 @@ export default function Register() {
     }
 
     setLoading(true);
-    const result = await signUpWithEmail({ email, password });
+    const signUpResult = await signUpWithEmail({ email, password });
 
-    result.match(
+    signUpResult.match(
       () => {
         console.log("Registration successful!");
         setLoading(false);

@@ -1,7 +1,7 @@
 // app/login.tsx
 import { Button, Input, Text } from "@rneui/themed";
 import { useRouter } from "expo-router";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import {
   View,
   ActivityIndicator,
@@ -17,33 +17,37 @@ import Background from "@/components/Background";
 export default function Login() {
   const router = useRouter();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("test@test.co");
+  const [password, setPassword] = useState("123456aa");
   const [loading, setLoading] = useState(false);
   const { signInWithEmail } = useAuth();
 
-  const handleLogin = async function () {
-    if (email.length < 5 || !email.includes("@")) {
-      Alert.alert("Validation Error", "Please enter a valid email address.");
-      return;
-    } else if (password.length < 8) {
-      Alert.alert(
-        "Validation Error",
-        "Password must be at least 8 characters."
+  const handleLogin = useCallback(
+    async function () {
+      if (email.length < 5 || !email.includes("@")) {
+        Alert.alert("Validation Error", "Please enter a valid email address.");
+        return;
+      } else if (password.length < 8) {
+        Alert.alert(
+          "Validation Error",
+          "Password must be at least 8 characters."
+        );
+        return;
+      }
+      setLoading(true);
+      const signInResult = await signInWithEmail({ email, password });
+      signInResult.match(
+        () => {
+          resetFirstVisit();
+        },
+        (transformedError) => {
+          Alert.alert("Login Failed", transformedError.message);
+        }
       );
-      return;
-    }
-
-    setLoading(true);
-    const result = await signInWithEmail({ email, password });
-    // TODO: Add error handling for login failure   Sentry.captureException(err);
-
-    result.mapErr((err) => {
-      Alert.alert("Login Failed", err.message);
-    });
-
-    setLoading(false);
-  };
+      setLoading(false);
+    },
+    [email, password, signInWithEmail]
+  );
 
   return (
     <Background>
