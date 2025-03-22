@@ -1,11 +1,13 @@
 // app/register.tsx
-import { Button, Input } from "@rneui/themed";
+import { Button, Text, Input } from "@rneui/themed";
 import { useRouter } from "expo-router";
 import React, { useState, useCallback } from "react";
-import { View, Text, Alert, ActivityIndicator, StyleSheet } from "react-native";
+import { View, Alert, ActivityIndicator, StyleSheet } from "react-native";
 
 import LogoPortrait from "~/components/lotties/LogoPortrait";
 import { useAuth } from "@/context/AuthenticationProvider";
+import Background from "@/components/Background";
+import { head } from "ramda";
 
 export default function Register() {
   const router = useRouter();
@@ -51,65 +53,87 @@ export default function Register() {
   }, [email, password, signUpWithEmail, validateForm]);
 
   const styles = StyleSheet.create({
-    button: {
-      marginTop: 8,
-      backgroundColor: "#00173D", // Use a color from your theme or a direct hex code
-      borderRadius: 5,
+    registerButton: {
+      backgroundColor: "#00173D",
     },
     buttonText: {
-      textAlign: "center",
-      color: "#FFFAEB", // Use a color from your theme or a direct hex code
+      color: "#FFFAEB",
     },
-    text: {
-      marginBottom: 2,
-      color: "#00173D", // Use a color from your theme or a direct hex code
+    heading: {
+      marginHorizontal: "auto",
+      fontFamily: "Ubuntu_400Regular",
+      fontSize: 36,
+      paddingHorizontal: 80,
+      textAlign: "center",
+      color: "#3E0C83",
     },
   });
 
   return (
-    <View>
-      <LogoPortrait scale={0.3} />
-      <Text>Create Account</Text>
+    <Background>
+      <LogoPortrait scale={0.2} style={{ transform: [{ rotate: "60deg" }] }} />
+      <Text style={styles.heading}>Create Account</Text>
       {loading || authLoading ? <ActivityIndicator /> : null}
 
-      <View>
+      <View style={{ marginTop: 10 }}>
         <Input
           placeholder="Enter your email"
           value={email}
           onChangeText={setEmail}
           autoCapitalize="none"
         />
+        <View style={{ marginTop: 20 }}>
+          <Input
+            placeholder="Enter your password"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+          />
 
-        <Input
-          placeholder="Enter your password"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-        />
+          <Input
+            placeholder="Confirm your password"
+            value={confirmPassword}
+            onChangeText={setConfirmPassword}
+            secureTextEntry
+          />
 
-        <Input
-          placeholder="Confirm your password"
-          value={confirmPassword}
-          onChangeText={setConfirmPassword}
-          secureTextEntry
-        />
+          <Button
+            title="Register"
+            disabled={loading || authLoading}
+            buttonStyle={styles.registerButton}
+            titleStyle={styles.buttonText}
+            onPress={handleRegister}
+          />
+        </View>
 
-        <Button
-          title="Register"
-          disabled={loading || authLoading}
-          buttonStyle={styles.button}
-          titleStyle={styles.buttonText}
-          onPress={handleRegister}
-        />
-        <Text style={{ color: "red" }}>Already have an account? </Text>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "center",
+            marginTop: 10,
+          }}
+        >
+          <Text
+            h4
+            style={{
+              textAlign: "center",
+              textAlignVertical: "center",
+            }}
+          >
+            Already have an account?{" "}
+          </Text>
 
-        <Button
-          title="Login"
-          buttonStyle={styles.button}
-          titleStyle={styles.buttonText}
-          onPress={() => router.push("/login")}
-        />
+          <Button
+            title="Login"
+            onPress={() => router.push("/login")}
+            type="clear"
+            titleStyle={{
+              fontSize: 14,
+              fontFamily: "Ubuntu_700Bold",
+            }}
+          />
+        </View>
       </View>
-    </View>
+    </Background>
   );
 }

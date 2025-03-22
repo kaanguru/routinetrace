@@ -17,8 +17,8 @@ import Background from "@/components/Background";
 export default function Login() {
   const router = useRouter();
 
-  const [email, setEmail] = useState("test@test.co");
-  const [password, setPassword] = useState("123456aa");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const { signInWithEmail } = useAuth();
 
@@ -51,7 +51,7 @@ export default function Login() {
 
   return (
     <Background>
-      <LogoPortrait style={{ transform: [{ rotate: "60deg" }] }} />
+      <LogoPortrait scale={0.25} style={{ transform: [{ rotate: "60deg" }] }} />
       <Text
         style={{
           marginHorizontal: "auto",
@@ -74,6 +74,7 @@ export default function Login() {
         />
         <Input
           placeholder="Enter your password"
+          secureTextEntry
           value={password}
           onChangeText={setPassword}
         />

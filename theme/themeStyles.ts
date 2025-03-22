@@ -42,7 +42,7 @@ const themeStyles = {
       containerStyle: {
         margin: 12,
         borderRadius: 8,
-        borderWidth: 2,
+        borderWidth: 4,
         borderColor: "#FD590D",
         backgroundColor: "#FFF4D655",
       },
