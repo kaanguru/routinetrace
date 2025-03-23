@@ -19,7 +19,7 @@ import Background from "@/components/Background";
 
 const userSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
-  password: z.string().min(8, "PASSWORD must be at least 8 characters"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
 });
 
 export default function Login() {
@@ -76,7 +76,7 @@ export default function Login() {
       </Text>
       {loading && <ActivityIndicator />}
       <View style={{ marginTop: 30 }}>
-        <form.Field name="email">
+        <form.Field name="email" asyncDebounceMs={300}>
           {(field) => (
             <>
               <Input
@@ -91,13 +91,8 @@ export default function Login() {
             </>
           )}
         </form.Field>
-        {/* <Input
-          placeholder="Enter your email"
-          value={email}
-          onChangeText={setEmail}
-          autoCapitalize="none"
-        /> */}
-        <form.Field name="password">
+
+        <form.Field name="password" asyncDebounceMs={200}>
           {(field) => (
             <>
               <Input
@@ -117,12 +112,6 @@ export default function Login() {
             </>
           )}
         </form.Field>
-        {/* <Input
-          placeholder="Enter your password"
-          secureTextEntry
-          value={password}
-          onChangeText={setPassword}
-        /> */}
       </View>
       <View style={{ marginTop: 10 }}>
         <Button
