@@ -18,7 +18,16 @@ interface TaskListDisplayProps {
 }
 
 const TaskListHeader = ({ isFiltered }: Readonly<{ isFiltered: boolean }>) => (
-  <Text>{isFiltered ? "Today's" : "All Tasks"}</Text>
+  <Text
+    style={{
+      margin: 0,
+      padding: 0,
+      textAlign: "right",
+      fontFamily: "UbuntuMono_400Regular",
+    }}
+  >
+    {isFiltered ? "Today's" : "All Tasks"}
+  </Text>
 );
 
 function TaskListDisplay({

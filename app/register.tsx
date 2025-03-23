@@ -7,7 +7,6 @@ import { View, Alert, ActivityIndicator, StyleSheet } from "react-native";
 import LogoPortrait from "~/components/lotties/LogoPortrait";
 import { useAuth } from "@/context/AuthenticationProvider";
 import Background from "@/components/Background";
-import { head } from "ramda";
 
 export default function Register() {
   const router = useRouter();
@@ -17,7 +16,7 @@ export default function Register() {
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-
+  // TODO: TanStack Form
   const validateForm = useCallback((): string | null => {
     if (password !== confirmPassword) {
       return "The passwords you entered do not match.";

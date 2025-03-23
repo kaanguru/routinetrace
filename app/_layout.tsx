@@ -1,16 +1,17 @@
 import { createTheme, ThemeProvider } from "@rneui/themed";
-
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useReactQueryDevTools } from "@dev-plugins/react-query";
-
 import RNEWrapper from "@/components/RNEWrapper";
 import AuthProvider from "@/context/AuthenticationProvider";
 import themeStyles from "@/theme/themeStyles";
 import { useColorScheme } from "react-native";
 import * as Sentry from "@sentry/react-native";
+import { ErrorBoundary } from "react-error-boundary";
+import ErrorFallback from "@/components/error/ErrorFallback";
+import handleErrorBoundaryError from "@/utils/errorHandler";
 
 Sentry.init({
-  dsn: "https://efcb3dd32016c722a5e399a67e66eafc@o4508883408846848.ingest.de.sentry.io/4509000442249296",
+  dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
 });
 
 const queryClient = new QueryClient();
@@ -25,11 +26,16 @@ export default Sentry.wrap(function RootLayout() {
   theme.mode = useColorScheme() ?? "light";
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider theme={theme}>
-        <AuthProvider>
-          <RNEWrapper />
-        </AuthProvider>
-      </ThemeProvider>
+      <ErrorBoundary
+        FallbackComponent={ErrorFallback}
+        onError={handleErrorBoundaryError}
+      >
+        <ThemeProvider theme={theme}>
+          <AuthProvider>
+            <RNEWrapper />
+          </AuthProvider>
+        </ThemeProvider>
+      </ErrorBoundary>
     </QueryClientProvider>
   );
 });
