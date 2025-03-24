@@ -1,6 +1,7 @@
 import { Text } from "@rneui/themed";
 import React from "react";
-import { FlatList, RefreshControl, View } from "react-native";
+import { RefreshControl, View } from "react-native";
+import { FlashList } from "@shopify/flash-list";
 
 import TaskListEmptyComponent from "~/components/TaskListEmptyComponent";
 import { Tables } from "~/database.types";
@@ -39,19 +40,14 @@ function TaskListDisplay({
   refetch,
 }: Readonly<TaskListDisplayProps>) {
   return (
-    <FlatList
-      contentContainerStyle={{
-        gap: 16,
-        margin: 3,
-      }}
+    <FlashList
       data={reorderedTasks}
       renderItem={renderTaskItem}
       keyExtractor={keyExtractor}
       ListEmptyComponent={<TaskListEmptyComponent />}
-      //ListHeaderComponent
       ListHeaderComponent={
         reorderedTasks.length > 0 ? (
-          <View>
+          <View style={{ paddingVertical: 5, paddingHorizontal: 10 }}>
             <TaskListHeader isFiltered={isFiltered} />
           </View>
         ) : null
@@ -64,15 +60,8 @@ function TaskListDisplay({
           progressBackgroundColor="#ffffff"
         />
       }
-      initialNumToRender={10}
-      maxToRenderPerBatch={3}
-      windowSize={6}
-      removeClippedSubviews
-      getItemLayout={(data, index) => ({
-        length: 94,
-        offset: 110 * index,
-        index,
-      })}
+      estimatedItemSize={113}
+      ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
     />
   );
 }

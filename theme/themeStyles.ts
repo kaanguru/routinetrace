@@ -29,7 +29,7 @@ const themeStyles = {
     grey4: "#FFEFC2",
     grey5: "#FFF4D6",
     greyOutline: "#FD905E",
-    background: "#001F52",
+    background: "#001029",
   },
   components: {
     Button: {

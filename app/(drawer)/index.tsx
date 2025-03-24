@@ -227,7 +227,7 @@ export default function Index() {
             }
           }}
         >
-          <FontAwesome6 name="add" size={24} color="#ff006e" />
+          <FontAwesome6 name="add" size={24} color="#3D001B" />
         </FAB>
       </Background>
     </>

@@ -9,7 +9,7 @@ import {
   Alert,
 } from "react-native";
 import { useForm } from "@tanstack/react-form";
-import { z } from "zod";
+import userSchema from "@/schemas/userSchema";
 import FormFieldInfo from "@/components/FormFieldInfo";
 
 import LogoPortrait from "@/components/lotties/LogoPortrait";
@@ -17,16 +17,11 @@ import { useAuth, AuthCredentials } from "@/context/AuthenticationProvider";
 import { resetFirstVisit } from "@/utils/isFirstVisit";
 import Background from "@/components/Background";
 
-const userSchema = z.object({
-  email: z.string().email({ message: "Invalid email address" }),
-  password: z.string().min(8, "Password must be at least 8 characters"),
-});
-
 export default function Login() {
   const router = useRouter();
 
   const [loading, setLoading] = useState(false);
-  const { signInWithEmail } = useAuth();
+  const { signInWithEmail, isLoading: authLoading } = useAuth();
   const form = useForm({
     defaultValues: {
       email: "",
@@ -40,11 +35,11 @@ export default function Login() {
     },
   });
   const handleLogin = useCallback(
-    async function (val: AuthCredentials) {
+    async (value: AuthCredentials) => {
       setLoading(true);
       const signInResult = await signInWithEmail({
-        email: val.email,
-        password: val.password,
+        email: value.email,
+        password: value.password,
       });
       signInResult.match(
         () => {
@@ -74,7 +69,8 @@ export default function Login() {
       >
         Welcome Back
       </Text>
-      {loading && <ActivityIndicator />}
+      {loading || authLoading ? <ActivityIndicator /> : null}
+
       <View style={{ marginTop: 30 }}>
         <form.Field name="email" asyncDebounceMs={300}>
           {(field) => (

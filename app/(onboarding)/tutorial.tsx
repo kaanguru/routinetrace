@@ -105,7 +105,7 @@ export default function TutorialScreen() {
           ref={flashListRef}
           data={tutorials}
           renderItem={renderItem}
-          estimatedItemSize={SCREEN_WIDTH}
+          estimatedItemSize={SCREEN_WIDTH - 5}
           horizontal
           pagingEnabled
           showsHorizontalScrollIndicator={false}

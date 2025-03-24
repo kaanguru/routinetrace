@@ -3,53 +3,58 @@ import { Button, Text, Input } from "@rneui/themed";
 import { useRouter } from "expo-router";
 import React, { useState, useCallback } from "react";
 import { View, Alert, ActivityIndicator, StyleSheet } from "react-native";
+import { StandardSchemaV1Issue, useForm } from "@tanstack/react-form";
+import userSchema from "@/schemas/userSchema";
+import FormFieldInfo from "@/components/FormFieldInfo";
 
-import LogoPortrait from "~/components/lotties/LogoPortrait";
-import { useAuth } from "@/context/AuthenticationProvider";
+import LogoPortrait from "@/components/lotties/LogoPortrait";
+import { useAuth, AuthCredentials } from "@/context/AuthenticationProvider";
 import Background from "@/components/Background";
+import { z } from "zod";
 
 export default function Register() {
   const router = useRouter();
   const { signUpWithEmail, isLoading: authLoading } = useAuth();
+  const registrationSchema = userSchema
+    .extend({
+      confirm_password: z.string().min(6),
+    })
+    .refine((data) => data.password === data.confirm_password, {
+      message: "Passwords do not match",
+      path: ["confirm_password"],
+    });
+  const form = useForm({
+    defaultValues: {
+      email: "",
+      password: "",
+      confirm_password: "",
+    },
+    validators: {
+      onChange: registrationSchema,
+    },
+    onSubmit: async ({ value }) => {
+      handleRegister(value);
+    },
+  });
 
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [confirmPassword, setConfirmPassword] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
-  // TODO: TanStack Form
-  const validateForm = useCallback((): string | null => {
-    if (password !== confirmPassword) {
-      return "The passwords you entered do not match.";
-    }
-    if (email.length < 5 || !email.includes("@")) {
-      return "Please enter a valid email address.";
-    }
-    if (password.length < 8) {
-      return "Password must be at least 8 characters.";
-    }
-    return null;
-  }, [email, password, confirmPassword]);
+  const handleRegister = useCallback(
+    async (value: AuthCredentials) => {
+      const signUpResult = await signUpWithEmail({
+        email: value.email,
+        password: value.password,
+      });
 
-  const handleRegister = useCallback(async () => {
-    const validationError = validateForm();
-    if (validationError) {
-      Alert.alert("Validation Error", validationError);
-      return;
-    }
-
-    setLoading(true);
-    const signUpResult = await signUpWithEmail({ email, password });
-
-    signUpResult.match(
-      () => {
-        console.log("Registration successful!");
-        setLoading(false);
-      },
-      (transformedError) => {
-        Alert.alert("Register Failed", transformedError.message);
-      }
-    );
-  }, [email, password, signUpWithEmail, validateForm]);
+      signUpResult.match(
+        () => {
+          console.log("Registration successful!");
+        },
+        (transformedError) => {
+          Alert.alert("Register Failed", transformedError.message);
+        }
+      );
+    },
+    [form, signUpWithEmail]
+  );
 
   const styles = StyleSheet.create({
     registerButton: {
@@ -72,36 +77,87 @@ export default function Register() {
     <Background>
       <LogoPortrait scale={0.2} style={{ transform: [{ rotate: "60deg" }] }} />
       <Text style={styles.heading}>Create Account</Text>
-      {loading || authLoading ? <ActivityIndicator /> : null}
+      {authLoading ? <ActivityIndicator /> : null}
 
       <View style={{ marginTop: 10 }}>
-        <Input
-          placeholder="Enter your email"
-          value={email}
-          onChangeText={setEmail}
-          autoCapitalize="none"
-        />
+        <form.Field name="email" asyncDebounceMs={300}>
+          {(field) => (
+            <>
+              <Input
+                placeholder="Enter your email"
+                keyboardType="email-address"
+                value={field.state.value != null ? field.state.value : ""}
+                onBlur={field.handleBlur}
+                onChangeText={(text) => field.handleChange(text)}
+                autoCapitalize="none"
+              />
+              <FormFieldInfo field={field} />
+            </>
+          )}
+        </form.Field>
         <View style={{ marginTop: 20 }}>
-          <Input
-            placeholder="Enter your password"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-          />
-
-          <Input
-            placeholder="Confirm your password"
-            value={confirmPassword}
-            onChangeText={setConfirmPassword}
-            secureTextEntry
-          />
-
+          <form.Field name="password" asyncDebounceMs={200}>
+            {(field) => (
+              <>
+                <Input
+                  placeholder="Enter your password"
+                  keyboardType="ascii-capable"
+                  secureTextEntry
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  textContentType="password"
+                  value={
+                    field.state.value != null
+                      ? field.state.value.toString()
+                      : ""
+                  }
+                  onBlur={field.handleBlur}
+                  onChangeText={(text) => field.handleChange(text)}
+                />
+                <FormFieldInfo field={field} />
+              </>
+            )}
+          </form.Field>
+          <form.Field
+            name="confirm_password"
+            validators={{
+              onChangeListenTo: ["password"],
+              onChange: ({ value, fieldApi }) => {
+                if (value !== fieldApi.form.getFieldValue("password")) {
+                  return "Passwords do not match";
+                }
+                return undefined;
+              },
+            }}
+          >
+            {(field) => (
+              <View style={{ marginBottom: 20 }}>
+                <Input
+                  placeholder="Enter password again to confirm"
+                  keyboardType="ascii-capable"
+                  secureTextEntry
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  textContentType="password"
+                  value={field.state.value}
+                  onChangeText={field.handleChange}
+                />
+                {field.state.meta.errors.map((err, index) => (
+                  <Text key={index}>
+                    {typeof err === "string"
+                      ? err
+                      : (err as StandardSchemaV1Issue).message}
+                  </Text>
+                ))}
+              </View>
+            )}
+          </form.Field>
           <Button
             title="Register"
-            disabled={loading || authLoading}
+            disabled={authLoading}
             buttonStyle={styles.registerButton}
             titleStyle={styles.buttonText}
-            onPress={handleRegister}
+            onPress={() => form.handleSubmit()}
           />
         </View>
 

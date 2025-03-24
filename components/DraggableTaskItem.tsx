@@ -17,6 +17,7 @@ import AnimatedCheckView from "./lotties/AnimatedCheckBox";
 import useChecklistItems from "~/hooks/useCheckListQueries";
 import { TaskItemProps } from "~/types";
 import shortenText from "~/utils/shortenText";
+import AnimatedCheckBox from "./lotties/AnimatedCheckBox";
 
 const areEqual = (
   prevProps: Readonly<TaskItemProps>,
@@ -65,7 +66,7 @@ export const TaskItem = memo(
         translateY.value = withSpring(0);
         pressed.value = false;
       })
-      .enabled(isFiltered); // Conditionally enable/disable the gesture
+      .enabled(isFiltered);
 
     const opacity = useSharedValue(1);
     const handleFadeOut = () => {
@@ -85,22 +86,83 @@ export const TaskItem = memo(
     };
     return (
       <Animated.View style={animatedStyle}>
-        <View style={{ backgroundColor: "#4F10A8" }}>
-          <CheckBox checked={task.is_complete} onPress={handleToggleComplete} />
-
-          <AnimatedCheckView height={22} width={22} />
+        <View
+          style={{
+            backgroundColor: "#4F10A8",
+            flexDirection: "row",
+            height: 99,
+            justifyContent: "space-between",
+            alignItems: "baseline",
+            gap: 1,
+            borderRadius: 8,
+            paddingHorizontal: 0,
+            opacity: 1,
+          }}
+        >
+          <Pressable
+            onPress={handleToggleComplete}
+            accessibilityRole="button"
+            accessibilityLabel={`Task: ${task.title}`}
+            style={{
+              alignSelf: "center",
+              height: "33%",
+              justifyContent: "center",
+              padding: 15,
+            }}
+          >
+            <View
+              style={{
+                backgroundColor: "#D1B5F8",
+                padding: -1,
+                borderRadius: 6,
+              }}
+            >
+              <AnimatedCheckBox />
+            </View>
+          </Pressable>
 
           <Pressable
             onPress={onPress}
             accessibilityRole="button"
             accessibilityLabel={`Task: ${task.title}`}
+            style={{
+              flexDirection: "column",
+              flexGrow: 1,
+              alignSelf: "center",
+              height: "100%",
+              justifyContent: "center",
+            }}
           >
-            <View>
-              <Text>{task.title}</Text>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+                paddingVertical: 8,
+              }}
+            >
+              <Text
+                style={{
+                  flexGrow: 1,
+                  color: "white",
+                  fontSize: 16,
+                  fontWeight: "bold",
+                  marginRight: 1,
+                }}
+              >
+                {task.title}
+              </Text>
 
               {taskHasChecklistItems && !isCheckListItemsLoading ? (
                 <>
-                  <Text>{checkListItemsLength}</Text>
+                  <Text
+                    style={{
+                      marginRight: 1,
+                      color: "white",
+                    }}
+                  >
+                    {checkListItemsLength}
+                  </Text>
                   <MaterialIcons
                     name="event-repeat"
                     size={16}
@@ -114,13 +176,26 @@ export const TaskItem = memo(
               )}
             </View>
             {task.notes && (
-              <View style={{ backgroundColor: "#23074B" }}>
+              <View
+                style={{
+                  backgroundColor: "#23074B",
+                  position: "absolute",
+                  bottom: 0,
+                  left: 0,
+                  right: 1,
+                  zIndex: -10,
+                  maxHeight: 18,
+                  borderRadius: 2,
+                  paddingHorizontal: 1,
+                  paddingBottom: 5,
+                }}
+              >
                 <Markdown
                   mergeStyle={false}
                   style={{
                     body: {
                       padding: 0,
-                      marginTop: -5,
+                      marginTop: -11,
                       height: 40,
                       overflow: "hidden",
                       textOverflow: "ellipsis",
@@ -140,7 +215,16 @@ export const TaskItem = memo(
           </Pressable>
           {isFiltered && (
             <GestureDetector gesture={panGesture}>
-              <View>
+              <View
+                style={{
+                  alignSelf: "center",
+                  height: "100%",
+                  width: 12,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginEnd: 10,
+                }}
+              >
                 <FontAwesome5
                   name="grip-vertical"
                   size={18}
