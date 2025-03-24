@@ -2,7 +2,7 @@ import { FontAwesome6 } from "@expo/vector-icons";
 import { Button, Text, useThemeMode } from "@rneui/themed";
 import { router } from "expo-router";
 import React from "react";
-import { View } from "react-native";
+import { Pressable, View } from "react-native";
 interface HeaderProps {
   headerTitle: string;
 }
@@ -11,15 +11,24 @@ const Header: React.FC<HeaderProps> = ({ headerTitle }) => {
   const { mode } = useThemeMode();
   return (
     <View id="header">
-      <View>
-        <Button size="md" onPress={() => router.back()}>
+      <View
+        style={{
+          marginHorizontal: 4,
+          width: 36,
+          height: 36,
+          marginBottom: 12,
+          borderRadius: 36,
+          backgroundColor: mode === "dark" ? "#00173D" : "#FFFAEB",
+        }}
+      >
+        <Pressable style={{ padding: 0 }} onPress={() => router.back()}>
           <FontAwesome6
             name="arrow-left"
             size={20}
             style={{ padding: 8 }}
-            color={mode === "light" ? "#FFFAEB" : "#051824"}
+            color={mode === "dark" ? "#FFFAEB" : "#051824"}
           />
-        </Button>
+        </Pressable>
       </View>
       <View>
         <Text>{headerTitle}</Text>

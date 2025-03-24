@@ -18,6 +18,7 @@ import { useUpdateTask, useDeleteTask } from "@/hooks/useTasksMutations";
 import { useTaskById } from "@/hooks/useTasksQueries";
 import { RepeatPeriod, TaskFormData } from "@/types";
 import createTaskUpdate from "@/utils/createTaskUpdate";
+import Background from "@/components/Background";
 
 const EditTask = () => {
   const router = useRouter();
@@ -136,14 +137,14 @@ const EditTask = () => {
 
   if (loading) {
     return (
-      <View>
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
         <ActivityIndicator size="large" />
       </View>
     );
   }
 
   return (
-    <View>
+    <Background>
       <Header headerTitle={formData.title} />
       <ScrollView>
         <View>
@@ -289,7 +290,7 @@ const EditTask = () => {
           title={updateTaskMutation.isPending ? "Saving..." : "Save"}
         />
       </View>
-    </View>
+    </Background>
   );
 };
 
