@@ -1,4 +1,5 @@
 import { Slider, Text } from "@rneui/themed";
+// TODO replace with react native slider
 import { View } from "react-native";
 
 import { RepeatPeriod } from "~/types";

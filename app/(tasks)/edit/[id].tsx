@@ -19,6 +19,9 @@ import { useTaskById } from "@/hooks/useTasksQueries";
 import { RepeatPeriod, TaskFormData } from "@/types";
 import createTaskUpdate from "@/utils/createTaskUpdate";
 import Background from "@/components/Background";
+import { ErrorBoundary } from "react-error-boundary";
+import ErrorFallback from "@/components/error/ErrorFallback";
+import handleErrorBoundaryError from "@/utils/errorHandler";
 
 const EditTask = () => {
   const router = useRouter();
@@ -172,13 +175,18 @@ const EditTask = () => {
 
             {(formData.repeatPeriod === "Daily" ||
               formData.repeatPeriod === "Monthly") && (
-              <RepeatFrequencySlider
-                period={formData.repeatPeriod}
-                frequency={formData.repeatFrequency}
-                onChange={(value) =>
-                  setFormData((prev) => ({ ...prev, repeatFrequency: value }))
-                }
-              />
+              <ErrorBoundary
+                FallbackComponent={ErrorFallback}
+                onError={handleErrorBoundaryError}
+              >
+                <RepeatFrequencySlider
+                  period={formData.repeatPeriod}
+                  frequency={formData.repeatFrequency}
+                  onChange={(value) =>
+                    setFormData((prev) => ({ ...prev, repeatFrequency: value }))
+                  }
+                />
+              </ErrorBoundary>
             )}
 
             {formData.repeatPeriod === "Weekly" && (
