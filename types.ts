@@ -13,12 +13,12 @@ interface TaskFormData {
   repeatOnWk: DayOfWeek[];
   customStartDate: Date | null;
   isCustomStartDateEnabled: boolean;
-  checklistItems: Array<{
+  checklistItems: {
     id: string;
     content: string;
     isComplete: boolean;
     position: number;
-  }>;
+  }[];
 }
 type Task = Tables<'tasks'>;
 type Item = Tables<'checklistitems'>;

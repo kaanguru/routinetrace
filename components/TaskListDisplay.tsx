@@ -7,15 +7,14 @@ import TaskListEmptyComponent from "~/components/TaskListEmptyComponent";
 import { Tables } from "~/database.types";
 
 interface TaskListDisplayProps {
-  isFiltered: boolean;
-  reorderedTasks: Tables<"tasks">[];
-  renderTaskItem: ({
-    item,
-    index,
-  }: Readonly<{ item: Tables<"tasks">; index: number }>) => React.ReactElement;
-  keyExtractor: (item: Readonly<Tables<"tasks">>) => string;
-  isRefetching: boolean;
-  refetch: () => void;
+  readonly isFiltered: boolean;
+  readonly reorderedTasks: readonly Tables<"tasks">[];
+  readonly renderTaskItem: (
+    params: Readonly<{ item: Tables<"tasks">; index: number }>
+  ) => React.ReactElement;
+  readonly keyExtractor: (item: Readonly<Tables<"tasks">>) => string;
+  readonly isRefetching: boolean;
+  readonly refetch: () => void;
 }
 
 const TaskListHeader = ({ isFiltered }: Readonly<{ isFiltered: boolean }>) => (
@@ -29,6 +28,27 @@ const TaskListHeader = ({ isFiltered }: Readonly<{ isFiltered: boolean }>) => (
   >
     {isFiltered ? "Today's" : "All Tasks"}
   </Text>
+);
+
+const renderListHeader = (
+  tasks: readonly unknown[],
+  isFiltered: boolean
+) => {
+  if (tasks.length === 0) return null;
+  return (
+    <View style={{ paddingVertical: 5, paddingHorizontal: 10 }}>
+      <TaskListHeader isFiltered={isFiltered} />
+    </View>
+  );
+};
+
+const createRefreshControl = (isRefetching: boolean, refetch: () => void) => (
+  <RefreshControl
+    refreshing={isRefetching}
+    onRefresh={refetch}
+    colors={["#000000"]}
+    progressBackgroundColor="#ffffff"
+  />
 );
 
 function TaskListDisplay({
@@ -45,21 +65,8 @@ function TaskListDisplay({
       renderItem={renderTaskItem}
       keyExtractor={keyExtractor}
       ListEmptyComponent={<TaskListEmptyComponent />}
-      ListHeaderComponent={
-        reorderedTasks.length > 0 ? (
-          <View style={{ paddingVertical: 5, paddingHorizontal: 10 }}>
-            <TaskListHeader isFiltered={isFiltered} />
-          </View>
-        ) : null
-      }
-      refreshControl={
-        <RefreshControl
-          refreshing={isRefetching}
-          onRefresh={refetch}
-          colors={["#000000"]}
-          progressBackgroundColor="#ffffff"
-        />
-      }
+      ListHeaderComponent={renderListHeader(reorderedTasks, isFiltered)}
+      refreshControl={createRefreshControl(isRefetching, refetch)}
       estimatedItemSize={113}
       ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
     />

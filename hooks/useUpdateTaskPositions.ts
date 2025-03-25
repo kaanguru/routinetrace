@@ -6,7 +6,7 @@ import { supabase } from '~/utils/supabase';
 export default function useUpdateTaskPositions() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (reorderedTasks: Readonly<Tables<'tasks'>[]>) => {
+    mutationFn: async (reorderedTasks: readonly Tables<'tasks'>[]) => {
       const updates = reorderedTasks.map((task, index) =>
         supabase.from('tasks').update({ position: index }).eq('id', task.id),
       );

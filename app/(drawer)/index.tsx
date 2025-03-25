@@ -1,11 +1,11 @@
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { useThemeMode, FAB } from "@rneui/themed";
-import { Stack, useFocusEffect, useRouter } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import * as R from "ramda";
 import React, { useCallback, useState, useEffect } from "react";
 import { ActivityIndicator, Pressable, View } from "react-native";
 
-import { TaskItem } from "@/components/DraggableTaskItem";
+import DraggableTaskItem from "@/components/DraggableTaskItem";
 import TaskListDisplay from "@/components/TaskListDisplay";
 import Confetti from "@/components/lotties/Confetti";
 import { useSoundContext } from "@/context/SoundContext";
@@ -23,13 +23,50 @@ import isTaskDueToday from "@/utils/tasks/isTaskDueToday";
 import reOrder from "@/utils/tasks/reOrder";
 import Background from "@/components/Background";
 
+// Pure functions for business logic
+const shouldShowLoading = (conditions: boolean[]) => conditions.some(Boolean);
+const getHeaderIconProps = (isFiltered: boolean, mode: string) => ({
+  name: isFiltered ? "calendar-days" : "eye",
+  size: 18,
+  color: mode === "dark" ? "#FFFAEB" : "#051824",
+});
+
+// Component composition
+const HeaderRightButton = ({
+  isFiltered,
+  mode,
+  onPress,
+  hasTasks,
+}: {
+  isFiltered: boolean;
+  mode: string;
+  onPress: () => void;
+  hasTasks: boolean;
+}) =>
+  hasTasks ? (
+    <Pressable onPress={onPress} style={{ marginRight: 16 }}>
+      <FontAwesome6 {...getHeaderIconProps(isFiltered, mode)} />
+    </Pressable>
+  ) : null;
+
+const LoadingView = ({ showConfetti }: { showConfetti: boolean }) => (
+  <View style={{ flex: 1, padding: 16 }}>
+    {showConfetti ? <Confetti /> : <ActivityIndicator size="large" />}
+  </View>
+);
+
 export default function Index() {
-  const [isFiltered, setIsFiltered] = useState<boolean>(true);
-  const [showConfetti, setShowConfetti] = useState<boolean>(false);
+  // State management
+  const [isFiltered, setIsFiltered] = useState(true);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [reorderedTasks, setReorderedTasks] = useState<Task[]>([]);
+
+  // Hooks
   const { isSoundEnabled } = useSoundContext();
   const { mode } = useThemeMode();
-
   const router = useRouter();
+
+  // Data fetching
   const {
     data: tasks = [],
     isLoading,
@@ -43,18 +80,25 @@ export default function Index() {
   } = useUpdateTaskPositions();
   const { playSound } = useTaskCompleteSound();
   const toggleComplete = useToggleComplete();
-  const {
-    data: user,
-    isLoading: isLoadingUser,
-    isError: isErrorUser,
-  } = useUser();
+  const { data: user, isLoading: isLoadingUser } = useUser();
   const {
     mutate: updateHealthAndHappiness,
     isPending: isCreatingHealthAndHappiness,
   } = useUpdateHealthAndHappiness();
   const { data: healthAndHappiness } = useHealthAndHappinessQuery(user?.id);
-  const [reorderedTasks, setReorderedTasks] = useState<Task[]>([]);
 
+  // Derived state
+  const loadingConditions = [
+    isLoading,
+    isRefetching,
+    isUpdatingTaskPositions,
+    isLoadingUser,
+    isCreatingHealthAndHappiness,
+  ];
+  const showLoading = shouldShowLoading(loadingConditions);
+  const hasTasks = reorderedTasks.length > 0;
+
+  // Effects
   useEffect(() => {
     const newReorderedTasks = isFiltered ? filteredTasks : tasks;
     if (!R.equals(reorderedTasks, newReorderedTasks)) {
@@ -62,25 +106,23 @@ export default function Index() {
     }
   }, [filteredTasks, tasks, isFiltered, reorderedTasks]);
 
+  // Event handlers
   const handleReorder = useCallback(
     (from: number, to: number) => {
       const newTasks = reOrder(from, to, [...reorderedTasks]);
       setReorderedTasks(newTasks);
-
       updateTaskPositionsMutation(newTasks);
     },
     [reorderedTasks, updateTaskPositionsMutation]
   );
 
-  const handleFilterTodayPress = useCallback(() => {
-    setIsFiltered((prevIsFiltered) => !prevIsFiltered);
-  }, []);
+  const handleFilterTodayPress = useCallback(
+    () => setIsFiltered((prev) => !prev),
+    []
+  );
 
   const handleOnToggleComplete = useCallback(
-    ({
-      taskID,
-      isComplete,
-    }: Readonly<{ taskID: number; isComplete: boolean }>) => {
+    ({ taskID, isComplete }: { taskID: number; isComplete: boolean }) => {
       toggleComplete.mutate(
         { taskID, isComplete },
         {
@@ -92,12 +134,8 @@ export default function Index() {
               happiness:
                 (healthAndHappiness?.happiness ?? 0) + genRandomInt(2, 8),
             });
-            if (isSoundEnabled) {
-              playSound();
-            }
-            setTimeout(() => {
-              setShowConfetti(false);
-            }, 600);
+            isSoundEnabled && playSound();
+            setTimeout(() => setShowConfetti(false), 200);
           },
         }
       );
@@ -112,37 +150,33 @@ export default function Index() {
     ]
   );
 
-  useFocusEffect(
-    useCallback(() => {
-      refetch();
-    }, [refetch])
-  );
+  const handleFABPress = useCallback(() => {
+    const shouldShowWarning = tasks.filter(isTaskDueToday).length > 8;
+    router.push(
+      shouldShowWarning ? "/(tasks)/soManyTasksWarning" : "/(tasks)/create-task"
+    );
+  }, [router, tasks]);
 
   const renderTaskItem = useCallback(
-    ({ item, index }: Readonly<{ item: Task; index: number }>) => (
-      <TaskItem
+    ({ item, index }: { item: Task; index: number }) => (
+      <DraggableTaskItem
         task={item}
         index={index}
-        onPress={() => {
+        onPress={() =>
           router.push({
             pathname: "/(tasks)/[id]",
             params: { id: item.id.toString() },
-          });
-        }}
+          })
+        }
         onReorder={handleReorder}
         onToggleComplete={handleOnToggleComplete}
-        isFiltered={isFiltered} // Pass the isFiltered state
+        isFiltered={isFiltered}
       />
     ),
     [router, handleReorder, handleOnToggleComplete, isFiltered]
   );
 
-  const keyExtractor = useCallback(
-    (item: Readonly<Task>) => item.id.toString(),
-    []
-  );
-
-  const showLoading = isLoading || isRefetching || showConfetti;
+  const keyExtractor = useCallback((item: Task) => item.id.toString(), []);
 
   return (
     <>
@@ -160,72 +194,31 @@ export default function Index() {
             fontWeight: "400",
           },
           headerRight: () => (
-            <>
-              {reorderedTasks.length > 0 && (
-                <Pressable
-                  onPress={handleFilterTodayPress}
-                  style={{ marginRight: 16 }}
-                >
-                  {isFiltered ? (
-                    <FontAwesome6
-                      name="calendar-days"
-                      size={18}
-                      color={mode === "dark" ? "#FFFAEB" : "#051824"}
-                    />
-                  ) : (
-                    <FontAwesome6
-                      name="eye"
-                      size={18}
-                      color={mode === "dark" ? "#FFFAEB" : "#051824"}
-                    />
-                  )}
-                </Pressable>
-              )}
-            </>
+            <HeaderRightButton
+              isFiltered={isFiltered}
+              mode={mode}
+              onPress={handleFilterTodayPress}
+              hasTasks={hasTasks}
+            />
           ),
         }}
       />
-      <Background
-        style={{
-          flex: 1,
-          padding: 16,
-        }}
-      >
+      <Background style={{ flex: 1, padding: 16 }}>
         {showLoading ? (
-          <View
-            style={{
-              flex: 1,
-              padding: 16,
-            }}
-          >
-            {showConfetti ? <Confetti /> : <ActivityIndicator size="large" />}
-          </View>
+          <LoadingView showConfetti={showConfetti} />
         ) : (
-          <>
-            <TaskListDisplay
-              isFiltered={isFiltered}
-              reorderedTasks={reorderedTasks}
-              renderTaskItem={renderTaskItem}
-              keyExtractor={keyExtractor}
-              isRefetching={isRefetching}
-              refetch={refetch}
-            />
-          </>
+          <TaskListDisplay
+            isFiltered={isFiltered}
+            reorderedTasks={reorderedTasks}
+            renderTaskItem={renderTaskItem}
+            keyExtractor={keyExtractor}
+            isRefetching={isRefetching}
+            refetch={refetch}
+          />
         )}
         <FAB
-          style={{
-            position: "absolute",
-            margin: 16,
-            right: 0,
-            bottom: 0,
-          }}
-          onPress={() => {
-            if (tasks.filter(isTaskDueToday).length > 8) {
-              router.push("/(tasks)/soManyTasksWarning");
-            } else {
-              router.push("/(tasks)/create-task");
-            }
-          }}
+          style={{ position: "absolute", margin: 16, right: 0, bottom: 0 }}
+          onPress={handleFABPress}
         >
           <FontAwesome6 name="add" size={24} color="#3D001B" />
         </FAB>

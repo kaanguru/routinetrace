@@ -15,7 +15,7 @@ export default function useTaskCompletionHistory(taskID: number) {
       await queryClient.cancelQueries({ queryKey: ['taskCompletionHistory', taskID] });
       const previousHistory = queryClient.getQueryData(['taskCompletionHistory', taskID]);
       queryClient.setQueryData(['taskCompletionHistory', taskID], (old: unknown) => [
-        ...(old as Array<unknown>),
+        ...(old as unknown[]),
         { task_id: taskID, completed_at: new Date() },
       ]);
       return { previousHistory };

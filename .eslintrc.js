@@ -3,7 +3,7 @@ module.exports = {
   extends: "expo",
   plugins: ["neverthrow"],
   rules: {
-    "neverthrow/must-use-result": "warning",
+    "neverthrow/must-use-result": "warn",
   },
   parser: "@typescript-eslint/parser",
   parserOptions: {
