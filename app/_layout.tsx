@@ -7,7 +7,7 @@ import themeStyles from "@/theme/themeStyles";
 import { useColorScheme } from "react-native";
 import * as Sentry from "@sentry/react-native";
 import { ErrorBoundary } from "react-error-boundary";
-import ErrorFallback from "@/components/error/ErrorFallback";
+import GlobalErrorFallback from "@/components/error/GlobalErrorFallback";
 import handleErrorBoundaryError from "@/utils/errorHandler";
 
 Sentry.init({
@@ -27,7 +27,7 @@ export default Sentry.wrap(function RootLayout() {
   return (
     <QueryClientProvider client={queryClient}>
       <ErrorBoundary
-        FallbackComponent={ErrorFallback}
+        FallbackComponent={GlobalErrorFallback}
         onError={handleErrorBoundaryError}
       >
         <ThemeProvider theme={theme}>

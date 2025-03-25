@@ -1,3 +1,4 @@
+/* eslint-disable neverthrow/must-use-result */
 import { ErrorInfo } from "react";
 import { err, Result } from "neverthrow";
 import reportError from "@/utils/reportError";
