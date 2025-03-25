@@ -203,7 +203,7 @@ export default function Index() {
           ),
         }}
       />
-      <Background style={{ flex: 1, padding: 16 }}>
+      <Background style={{ flex: 1, padding: 0 }}>
         {showLoading ? (
           <LoadingView showConfetti={showConfetti} />
         ) : (
@@ -217,10 +217,29 @@ export default function Index() {
           />
         )}
         <FAB
-          style={{ position: "absolute", margin: 16, right: 0, bottom: 0 }}
+          style={{
+            position: "absolute",
+            margin: 16,
+            right: 0,
+            bottom: 0,
+            boxShadow: [
+              {
+                offsetX: -3,
+                offsetY: 3,
+                blurRadius: 15,
+                color: "#FF006E",
+              },
+              {
+                offsetX: 5,
+                offsetY: -5,
+                blurRadius: 15,
+                color: "#6A18DC",
+              },
+            ],
+          }}
           onPress={handleFABPress}
         >
-          <FontAwesome6 name="add" size={24} color="#3D001B" />
+          <FontAwesome6 name="add" size={24} color="#FF99C5" />
         </FAB>
       </Background>
     </>

@@ -7,7 +7,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { ActivityIndicator, Alert, ScrollView, View, Text } from "react-native";
 
 import ChecklistSection from "@/components/ChecklistSection";
-import { FormInput } from "@/components/FormInput";
+import { FormInput } from "@/components/TaskFormInput";
 import Header from "@/components/Header";
 import { RepeatFrequencySlider } from "@/components/RepeatFrequencySlider";
 import RepeatPeriodSelector from "@/components/RepeatPeriodSelector";

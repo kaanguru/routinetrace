@@ -51,7 +51,7 @@ export default function Login() {
       );
       setLoading(false);
     },
-    [form, signInWithEmail]
+    [signInWithEmail]
   );
 
   return (

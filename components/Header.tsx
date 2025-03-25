@@ -10,9 +10,18 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ headerTitle }) => {
   const { mode } = useThemeMode();
   return (
-    <View id="header">
+    <View
+      id="header"
+      style={{
+        flexDirection: "row",
+        alignItems: "center",
+        marginBottom: 5,
+        marginTop: 5,
+      }}
+    >
       <View
         style={{
+          alignSelf: "flex-start",
           marginHorizontal: 4,
           width: 36,
           height: 36,
@@ -30,9 +39,9 @@ const Header: React.FC<HeaderProps> = ({ headerTitle }) => {
           />
         </Pressable>
       </View>
-      <View>
-        <Text>{headerTitle}</Text>
-      </View>
+      <Text h4 style={{ flexGrow: 1, marginEnd: 36, textAlign: "center" }}>
+        {headerTitle}
+      </Text>
     </View>
   );
 };

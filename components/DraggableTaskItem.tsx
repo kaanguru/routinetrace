@@ -15,6 +15,7 @@ import useChecklistItems from "~/hooks/useCheckListQueries";
 import { TaskItemProps } from "~/types";
 import shortenText from "~/utils/shortenText";
 import AnimatedCheckBox from "./lotties/AnimatedCheckBox";
+import { LinearGradient } from "expo-linear-gradient";
 
 // Constants
 const ITEM_HEIGHT = 94;
@@ -30,9 +31,10 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "baseline",
     gap: 1,
-    borderRadius: 8,
+    borderRadius: 10,
     paddingHorizontal: 0,
     opacity: 1,
+    elevation: 10,
   },
   checkboxContainer: {
     alignSelf: "center",
@@ -68,7 +70,7 @@ const styles = StyleSheet.create({
   notesContainer: {
     backgroundColor: "#23074B",
     position: "absolute",
-    bottom: 0,
+    bottom: 2,
     left: 0,
     right: 5,
     zIndex: -10,
@@ -114,6 +116,8 @@ const useDragAnimation = (
       isDragging.value = true;
     })
     .onUpdate((event) => {
+      //  to bring the item to the front while dragging and scale it up
+
       translateY.value = event.translationY;
     })
     .onEnd(() => {
@@ -142,6 +146,8 @@ const useFadeAnimation = (callback: () => void) => {
 
   const animatedStyle = useAnimatedStyle(() => ({
     opacity: opacity.value,
+    transform: [{ scale: opacity.value }],
+    height: opacity.value * ITEM_HEIGHT,
   }));
 
   return { handleFadeOut, animatedStyle };
@@ -174,64 +180,69 @@ const DraggableTaskItem = memo(function TaskItem({
 
   return (
     <Animated.View style={combinedStyle}>
-      <View style={styles.container}>
-        <Pressable
-          onPress={handleFadeOut}
-          accessibilityRole="button"
-          accessibilityLabel={`Task: ${task.title}`}
-          style={styles.checkboxContainer}
+      <View>
+        <LinearGradient
+          colors={["#6A18DC", "#5511b4", "#430e8f", "#350A71"]}
+          style={styles.container}
         >
-          <View style={styles.checkboxBackground}>
-            <AnimatedCheckBox />
-          </View>
-        </Pressable>
+          <Pressable
+            onPress={handleFadeOut}
+            accessibilityRole="button"
+            accessibilityLabel={`Task: ${task.title}`}
+            style={styles.checkboxContainer}
+          >
+            <View style={styles.checkboxBackground}>
+              <AnimatedCheckBox />
+            </View>
+          </Pressable>
 
-        <Pressable
-          onPress={onPress}
-          accessibilityRole="button"
-          accessibilityLabel={`Task: ${task.title}`}
-          style={styles.contentContainer}
-        >
-          <View style={styles.titleContainer}>
-            <Text style={styles.titleText}>{task.title}</Text>
+          <Pressable
+            onPress={onPress}
+            accessibilityRole="button"
+            accessibilityLabel={`Task: ${task.title}`}
+            style={styles.contentContainer}
+          >
+            <View style={styles.titleContainer}>
+              <Text style={styles.titleText}>{task.title}</Text>
 
-            {taskHasChecklistItems && !isCheckListItemsLoading ? (
-              <>
-                <Text style={{ marginRight: 1, color: "white" }}>
-                  {checkListItemsLength}
-                </Text>
-                <MaterialIcons
-                  name="event-repeat"
-                  size={16}
-                  color={mode === "light" ? "#FFFAEB" : "#051824"}
-                />
-              </>
-            ) : (
-              isCheckListItemsLoading && (
-                <ActivityIndicator size="small" color="#FF006E" />
-              )
+              {taskHasChecklistItems && !isCheckListItemsLoading ? (
+                <>
+                  <Text style={{ marginRight: 1, color: "white" }}>
+                    {checkListItemsLength}
+                  </Text>
+                  <MaterialIcons
+                    name="event-repeat"
+                    size={16}
+                    color={mode === "light" ? "#FFFAEB" : "#051824"}
+                  />
+                </>
+              ) : (
+                isCheckListItemsLoading && (
+                  <ActivityIndicator size="small" color="#FF006E" />
+                )
+              )}
+            </View>
+
+            {task.notes && (
+              <View style={styles.notesContainer}>
+                <Text style={styles.notesText}>{shortenText(task.notes)}</Text>
+              </View>
             )}
-          </View>
+          </Pressable>
 
-          {task.notes && (
-            <View style={styles.notesContainer}>
-              <Text style={styles.notesText}>{shortenText(task.notes)}</Text>
-            </View>
+          {isFiltered && (
+            <GestureDetector gesture={panGesture}>
+              <View style={styles.dragHandleContainer}>
+                <FontAwesome5
+                  name="grip-vertical"
+                  size={18}
+                  color={mode === "light" ? "#FFFAEB" : "#051824"}
+                  style={styles.dragHandleIcon}
+                />
+              </View>
+            </GestureDetector>
           )}
-        </Pressable>
-
-        {isFiltered && (
-          <GestureDetector gesture={panGesture}>
-            <View style={styles.dragHandleContainer}>
-              <FontAwesome5
-                name="grip-vertical"
-                size={18}
-                color={mode === "light" ? "#FFFAEB" : "#051824"}
-                style={styles.dragHandleIcon}
-              />
-            </View>
-          </GestureDetector>
-        )}
+        </LinearGradient>
       </View>
     </Animated.View>
   );

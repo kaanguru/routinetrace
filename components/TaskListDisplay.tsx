@@ -30,13 +30,10 @@ const TaskListHeader = ({ isFiltered }: Readonly<{ isFiltered: boolean }>) => (
   </Text>
 );
 
-const renderListHeader = (
-  tasks: readonly unknown[],
-  isFiltered: boolean
-) => {
+const renderListHeader = (tasks: readonly unknown[], isFiltered: boolean) => {
   if (tasks.length === 0) return null;
   return (
-    <View style={{ paddingVertical: 5, paddingHorizontal: 10 }}>
+    <View style={{ paddingVertical: 5, paddingHorizontal: 0 }}>
       <TaskListHeader isFiltered={isFiltered} />
     </View>
   );
@@ -51,7 +48,7 @@ const createRefreshControl = (isRefetching: boolean, refetch: () => void) => (
   />
 );
 
-function TaskListDisplay({
+export default function TaskListDisplay({
   isFiltered,
   reorderedTasks,
   renderTaskItem,
@@ -72,5 +69,3 @@ function TaskListDisplay({
     />
   );
 }
-
-export default TaskListDisplay;

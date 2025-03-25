@@ -107,6 +107,7 @@ create index IF not exists idx_task_completion_history_task_id on public.task_co
 - Use funtional paradigm for all components and hooks.
 - No Mutations
 - Use "function" keyword for pure functions(not an Asynchronous function and does not have side effects).
+- Use "function" keyword for helper pure functions and move them on end of file.
 - Require function parameters to be typed as certain immutability
 - Don't use syntax that mutates existing objects and arrays via assignment to or deletion of their properties/elements. Use **Readonly** like `export default function Root({ children }: Readonly<{ children: React.ReactNode }>) {...}`
 - Use `const` instead of `let`

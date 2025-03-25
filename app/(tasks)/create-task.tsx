@@ -5,7 +5,7 @@ import { useCallback, useState } from "react";
 import { View, Text, Alert, ScrollView } from "react-native";
 
 import ChecklistSection from "@/components/ChecklistSection";
-import { FormInput } from "@/components/FormInput";
+import TaskFormInput from "@/components/TaskFormInput";
 import Header from "@/components/Header";
 import { RepeatFrequencySlider } from "@/components/RepeatFrequencySlider";
 import RepeatPeriodSelector from "@/components/RepeatPeriodSelector";
@@ -16,6 +16,7 @@ import { useCreateTask } from "@/hooks/useTasksMutations";
 import useUser from "@/hooks/useUser";
 import { RepeatPeriod, TaskFormData } from "@/types";
 import genRandomInt from "@/utils/genRandomInt";
+import Background from "@/components/Background";
 
 export default function CreateTask() {
   const router = useRouter();
@@ -94,11 +95,15 @@ export default function CreateTask() {
     []
   );
   return (
-    <View>
+    <Background>
       <Header headerTitle="Create Task" />
-      <ScrollView>
-        <View>
-          <FormInput
+      <ScrollView style={{ marginVertical: 0, paddingHorizontal: 12 }}>
+        <View
+          style={{
+            gap: 5,
+          }}
+        >
+          <TaskFormInput
             title={formData.title}
             notes={formData.notes}
             setTitle={(title: string) =>
@@ -230,6 +235,6 @@ export default function CreateTask() {
           title={isCreatingTask ? "Creating..." : "Create"}
         />
       </View>
-    </View>
+    </Background>
   );
 }

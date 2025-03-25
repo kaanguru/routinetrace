@@ -1,5 +1,5 @@
-import { Slider, Text } from "@rneui/themed";
-// TODO replace with react native slider
+import { Text } from "@rneui/themed";
+import Slider from "@react-native-community/slider";
 import { View } from "react-native";
 
 import { RepeatPeriod } from "~/types";
@@ -26,7 +26,8 @@ export const RepeatFrequencySlider = ({
           minimumValue={1}
           maximumValue={period === "Monthly" ? 6 : 15}
           onValueChange={onChange}
-          orientation="horizontal"
+          style={{ width: 200, height: 40 }}
+          step={1}
         />
       </View>
     </View>
