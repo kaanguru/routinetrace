@@ -1,8 +1,6 @@
 import { Input } from "@rneui/themed";
 import { View } from "react-native";
 
-import MarkdownInput from "./MarkdownInput";
-
 import { FormInputProps } from "@/types";
 
 export function FormInput({
@@ -16,7 +14,7 @@ export function FormInput({
       <Input placeholder="Task title" value={title} onChangeText={setTitle} />
 
       <View>
-        <MarkdownInput notes={notes} setNotes={setNotes} />
+        <Input placeholder="Task notes" value={notes} onChangeText={setNotes} />
       </View>
     </>
   );

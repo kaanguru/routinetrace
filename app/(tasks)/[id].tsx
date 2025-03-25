@@ -22,7 +22,6 @@ import {
   View,
   Pressable,
 } from "react-native";
-import Markdown from "react-native-markdown-display";
 
 import Header from "@/components/Header";
 import useChecklistItemMutations from "@/hooks/useCheckListMutations";
@@ -178,7 +177,7 @@ export default function TaskDetailPage() {
             <Text>{task.title}</Text>
             {task.notes && (
               <View>
-                <Markdown>{task.notes}</Markdown>
+                <Text>{task.notes}</Text>
               </View>
             )}
             <Card.Divider />

@@ -3,7 +3,6 @@ import { Text, CheckBox, useThemeMode } from "@rneui/themed";
 import { memo } from "react";
 import { ActivityIndicator, Pressable, View } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
-import Markdown from "react-native-markdown-display";
 import Animated, {
   runOnJS,
   useAnimatedStyle,
@@ -182,7 +181,7 @@ export const TaskItem = memo(
                   position: "absolute",
                   bottom: 0,
                   left: 0,
-                  right: 1,
+                  right: 5,
                   zIndex: -10,
                   maxHeight: 18,
                   borderRadius: 2,
@@ -190,26 +189,16 @@ export const TaskItem = memo(
                   paddingBottom: 5,
                 }}
               >
-                <Markdown
-                  mergeStyle={false}
+                <Text
                   style={{
-                    body: {
-                      padding: 0,
-                      marginTop: -11,
-                      height: 40,
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                    },
-                    text: {
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      color: "#fff",
-                      fontSize: 12,
-                    },
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    color: "#fff",
+                    fontSize: 12,
                   }}
                 >
                   {shortenText(task.notes)}
-                </Markdown>
+                </Text>
               </View>
             )}
           </Pressable>
@@ -219,16 +208,18 @@ export const TaskItem = memo(
                 style={{
                   alignSelf: "center",
                   height: "100%",
-                  width: 12,
+                  width: 25,
                   alignItems: "center",
                   justifyContent: "center",
-                  marginEnd: 10,
                 }}
               >
                 <FontAwesome5
                   name="grip-vertical"
                   size={18}
                   color={mode === "light" ? "#FFFAEB" : "#051824"}
+                  style={{
+                    marginEnd: 10,
+                  }}
                 />
               </View>
             </GestureDetector>
