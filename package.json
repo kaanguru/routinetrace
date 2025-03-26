@@ -7,12 +7,17 @@
     "android": "expo run:android",
     "format": "eslint \"**/*.{js,jsx,ts,tsx}\" --fix && prettier \"**/*.{js,jsx,ts,tsx,json}\" --write",
     "ios": "expo run:ios",
+    "prebuild": "expo prebuild -p android",
+    "build": "eas build:run -p android",
+    "build:dev": "eas build -p android --profile development",
+    "build:pre": "eas build -p android --profile preview",
     "lint": "expo lint",
     "logs": "react-native log-android",
     "start": "expo start --android -c",
     "start.c": "expo start --android",
     "test": "jest --watchAll",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "update:sdk": "expo install expo@latest && expo install --fix"
   },
   "jest": {
     "preset": "jest-expo"

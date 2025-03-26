@@ -18,7 +18,7 @@ import AnimatedCheckBox from "./lotties/AnimatedCheckBox";
 import { LinearGradient } from "expo-linear-gradient";
 
 // Constants
-const ITEM_HEIGHT = 94;
+const ITEM_HEIGHT = 99;
 const MAX_INDEX = 20;
 const ANIMATION_DURATION = 300;
 
@@ -104,20 +104,21 @@ const areEqual = (prevProps: TaskItemProps, nextProps: TaskItemProps) =>
   prevProps.task.is_complete === nextProps.task.is_complete &&
   prevProps.index === nextProps.index;
 
+// components/DraggableTaskItem.tsx
 const useDragAnimation = (
   index: number,
   onReorder: (from: number, to: number) => void
 ) => {
   const translateY = useSharedValue(0);
   const isDragging = useSharedValue(false);
+  const zIndex = useSharedValue(0);
 
   const panGesture = Gesture.Pan()
     .onStart(() => {
       isDragging.value = true;
+      zIndex.value = 9999;
     })
     .onUpdate((event) => {
-      //  to bring the item to the front while dragging and scale it up
-
       translateY.value = event.translationY;
     })
     .onEnd(() => {
@@ -126,11 +127,16 @@ const useDragAnimation = (
         runOnJS(onReorder)(index, newIndex);
       }
       translateY.value = withSpring(0);
+      zIndex.value = 0;
+      isDragging.value = false;
     });
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: translateY.value }],
-    zIndex: isDragging.value ? 1 : 0,
+    zIndex: zIndex.value,
+    borderWidth: isDragging.value ? 2 : 0,
+    borderColor: isDragging.value ? "#FF99C5" : "transparent",
+    borderRadius: isDragging.value ? 10 : 0,
   }));
 
   return { panGesture, animatedStyle };

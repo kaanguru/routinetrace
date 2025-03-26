@@ -21,7 +21,7 @@ import useInitializeDailyTasks from "~/hooks/useInitializeDailyTasks";
 import { isFirstLaunchToday } from "~/utils/isFirstLaunchToday";
 import { isFirstVisit } from "~/utils/isFirstVisit";
 import { supabase } from "~/utils/supabase";
-import { Result, ok, err, errAsync, ResultAsync } from "neverthrow";
+import { Result, ok } from "neverthrow";
 import reportError from "@/utils/reportError";
 
 const InitializationContext = createContext<
