@@ -41,5 +41,13 @@ ios/*
 web-build/*
 dist/*
 .env
-
 .env.local
+
+.yarn/sdks/
+.pnp.cjs.d # If it exists
+
+# Yarn cache (usually safe to commit, but can be ignored if you want to save space)
+# .yarn/cache/
+
+# Yarn build state (commit install-state.gz instead)
+.yarn/build-state.yml
