@@ -4,9 +4,9 @@ import Reactotron, {
   trackGlobalErrors,
 } from "reactotron-react-native";
 
-Reactotron.configure() // controls connection & communication settings
-  .useReactNative() // add all built-in react native plugins
+Reactotron.configure()
+  .useReactNative()
   .use(asyncStorage())
   .use(openInEditor())
   .use(trackGlobalErrors())
-  .connect(); // let's connect!
+  .connect();
