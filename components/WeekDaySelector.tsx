@@ -17,10 +17,16 @@ const WeekdaySelector = ({
     if (selectedDays.length === 0) {
       onDayToggle(currentDay, true);
     }
-  }, []);
+  }, [onDayToggle, selectedDays.length]);
 
   return (
-    <View>
+    <View
+      style={{
+        flexDirection: "row",
+        alignItems: "flex-start",
+        flexWrap: "wrap",
+      }}
+    >
       {(["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"] as DayOfWeek[]).map(
         (day) => (
           <CheckBox

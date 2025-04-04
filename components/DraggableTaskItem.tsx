@@ -20,13 +20,13 @@ import { LinearGradient } from "expo-linear-gradient";
 // Constants
 const ITEM_HEIGHT = 99;
 const MAX_INDEX = 20;
-const ANIMATION_DURATION = 300;
+const ANIMATION_DURATION = 600;
 
 // Styles
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#4F10A8",
-    flexDirection: "row",
+    flex: 1,
+    flexDirection: "column",
     height: 99,
     justifyContent: "space-between",
     alignItems: "baseline",
@@ -36,6 +36,14 @@ const styles = StyleSheet.create({
     opacity: 1,
     elevation: 10,
   },
+  gradientContainer: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 10,
+    borderRadius: 10,
+  },
   checkboxContainer: {
     alignSelf: "center",
     height: "33%",
@@ -43,9 +51,9 @@ const styles = StyleSheet.create({
     padding: 15,
   },
   checkboxBackground: {
-    backgroundColor: "#D1B5F8",
+    backgroundColor: "#FFFCF4",
     padding: -1,
-    borderRadius: 6,
+    borderRadius: 9,
   },
   contentContainer: {
     flexDirection: "column",
@@ -116,7 +124,7 @@ const useDragAnimation = (
   const panGesture = Gesture.Pan()
     .onStart(() => {
       isDragging.value = true;
-      zIndex.value = 9999;
+      zIndex.value = 100;
     })
     .onUpdate((event) => {
       translateY.value = event.translationY;
@@ -132,8 +140,11 @@ const useDragAnimation = (
     });
 
   const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: translateY.value }],
-    zIndex: zIndex.value,
+    transform: [
+      { translateY: translateY.value },
+      { scale: isDragging.value ? 1.05 : 1 },
+    ],
+    zIndex: isDragging ? 999 : 0,
     borderWidth: isDragging.value ? 2 : 0,
     borderColor: isDragging.value ? "#FF99C5" : "transparent",
     borderRadius: isDragging.value ? 10 : 0,
@@ -186,10 +197,10 @@ const DraggableTaskItem = memo(function TaskItem({
 
   return (
     <Animated.View style={combinedStyle}>
-      <View>
+      <View style={styles.container}>
         <LinearGradient
           colors={["#6A18DC", "#5511b4", "#430e8f", "#350A71"]}
-          style={styles.container}
+          style={styles.gradientContainer}
         >
           <Pressable
             onPress={handleFadeOut}

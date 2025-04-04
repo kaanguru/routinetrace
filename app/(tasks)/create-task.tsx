@@ -96,7 +96,7 @@ export default function CreateTask() {
   );
   return (
     <Background>
-      <Header headerTitle="Create Task" />
+      <Header headerTitle="➕" />
       <ScrollView style={{ marginVertical: 0, paddingHorizontal: 12 }}>
         <View
           style={{
@@ -135,9 +135,8 @@ export default function CreateTask() {
           )}
 
           {formData.repeatPeriod === "Weekly" && (
-            <View>
-              <View>
-                <Text>Repeat Every</Text>
+            <View style={{ marginTop: 10, padding: 10 }}>
+              <View style={{ flexDirection: "row", alignItems: "flex-start" }}>
                 <RepeatFrequencySlider
                   period={formData.repeatPeriod}
                   frequency={formData.repeatFrequency}
@@ -145,9 +144,6 @@ export default function CreateTask() {
                     setFormData((prev) => ({ ...prev, repeatFrequency: value }))
                   }
                 />
-              </View>
-              <View>
-                <Text>Repeat on</Text>
               </View>
               <WeekdaySelector
                 selectedDays={formData.repeatOnWk}
@@ -177,13 +173,14 @@ export default function CreateTask() {
                 checked={formData.isCustomStartDateEnabled}
                 title="Custom Start Date"
                 onPress={() => {
-                  return (isSelected: boolean) => {
-                    setFormData((prev) => ({
+                  setFormData((prev) => {
+                    const nextIsSelected = !prev.isCustomStartDateEnabled; // Calculate the next state
+                    return {
                       ...prev,
-                      isCustomStartDateEnabled: isSelected,
-                      customStartDate: isSelected ? new Date() : null,
-                    }));
-                  };
+                      isCustomStartDateEnabled: nextIsSelected,
+                      customStartDate: nextIsSelected ? new Date() : null,
+                    };
+                  });
                 }}
               />
             </View>
