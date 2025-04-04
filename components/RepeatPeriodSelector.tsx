@@ -1,10 +1,9 @@
-// components/RepeatPeriodSelector.tsx
 import { FontAwesome6 } from "@expo/vector-icons";
-import { BottomSheet, Button, ListItem, Text } from "@rneui/themed";
+import { BottomSheet, Button, ListItem } from "@rneui/themed";
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 
-import { RepeatPeriod } from "~/types"; // Assuming RepeatPeriod type is defined in ~/types
+import { RepeatPeriod } from "~/types";
 
 interface RepeatPeriodSelectorProps {
   repeatPeriod: RepeatPeriod | "" | null;
@@ -31,15 +30,14 @@ function RepeatPeriodSelector({
 
   return (
     <View style={styles.container}>
-      {/* Use RNE Button to trigger the BottomSheet */}
       <Button
-        type="outline" // Or "solid", "clear" depending on desired style
+        type="outline"
         buttonStyle={styles.pickerButton}
         titleStyle={styles.pickerButtonTitle}
         onPress={() => setIsVisible(true)}
-        iconRight // Place icon to the right
+        iconRight
         icon={
-          <FontAwesome6 name="circle-chevron-right" size={20} color="#00173D" /> // Use project's Black color
+          <FontAwesome6 name="circle-chevron-right" size={20} color="#00173D" />
         }
       >
         {selectedLabel}
@@ -48,8 +46,6 @@ function RepeatPeriodSelector({
       <BottomSheet
         isVisible={isVisible}
         onBackdropPress={() => setIsVisible(false)}
-        // Optional: Add styling to the bottom sheet container if needed
-        // containerStyle={{ backgroundColor: 'rgba(0.5, 0.25, 0, 0.2)' }}
       >
         {repeatOptions.map((option, index) => (
           <ListItem
@@ -73,7 +69,6 @@ function RepeatPeriodSelector({
             )}
           </ListItem>
         ))}
-        {/* Optional: Add a cancel button */}
         <ListItem
           key="cancel"
           containerStyle={styles.cancelButton}
@@ -95,34 +90,33 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   pickerButton: {
-    // Adjust styling for RNE Button
-    justifyContent: "space-between", // Pushes title and icon apart
-    borderColor: "#FEBA9A", // red-300
+    justifyContent: "space-between",
+    borderColor: "#FEBA9A",
     borderWidth: 0.25,
     borderRadius: 8,
-    backgroundColor: "#FFFAEB", // White
+    backgroundColor: "#FFFAEB",
     paddingHorizontal: 15,
     paddingVertical: 12,
   },
   pickerButtonTitle: {
-    color: "#00173D", // Black
-    fontFamily: "Ubuntu_400Regular", // Use project font
+    color: "#00173D",
+    fontFamily: "Ubuntu_400Regular",
     fontSize: 16,
   },
   selectedOption: {
-    backgroundColor: "#FFEFC2", // amber-100 for subtle highlight
+    backgroundColor: "#FFEFC2",
   },
   optionText: {
     fontSize: 16,
     fontFamily: "Ubuntu_400Regular",
-    color: "#00173D", // Black
+    color: "#00173D",
   },
   cancelButton: {
-    backgroundColor: "#FEBA9A", // red-300
+    backgroundColor: "#FEBA9A",
   },
   cancelButtonText: {
     textAlign: "center",
-    color: "#FFFAEB", // White
+    color: "#FFFAEB",
     fontFamily: "Ubuntu_500Medium",
     fontSize: 16,
   },

@@ -84,7 +84,7 @@ export default function ChecklistSection({
       <ScrollView
         id="checklist-section"
         style={{
-          height: ITEM_HEIGHT * items.length,
+          height: ITEM_HEIGHT * items.length + 5,
         }}
       >
         {items.map((item, index) => (

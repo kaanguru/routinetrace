@@ -223,7 +223,14 @@ const DraggableTaskItem = memo(function TaskItem({
               <Text style={styles.titleText}>{task.title}</Text>
 
               {taskHasChecklistItems && !isCheckListItemsLoading ? (
-                <>
+                <View
+                  style={{
+                    marginEnd: 10,
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: 2,
+                  }}
+                >
                   <Text style={{ marginRight: 1, color: "white" }}>
                     {checkListItemsLength}
                   </Text>
@@ -232,7 +239,7 @@ const DraggableTaskItem = memo(function TaskItem({
                     size={16}
                     color={mode === "light" ? "#FFFAEB" : "#051824"}
                   />
-                </>
+                </View>
               ) : (
                 isCheckListItemsLoading && (
                   <ActivityIndicator size="small" color="#FF006E" />

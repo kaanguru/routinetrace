@@ -1,8 +1,8 @@
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { Text, Button, CheckBox, Icon } from "@rneui/themed";
+import { Text, Button, CheckBox, Icon, useTheme } from "@rneui/themed";
 import { useRouter } from "expo-router";
 import { useCallback, useState } from "react";
-import { View, Alert, ScrollView } from "react-native";
+import { View, Alert, ScrollView, Pressable } from "react-native";
 
 import ChecklistSection from "@/components/ChecklistSection";
 import TaskFormInput from "@/components/TaskFormInput";
@@ -184,12 +184,16 @@ export default function CreateTask() {
         {formData.isCustomStartDateEnabled && (
           <View style={{ flexDirection: "row", alignItems: "flex-start" }}>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text h4>{formData.customStartDate?.toDateString()}</Text>
-              <Button
-                size="sm"
+              <Pressable
                 onPress={() => setShowDatePicker(true)}
-                type="clear"
-                style={{ marginHorizontal: 10 }}
+                style={{
+                  margin: 10,
+                  padding: 5,
+                  borderRadius: 5,
+                  backgroundColor: "#FFEFC2",
+                  borderBlockColor: "#FF006E",
+                  borderWidth: 1,
+                }}
               >
                 <Icon
                   name="calendar-month"
@@ -197,7 +201,8 @@ export default function CreateTask() {
                   size={24}
                   color="black"
                 />
-              </Button>
+              </Pressable>
+              <Text h4>{formData.customStartDate?.toDateString()}</Text>
             </View>
           </View>
         )}
