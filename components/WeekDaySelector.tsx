@@ -1,9 +1,7 @@
-import { CheckBox } from "@rneui/themed";
-import { useEffect } from "react";
-import { View } from "react-native";
+import { useTheme, Text } from "@rneui/themed";
+import { View, TouchableOpacity, StyleSheet } from "react-native";
 
 import { DayOfWeek } from "~/types";
-import getCurrentDayOfWeek from "~/utils/dates/getCurrentDayOfWeek";
 
 const WeekdaySelector = ({
   selectedDays,
@@ -12,34 +10,84 @@ const WeekdaySelector = ({
   selectedDays: DayOfWeek[];
   onDayToggle: (day: DayOfWeek, isSelected: boolean) => void;
 }>) => {
-  useEffect(() => {
-    const currentDay = getCurrentDayOfWeek();
-    if (selectedDays.length === 0) {
-      onDayToggle(currentDay, true);
-    }
-  }, [onDayToggle, selectedDays.length]);
+  const { theme } = useTheme();
+
+  const styles = StyleSheet.create({
+    container: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      width: "100%",
+      paddingVertical: 8,
+    },
+    dayButton: {
+      flex: 1,
+      borderWidth: 1,
+      borderColor: theme.colors.grey4,
+      paddingVertical: 8,
+      paddingHorizontal: 2,
+      alignItems: "center",
+      justifyContent: "center",
+      marginHorizontal: 2,
+      borderRadius: 4,
+    },
+    dayButtonSelected: {
+      backgroundColor: theme.colors.primary,
+      borderColor: theme.colors.primary,
+    },
+    dayButtonUnselected: {
+      backgroundColor: theme.colors.background,
+    },
+    dayText: {
+      fontSize: 14,
+      fontFamily: "UbuntuMono_400Regular",
+    },
+    dayTextSelected: {
+      color: theme.colors.white,
+    },
+    dayTextUnselected: {
+      color: theme.colors.black,
+    },
+  });
+
+  const daysOfWeek: DayOfWeek[] = [
+    "Mon",
+    "Tue",
+    "Wed",
+    "Thu",
+    "Fri",
+    "Sat",
+    "Sun",
+  ];
 
   return (
-    <View
-      style={{
-        flexDirection: "row",
-        alignItems: "flex-start",
-        flexWrap: "wrap",
-      }}
-    >
-      {(["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"] as DayOfWeek[]).map(
-        (day) => (
-          <CheckBox
+    <View style={styles.container}>
+      {daysOfWeek.map((day) => {
+        const isSelected = selectedDays.includes(day);
+        return (
+          <TouchableOpacity
             key={day}
-            checked={selectedDays.includes(day)}
+            style={[
+              styles.dayButton,
+              isSelected
+                ? styles.dayButtonSelected
+                : styles.dayButtonUnselected,
+            ]}
             onPress={() => {
-              const isSelected = !selectedDays.includes(day); // Toggle the current state
-              onDayToggle(day, isSelected);
+              onDayToggle(day, !isSelected);
             }}
-            title={day}
-          />
-        )
-      )}
+          >
+            <Text
+              style={[
+                styles.dayText,
+                isSelected ? styles.dayTextSelected : styles.dayTextUnselected,
+              ]}
+            >
+              {day}
+            </Text>
+          </TouchableOpacity>
+        );
+      })}
     </View>
   );
 };
