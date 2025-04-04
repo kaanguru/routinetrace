@@ -15,8 +15,8 @@ export const RepeatFrequencySlider = ({
   onChange: (value: number) => void;
 }>) => (
   <View>
-    <View>
-      <Text>Repeat Every</Text>
+    <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>
+      <Text>Repeat Every </Text>
       <Text>{calculateRepeatText(period, frequency as number)}</Text>
     </View>
     <View>
@@ -26,7 +26,7 @@ export const RepeatFrequencySlider = ({
           minimumValue={1}
           maximumValue={period === "Monthly" ? 6 : 15}
           onValueChange={onChange}
-          style={{ width: 200, height: 40 }}
+          style={{ width: "100%", height: 40 }}
           step={1}
         />
       </View>

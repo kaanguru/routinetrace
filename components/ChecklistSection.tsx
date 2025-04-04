@@ -1,7 +1,7 @@
 import { FontAwesome6 } from "@expo/vector-icons";
 import { Button, useThemeMode } from "@rneui/themed";
 import { useState, useEffect, useCallback } from "react";
-import { View } from "react-native";
+import { ScrollView, View } from "react-native";
 
 import DraggableItem from "~/components/DraggableItem";
 import { TaskFormData } from "~/types";
@@ -23,11 +23,11 @@ export default function ChecklistSection({
   const [positions, setPositions] = useState<number[]>([]);
   const { mode } = useThemeMode();
 
-  const ITEM_HEIGHT = 42;
+  const ITEM_HEIGHT = 40;
 
   useEffect(() => {
     setPositions(items.map((_, i) => i));
-  }, [items.length]);
+  }, [items, items.length]);
 
   const handleDragStart = useCallback((index: number) => {
     setDraggingIndex(index);
@@ -63,17 +63,26 @@ export default function ChecklistSection({
   return (
     <View
       style={{
-        height: ITEM_HEIGHT * items.length * 1.66,
+        width: "100%",
+        height: "auto",
       }}
     >
-      <Button onPress={onAdd} title="Add Routines" />
-      <FontAwesome6
-        name="add"
-        size={16}
-        color={mode === "dark" ? "#FFFAEB" : "#051824"}
-      />
-
-      <View
+      <Button
+        type="solid"
+        onPress={onAdd}
+        title="Add Routines"
+        size="sm"
+        style={{ height: 30 }}
+      >
+        <FontAwesome6
+          name="add"
+          size={16}
+          color={mode === "dark" ? "#FFFAEB" : "#051824"}
+        />
+        Add Routiness
+      </Button>
+      <ScrollView
+        id="checklist-section"
         style={{
           height: ITEM_HEIGHT * items.length,
         }}
@@ -91,7 +100,7 @@ export default function ChecklistSection({
             onDragEnd={(translationY) => handleDragEnd(index, translationY)}
           />
         ))}
-      </View>
+      </ScrollView>
     </View>
   );
 }
