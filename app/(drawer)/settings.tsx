@@ -1,7 +1,14 @@
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useThemeMode, Dialog, Button, Text, Switch } from "@rneui/themed";
+import {
+  useThemeMode,
+  Dialog,
+  Button,
+  Text,
+  Switch,
+  Input,
+} from "@rneui/themed";
 import { router } from "expo-router";
 import { useState } from "react";
 import { View } from "react-native";
@@ -10,11 +17,11 @@ import LogoPortrait from "@/components/lotties/LogoPortrait";
 import { useSoundContext } from "@/context/SoundContext";
 import { useResetCompletionHistory } from "@/hooks/useTaskCompletionHistory";
 import useUser from "@/hooks/useUser";
+import changeEmail from "@/utils/auth/changeEmail";
 
 export default function SettingsScreen() {
   const { mode, setMode } = useThemeMode();
   const [showModal, setShowModal] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [newEmail, setNewEmail] = useState("");
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -29,13 +36,20 @@ export default function SettingsScreen() {
       onSuccess: () => setIsDialogOpen(false),
     });
   }
-  /*  const handleEmailChange = (text: string) => {
-    setNewEmail(text);
-  }; */
-  const handleSubmit = () => {
-    console.log("New Email:", newEmail);
-    setShowModal(false);
-    // TODO  send the new email to your backend for verification and update
+
+  const handleSubmit = async () => {
+    console.log("🚀 ~ handleSubmit ~ newEmail:", newEmail);
+    const result = await changeEmail(newEmail);
+    result.match(
+      () => {
+        alert("Check your inbox to confirm your new email address.");
+        setShowModal(false);
+      },
+      (error) => {
+        console.log("🚀 ~ handleSubmit ~ error:", error);
+        alert(`Failed to update email: ${error.message}`);
+      }
+    );
   };
   return (
     <View>
@@ -72,13 +86,18 @@ export default function SettingsScreen() {
         <Dialog
           isVisible={showModal}
           onBackdropPress={() => setShowModal(false)}
-          overlayStyle={{ backgroundColor: "transparent" }}
+          overlayStyle={{ backgroundColor: "white" }}
         >
           <Dialog.Title
             title="Need to use a different email address?"
             titleStyle={{ color: "black", fontWeight: "bold" }}
           />
-          <Text>No worries, we’ll send you reset instructions</Text>
+          <Text>enter your new email address</Text>
+          <Input
+            placeholder="Enter your new email address"
+            value={newEmail}
+            onChangeText={setNewEmail}
+          />
           <Dialog.Actions>
             <Button
               title="Cancel"
@@ -89,8 +108,10 @@ export default function SettingsScreen() {
                 borderWidth: 1,
               }}
               titleStyle={{ color: "black" }}
+              size="sm"
             />
             <Button
+              size="sm"
               title="Submit"
               onPress={handleSubmit}
               buttonStyle={{ backgroundColor: "#ff006e" }}
@@ -109,7 +130,7 @@ export default function SettingsScreen() {
       <Dialog
         isVisible={isDialogOpen}
         onBackdropPress={() => setIsDialogOpen(false)}
-        overlayStyle={{ backgroundColor: "transparent" }}
+        overlayStyle={{ backgroundColor: "white" }}
       >
         <Dialog.Title
           title="Are you sure you want to Reset History?"
@@ -121,6 +142,7 @@ export default function SettingsScreen() {
         </Text>
         <Dialog.Actions>
           <Button
+            size="sm"
             title="Cancel"
             onPress={() => setIsDialogOpen(false)}
             buttonStyle={{
@@ -131,7 +153,8 @@ export default function SettingsScreen() {
             titleStyle={{ color: "black" }}
           />
           <Button
-            title="Confirm Reset"
+            size="sm"
+            title="Confirm"
             onPress={handleReset}
             buttonStyle={{ backgroundColor: "#ff006e" }}
             titleStyle={{ color: "white" }}
