@@ -1,71 +1,74 @@
-import { Text } from "@rneui/themed";
 import React from "react";
-import { RefreshControl, View } from "react-native";
-import { FlashList } from "@shopify/flash-list";
-
-import TaskListEmptyComponent from "~/components/TaskListEmptyComponent";
-import { Tables } from "~/database.types";
+import { View, StyleSheet } from "react-native";
+import DraggableFlatListComponent from "./DraggableFlatList";
+import { Task } from "@/types";
+import EmptyTasksView from "./empty-tasks-view";
 
 interface TaskListDisplayProps {
-  readonly isFiltered: boolean;
-  readonly reorderedTasks: readonly Tables<"tasks">[];
-  readonly renderTaskItem: (
-    params: Readonly<{ item: Tables<"tasks">; index: number }>
-  ) => React.ReactElement;
-  readonly keyExtractor: (item: Readonly<Tables<"tasks">>) => string;
-  readonly isRefetching: boolean;
-  readonly refetch: () => void;
+  isFiltered: boolean;
+  reorderedTasks: Task[];
+  renderTaskItem: any;
+  keyExtractor: (item: Task) => string;
+  isRefetching: boolean;
+  refetch: () => void;
+  onReorder: (from: number, to: number) => void;
 }
 
-const TaskListHeader = ({ isFiltered }: Readonly<{ isFiltered: boolean }>) => (
-  <Text
-    style={{
-      margin: 0,
-      padding: 0,
-      textAlign: "right",
-      fontFamily: "UbuntuMono_400Regular",
-    }}
-  >
-    {isFiltered ? "Today's" : "All Tasks"}
-  </Text>
-);
-
-const renderListHeader = (tasks: readonly unknown[], isFiltered: boolean) => {
-  if (tasks.length === 0) return null;
-  return (
-    <View style={{ paddingVertical: 5, paddingHorizontal: 0 }}>
-      <TaskListHeader isFiltered={isFiltered} />
-    </View>
-  );
-};
-
-const createRefreshControl = (isRefetching: boolean, refetch: () => void) => (
-  <RefreshControl
-    refreshing={isRefetching}
-    onRefresh={refetch}
-    colors={["#000000"]}
-    progressBackgroundColor="#ffffff"
-  />
-);
-
-export default function TaskListDisplay({
+const TaskListDisplay = ({
   isFiltered,
   reorderedTasks,
   renderTaskItem,
   keyExtractor,
   isRefetching,
   refetch,
-}: Readonly<TaskListDisplayProps>) {
+  onReorder,
+}: TaskListDisplayProps) => {
+  // Handle drag end and call the parent's reorder function
+  const handleDragEnd = ({
+    from,
+    to,
+    data,
+  }: {
+    from: number;
+    to: number;
+    data: Task[];
+  }) => {
+    onReorder(from, to);
+  };
+
+  // Create a modified renderItem function that works with DraggableFlatList params
+  const renderItemForDraggable = ({ item, index, drag, isActive }: any) => {
+    // We need to modify the renderTaskItem to handle the drag function
+    return renderTaskItem({
+      item,
+      index,
+      dragActivator: drag,
+      isActive,
+    });
+  };
+
+  // Customize the empty component based on filter state
+  const emptyComponent = () => <EmptyTasksView />;
+
   return (
-    <FlashList
-      data={reorderedTasks}
-      renderItem={renderTaskItem}
-      keyExtractor={keyExtractor}
-      ListEmptyComponent={<TaskListEmptyComponent />}
-      ListHeaderComponent={renderListHeader(reorderedTasks, isFiltered)}
-      refreshControl={createRefreshControl(isRefetching, refetch)}
-      estimatedItemSize={113}
-      ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
-    />
+    <View style={styles.container}>
+      <DraggableFlatListComponent
+        tasks={reorderedTasks}
+        renderItem={renderItemForDraggable}
+        keyExtractor={keyExtractor}
+        onDragEnd={handleDragEnd}
+        ListEmptyComponent={emptyComponent()}
+        onRefresh={refetch}
+        refreshing={isRefetching}
+      />
+    </View>
   );
-}
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
+
+export default TaskListDisplay;

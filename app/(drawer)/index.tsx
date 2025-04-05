@@ -158,7 +158,17 @@ export default function Index() {
   }, [router, tasks]);
 
   const renderTaskItem = useCallback(
-    ({ item, index }: { item: Task; index: number }) => (
+    ({
+      item,
+      index,
+      dragActivator,
+      isActive,
+    }: {
+      item: Task;
+      index: number;
+      dragActivator?: () => void;
+      isActive?: boolean;
+    }) => (
       <DraggableTaskItem
         task={item}
         index={index}
@@ -171,6 +181,8 @@ export default function Index() {
         onReorder={handleReorder}
         onToggleComplete={handleOnToggleComplete}
         isFiltered={isFiltered}
+        dragActivator={dragActivator}
+        isActive={isActive}
       />
     ),
     [router, handleReorder, handleOnToggleComplete, isFiltered]
@@ -214,6 +226,7 @@ export default function Index() {
             keyExtractor={keyExtractor}
             isRefetching={isRefetching}
             refetch={refetch}
+            onReorder={handleReorder}
           />
         )}
         <FAB
