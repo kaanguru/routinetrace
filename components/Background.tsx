@@ -23,8 +23,8 @@ const useStyles = makeStyles((theme) => ({
     flex: 1,
     backgroundColor: theme.colors.background,
     paddingHorizontal: 0,
-    paddingVertical: theme.spacing.sm,
-    marginHorizontal: theme.spacing.md,
+    // paddingVertical: theme.spacing.sm,
+    // marginHorizontal: theme.spacing.md,
   },
 }));
 export default Background;
