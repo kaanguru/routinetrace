@@ -1,6 +1,6 @@
 import { Audio } from 'expo-av';
 import { useEffect, useCallback, useState } from 'react';
-
+import { ResultAsync, okAsync, errAsync } from 'neverthrow';
 import { useSoundSettings } from './useSoundSettings';
 
 const soundSources = [
@@ -10,20 +10,21 @@ const soundSources = [
 ];
 
 export default function useTaskCompleteSound() {
-  const [sound, setSound] = useState<Audio.Sound>();
+  const [sound, setSound] = useState<Audio.Sound | null>(null);
   const { isSoundEnabled } = useSoundSettings();
 
-  const playSound = useCallback(async () => {
-    try {
-      if (!isSoundEnabled) return;
+  const playSound = useCallback(async (): Promise<ResultAsync<void, Error>> => {
+    if (!isSoundEnabled) return okAsync(undefined);
 
+    try {
       const randomIndex = Math.floor(Math.random() * soundSources.length);
       const { sound: newSound } = await Audio.Sound.createAsync(soundSources[randomIndex]);
 
       setSound(newSound);
       await newSound.playAsync();
+      return okAsync(undefined);
     } catch (error) {
-      console.error('Error playing sound:', error);
+      return errAsync(new Error('Error playing sound: ' + error));
     }
   }, [isSoundEnabled]);
 
