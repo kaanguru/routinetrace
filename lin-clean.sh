@@ -1,8 +1,5 @@
 #!/bin/bash
 
-echo "Removing .yarn folder..."
-rm -rf .yarn/cache
-
 echo "Removing node_modules folder..."
 rm -rf node_modules
 
@@ -12,10 +9,10 @@ rm -rf .expo
 echo "Removing android build folder..."
 rm -rf android/build
 
-echo "Deleting yarn.lock..."
-rm -f yarn.lock
+echo "Deleting pnpm-lock..."
+rm -f pnpm-lock.lock
 
-echo "Cleaning yarn cache..."
-yarn cache clean --all
+echo "Cleaning pnpm cache..."
+pnpm store prune
 
-echo "Done. Run 'yarn' to reinstall dependencies."
+echo "Done. Run 'pnpm i' to reinstall dependencies."

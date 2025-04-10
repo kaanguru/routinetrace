@@ -19,8 +19,10 @@ export const RepeatFrequencySlider = ({
       <Text h4>Repeat Every </Text>
       <Text h4>{calculateRepeatText(period, frequency as number)}</Text>
     </View>
-    <View>
-      <View>
+    <View style={{width: "100%", gap: 32 }}>
+    <View style={{ 
+  alignItems: 'center', 
+}}>
         <Slider
           value={1}
           minimumValue={1}

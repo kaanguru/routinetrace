@@ -10,7 +10,7 @@ interface RepeatPeriodSelectorProps {
   setRepeatPeriod: (period: RepeatPeriod | "" | null) => void;
 }
 
-function RepeatPeriodSelector({
+export default function RepeatPeriodSelector({
   repeatPeriod,
   setRepeatPeriod,
 }: Readonly<RepeatPeriodSelectorProps>) {
@@ -122,4 +122,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RepeatPeriodSelector;
