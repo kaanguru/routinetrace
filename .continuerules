@@ -86,7 +86,7 @@ create index IF not exists idx_task_completion_history_task_id on public.task_co
 ## Tech Stack
 
 - react-native + expo
-- npm packageManager
+- pnpm package manager
 - [expo-router](https://docs.expo.dev/router/installation/#quick-start)
 - [drawer+tabs](https://docs.expo.dev/router/advanced/drawer/)
 - [React Native Elements](https://reactnativeelements.com/)
@@ -100,7 +100,7 @@ create index IF not exists idx_task_completion_history_task_id on public.task_co
 - Don't change utils\supabase.ts file
 - Use react-native-async-storage/async-storage for global state when needed
 - Use TanStack Query (FKA React Query) for fetching, caching, synchronizing and updating server state
-- Use useContext for local state management when needed(https://react.dev/reference/react/hooks#context-hooks)
+- Use useContext for local state management when needed [Context Hooks](https://react.dev/reference/react/hooks#context-hooks)
 
 ## Syntax and Formatting
 
