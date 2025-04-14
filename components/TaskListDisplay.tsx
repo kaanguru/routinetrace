@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View } from "react-native";
 import DraggableFlatListComponent from "./DraggableFlatList";
 import { Task } from "@/types";
 import EmptyTasksView from "./empty-tasks-view";
@@ -14,25 +14,9 @@ interface TaskListDisplayProps {
   onReorder: (from: number, to: number) => void;
 }
 
-const TaskListDisplay = ({
-  isFiltered,
-  reorderedTasks,
-  renderTaskItem,
-  keyExtractor,
-  isRefetching,
-  refetch,
-  onReorder,
-}: TaskListDisplayProps) => {
+export default function TaskListDisplay({ isFiltered, reorderedTasks, renderTaskItem, keyExtractor, isRefetching, refetch, onReorder }: TaskListDisplayProps) {
   // Handle drag end and call the parent's reorder function
-  const handleDragEnd = ({
-    from,
-    to,
-    data,
-  }: {
-    from: number;
-    to: number;
-    data: Task[];
-  }) => {
+  const handleDragEnd = ({ from, to, data }: { from: number; to: number; data: Task[] }) => {
     onReorder(from, to);
   };
 
@@ -51,24 +35,10 @@ const TaskListDisplay = ({
   const emptyComponent = () => <EmptyTasksView />;
 
   return (
-    <View style={styles.container}>
-      <DraggableFlatListComponent
-        tasks={reorderedTasks}
-        renderItem={renderItemForDraggable}
-        keyExtractor={keyExtractor}
-        onDragEnd={handleDragEnd}
-        ListEmptyComponent={emptyComponent()}
-        onRefresh={refetch}
-        refreshing={isRefetching}
-      />
+    <View style={{ flex: 1 }}>
+      <DraggableFlatListComponent tasks={reorderedTasks} renderItem={renderItemForDraggable} keyExtractor={keyExtractor} onDragEnd={handleDragEnd} ListEmptyComponent={emptyComponent()} onRefresh={refetch} refreshing={isRefetching} />
     </View>
   );
-};
+}
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
-
-export default TaskListDisplay;
+TaskListDisplay;

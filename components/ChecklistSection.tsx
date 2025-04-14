@@ -3,7 +3,7 @@ import { Button, useThemeMode } from "@rneui/themed";
 import { useState, useEffect, useCallback } from "react";
 import { ScrollView, View } from "react-native";
 
-import DraggableItem from "~/components/DraggableItem";
+import DraggableItem from "@/components/DraggableRoutineItem";
 import { TaskFormData } from "~/types";
 
 export default function ChecklistSection({
@@ -35,9 +35,7 @@ export default function ChecklistSection({
 
   const handleDragEnd = useCallback(
     (index: number, translationY: number) => {
-      const newIndex = Math.round(
-        (translationY + index * ITEM_HEIGHT) / ITEM_HEIGHT
-      );
+      const newIndex = Math.round((translationY + index * ITEM_HEIGHT) / ITEM_HEIGHT);
       const validIndex = Math.max(0, Math.min(newIndex, items.length - 1));
 
       if (validIndex !== index) {
@@ -67,38 +65,18 @@ export default function ChecklistSection({
         height: "auto",
       }}
     >
-      <Button
-        type="solid"
-        onPress={onAdd}
-        title="Add Routines"
-        size="sm"
-        style={{ height: 30 }}
-      >
-        <FontAwesome6
-          name="add"
-          size={16}
-          color={mode === "dark" ? "#FFFAEB" : "#051824"}
-        />
+      <Button type="solid" onPress={onAdd} title="Add Routines" size="sm" style={{ height: 30 }}>
+        <FontAwesome6 name="add" size={16} color={mode === "dark" ? "#FFFAEB" : "#051824"} />
         Add Routiness
       </Button>
       <ScrollView
         id="checklist-section"
         style={{
-          height: 'auto',
+          height: "auto",
         }}
       >
         {items.map((item, index) => (
-          <DraggableItem
-            key={item.id}
-            item={item}
-            index={index}
-            isDragging={draggingIndex === index}
-            onUpdate={onUpdate}
-            onRemove={onRemove}
-            position={positions[index] || index}
-            onDragStart={() => handleDragStart(index)}
-            onDragEnd={(translationY) => handleDragEnd(index, translationY)}
-          />
+          <DraggableItem key={item.id} item={item} index={index} isDragging={draggingIndex === index} onUpdate={onUpdate} onRemove={onRemove} position={positions[index] || index} onDragStart={() => handleDragStart(index)} onDragEnd={(translationY) => handleDragEnd(index, translationY)} />
         ))}
       </ScrollView>
     </View>

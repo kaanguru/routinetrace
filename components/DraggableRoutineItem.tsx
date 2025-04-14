@@ -3,11 +3,8 @@ import { useThemeMode, Input } from "@rneui/themed";
 import { useEffect, memo } from "react";
 import { Pressable, View } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  runOnJS,
-} from "react-native-reanimated";
+import Animated, { useSharedValue, useAnimatedStyle, runOnJS } from "react-native-reanimated";
+import DraggableFlatList, { RenderItemParams, ScaleDecorator } from "react-native-draggable-flatlist";
 
 import { TaskFormData } from "~/types";
 
@@ -73,12 +70,7 @@ const DraggableItem = memo(
         >
           <GestureDetector gesture={panGesture}>
             <Animated.View>
-              <FontAwesome5
-                name="grip-vertical"
-                size={18}
-                color={mode === "dark" ? "#FFFAEB" : "#051824"}
-                style={{ paddingTop: 10 }}
-              />
+              <FontAwesome5 name="grip-vertical" size={18} color={mode === "dark" ? "#FFFAEB" : "#051824"} style={{ paddingTop: 10 }} />
             </Animated.View>
           </GestureDetector>
           <Input
@@ -95,16 +87,8 @@ const DraggableItem = memo(
             }}
           />
 
-          <Pressable
-            onPress={() => onRemove(index)}
-            hitSlop={10}
-            style={{ padding: 10 }}
-          >
-            <Ionicons
-              name="trash-bin"
-              size={24}
-              color={mode === "dark" ? "#FFFAEB" : "#051824"}
-            />
+          <Pressable onPress={() => onRemove(index)} hitSlop={10} style={{ padding: 10 }}>
+            <Ionicons name="trash-bin" size={24} color={mode === "dark" ? "#FFFAEB" : "#051824"} />
           </Pressable>
         </View>
       </Animated.View>
