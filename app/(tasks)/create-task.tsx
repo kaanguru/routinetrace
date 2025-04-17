@@ -82,163 +82,118 @@ export default function CreateTask() {
     }));
   }, []);
 
-  const handleUpdateChecklistItem = useCallback(
-    (index: number, content: string) => {
-      setFormData((prev) => ({
-        ...prev,
-        checklistItems: prev.checklistItems.toSpliced(index, 1, {
-          ...prev.checklistItems[index],
-          content,
-        }),
-      }));
-    },
-    []
-  );
+  const handleUpdateChecklistItem = useCallback((index: number, content: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      checklistItems: prev.checklistItems.toSpliced(index, 1, {
+        ...prev.checklistItems[index],
+        content,
+      }),
+    }));
+  }, []);
   return (
     <Background>
       <Header headerTitle="➕" />
-      <ScrollView style={{ marginVertical: 0, paddingHorizontal: 12 }}>
-        <TaskFormInput
-          title={formData.title}
-          notes={formData.notes}
-          setTitle={(title: string) =>
-            setFormData((prev) => ({ ...prev, title }))
-          }
-          setNotes={(notes: string) =>
-            setFormData((prev) => ({ ...prev, notes }))
-          }
-        />
-        <RepeatPeriodSelector
-          repeatPeriod={formData.repeatPeriod}
-          setRepeatPeriod={(value: "" | RepeatPeriod | null) =>
-            setFormData((prev) => ({
-              ...prev,
-              repeatPeriod: value as RepeatPeriod | "",
-            }))
-          }
-        />
-
-        {(formData.repeatPeriod === "Daily" ||
-          formData.repeatPeriod === "Monthly") && (
-          <RepeatFrequencySlider
-            period={formData.repeatPeriod}
-            frequency={formData.repeatFrequency}
-            onChange={(value) =>
-              setFormData((prev) => ({ ...prev, repeatFrequency: value }))
+      <ScrollView>
+        <View style={{ marginVertical: 0, paddingHorizontal: 12 }}>
+          <TaskFormInput title={formData.title} notes={formData.notes} setTitle={(title: string) => setFormData((prev) => ({ ...prev, title }))} setNotes={(notes: string) => setFormData((prev) => ({ ...prev, notes }))} />
+          <RepeatPeriodSelector
+            repeatPeriod={formData.repeatPeriod}
+            setRepeatPeriod={(value: "" | RepeatPeriod | null) =>
+              setFormData((prev) => ({
+                ...prev,
+                repeatPeriod: value as RepeatPeriod | "",
+              }))
             }
           />
-        )}
 
-        {formData.repeatPeriod === "Weekly" && (
-          <View style={{ marginTop: 10, padding: 10 }}>
-            <View style={{ flexDirection: "row", alignItems: "flex-start" }}>
-              <RepeatFrequencySlider
-                period={formData.repeatPeriod}
-                frequency={formData.repeatFrequency}
-                onChange={(value) =>
-                  setFormData((prev) => ({ ...prev, repeatFrequency: value }))
-                }
+          {(formData.repeatPeriod === "Daily" || formData.repeatPeriod === "Monthly") && <RepeatFrequencySlider period={formData.repeatPeriod} frequency={formData.repeatFrequency} onChange={(value) => setFormData((prev) => ({ ...prev, repeatFrequency: value }))} />}
+
+          {formData.repeatPeriod === "Weekly" && (
+            <View style={{ marginTop: 10, padding: 10 }}>
+              <View style={{ flexDirection: "row", alignItems: "flex-start" }}>
+                <RepeatFrequencySlider period={formData.repeatPeriod} frequency={formData.repeatFrequency} onChange={(value) => setFormData((prev) => ({ ...prev, repeatFrequency: value }))} />
+              </View>
+              <WeekdaySelector
+                selectedDays={formData.repeatOnWk}
+                onDayToggle={(day, isSelected) => {
+                  setFormData((prev) => ({
+                    ...prev,
+                    repeatOnWk: isSelected ? [...prev.repeatOnWk, day] : prev.repeatOnWk.filter((d) => d !== day),
+                  }));
+                }}
               />
             </View>
-            <WeekdaySelector
-              selectedDays={formData.repeatOnWk}
-              onDayToggle={(day, isSelected) => {
-                setFormData((prev) => ({
-                  ...prev,
-                  repeatOnWk: isSelected
-                    ? [...prev.repeatOnWk, day]
-                    : prev.repeatOnWk.filter((d) => d !== day),
-                }));
-              }}
-            />
-          </View>
-        )}
+          )}
 
-        {formData.repeatPeriod === "Yearly" && (
-          <View>
+          {formData.repeatPeriod === "Yearly" && (
             <View>
-              <Text>Repeat Every Year</Text>
+              <View>
+                <Text>Repeat Every Year</Text>
+              </View>
+            </View>
+          )}
+
+          <View style={{ flexDirection: "column", alignItems: "flex-start" }}>
+            <View style={{ flexDirection: "row", alignItems: "flex-start" }}>
+              <CheckBox
+                checked={formData.isCustomStartDateEnabled}
+                title="Custom Start Date"
+                onPress={() => {
+                  setFormData((prev) => {
+                    const nextIsSelected = !prev.isCustomStartDateEnabled; // Calculate the next state
+                    return {
+                      ...prev,
+                      isCustomStartDateEnabled: nextIsSelected,
+                      customStartDate: nextIsSelected ? new Date() : null,
+                    };
+                  });
+                }}
+              />
             </View>
           </View>
-        )}
 
-        <View style={{ flexDirection: "column", alignItems: "flex-start" }}>
-          <View style={{ flexDirection: "row", alignItems: "flex-start" }}>
-            <CheckBox
-              checked={formData.isCustomStartDateEnabled}
-              title="Custom Start Date"
-              onPress={() => {
-                setFormData((prev) => {
-                  const nextIsSelected = !prev.isCustomStartDateEnabled; // Calculate the next state
-                  return {
+          {formData.isCustomStartDateEnabled && (
+            <View style={{ flexDirection: "row", alignItems: "flex-start" }}>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <Pressable
+                  onPress={() => setShowDatePicker(true)}
+                  style={{
+                    margin: 10,
+                    padding: 5,
+                    borderRadius: 5,
+                    backgroundColor: "#FFEFC2",
+                    borderBlockColor: "#FF006E",
+                    borderWidth: 1,
+                  }}
+                >
+                  <Icon name="calendar-month" type="material" size={24} color="black" />
+                </Pressable>
+                <Text h4>{formData.customStartDate?.toDateString()}</Text>
+              </View>
+            </View>
+          )}
+
+          {showDatePicker && (
+            <DateTimePicker
+              value={formData.customStartDate || new Date()}
+              mode="date"
+              onChange={(_, selectedDate) => {
+                setShowDatePicker(false);
+                if (selectedDate) {
+                  setFormData((prev) => ({
                     ...prev,
-                    isCustomStartDateEnabled: nextIsSelected,
-                    customStartDate: nextIsSelected ? new Date() : null,
-                  };
-                });
+                    customStartDate: selectedDate,
+                  }));
+                }
               }}
             />
-          </View>
+          )}
+
+          <ChecklistSection items={formData.checklistItems} onAdd={handleAddChecklistItem} onRemove={handleRemoveChecklistItem} onUpdate={handleUpdateChecklistItem} setFormData={setFormData} />
         </View>
-
-        {formData.isCustomStartDateEnabled && (
-          <View style={{ flexDirection: "row", alignItems: "flex-start" }}>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Pressable
-                onPress={() => setShowDatePicker(true)}
-                style={{
-                  margin: 10,
-                  padding: 5,
-                  borderRadius: 5,
-                  backgroundColor: "#FFEFC2",
-                  borderBlockColor: "#FF006E",
-                  borderWidth: 1,
-                }}
-              >
-                <Icon
-                  name="calendar-month"
-                  type="material"
-                  size={24}
-                  color="black"
-                />
-              </Pressable>
-              <Text h4>{formData.customStartDate?.toDateString()}</Text>
-            </View>
-          </View>
-        )}
-
-        {showDatePicker && (
-          <DateTimePicker
-            value={formData.customStartDate || new Date()}
-            mode="date"
-            onChange={(_, selectedDate) => {
-              setShowDatePicker(false);
-              if (selectedDate) {
-                setFormData((prev) => ({
-                  ...prev,
-                  customStartDate: selectedDate,
-                }));
-              }
-            }}
-          />
-        )}
-
-        <ChecklistSection
-          items={formData.checklistItems}
-          onAdd={handleAddChecklistItem}
-          onRemove={handleRemoveChecklistItem}
-          onUpdate={handleUpdateChecklistItem}
-          setFormData={setFormData}
-        />
       </ScrollView>
-      <View>
-        <Button
-          onPress={handleCreate}
-          testID="create-task-button"
-          disabled={isCreatingTask}
-          title={isCreatingTask ? "Creating..." : "Create"}
-        />
-      </View>
+      <Button onPress={handleCreate} testID="create-task-button" disabled={isCreatingTask} title={isCreatingTask ? "Creating..." : "Create"} />
     </Background>
   );
 }

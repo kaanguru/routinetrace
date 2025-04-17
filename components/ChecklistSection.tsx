@@ -1,10 +1,11 @@
+// components/ChecklistSection.tsx
 import { FontAwesome6 } from "@expo/vector-icons";
 import { Button, useThemeMode } from "@rneui/themed";
-import { useState, useEffect, useCallback } from "react";
-import { ScrollView, View } from "react-native";
+import { View } from "react-native";
+import DraggableFlatList, { type DragEndParams, type RenderItemParams } from "react-native-draggable-flatlist"; // Ensure types are imported if needed elsewhere
 
-import DraggableItem from "@/components/DraggableRoutineItem";
-import { TaskFormData } from "~/types";
+import DraggableRoutineItem from "@/components/DraggableRoutineItem"; // You don't need ITEM_HEIGHT here anymore
+import type { TaskFormData } from "~/types";
 
 export default function ChecklistSection({
   items,
@@ -19,66 +20,34 @@ export default function ChecklistSection({
   onUpdate: (index: number, content: string) => void;
   setFormData: React.Dispatch<React.SetStateAction<TaskFormData>>;
 }>) {
-  const [draggingIndex, setDraggingIndex] = useState<number | null>(null);
-  const [positions, setPositions] = useState<number[]>([]);
   const { mode } = useThemeMode();
-
-  const ITEM_HEIGHT = 40;
-
-  useEffect(() => {
-    setPositions(items.map((_, i) => i));
-  }, [items, items.length]);
-
-  const handleDragStart = useCallback((index: number) => {
-    setDraggingIndex(index);
-  }, []);
-
-  const handleDragEnd = useCallback(
-    (index: number, translationY: number) => {
-      const newIndex = Math.round((translationY + index * ITEM_HEIGHT) / ITEM_HEIGHT);
-      const validIndex = Math.max(0, Math.min(newIndex, items.length - 1));
-
-      if (validIndex !== index) {
-        setFormData((prev) => {
-          const newItems = [...prev.checklistItems];
-          const [movedItem] = newItems.splice(index, 1);
-          newItems.splice(validIndex, 0, movedItem);
-
-          return {
+  return (
+    <View style={{ width: "100%", marginVertical: 20 }}>
+      <Button type="solid" onPress={onAdd} title="Add Routines" size="sm" containerStyle={{ height: 40, marginBottom: 10 }}>
+        <FontAwesome6 name="add" size={16} color={mode === "dark" ? "#FFFAEB" : "#051824"} style={{ marginRight: 5 }} />
+        Add Routines
+      </Button>
+      <DraggableFlatList
+        data={items}
+        keyExtractor={(item) => item.id.toString()}
+        onDragEnd={({ data }: DragEndParams<TaskFormData["checklistItems"][number]>) => {
+          // Added type argument for clarity
+          setFormData((prev) => ({
             ...prev,
-            checklistItems: newItems.map((item, idx) => ({
+            checklistItems: data.map((item, idx) => ({
               ...item,
               position: idx,
             })),
-          };
-        });
-      }
-      setDraggingIndex(null);
-    },
-    [items.length, setFormData]
-  );
-
-  return (
-    <View
-      style={{
-        width: "100%",
-        height: "auto",
-      }}
-    >
-      <Button type="solid" onPress={onAdd} title="Add Routines" size="sm" style={{ height: 30 }}>
-        <FontAwesome6 name="add" size={16} color={mode === "dark" ? "#FFFAEB" : "#051824"} />
-        Add Routiness
-      </Button>
-      <ScrollView
-        id="checklist-section"
-        style={{
-          height: "auto",
+          }));
         }}
-      >
-        {items.map((item, index) => (
-          <DraggableItem key={item.id} item={item} index={index} isDragging={draggingIndex === index} onUpdate={onUpdate} onRemove={onRemove} position={positions[index] || index} onDragStart={() => handleDragStart(index)} onDragEnd={(translationY) => handleDragEnd(index, translationY)} />
-        ))}
-      </ScrollView>
+        renderItem={(
+          { item, getIndex, drag, isActive }: RenderItemParams<TaskFormData["checklistItems"][number]> // Added type argument for clarity
+        ) => <DraggableRoutineItem item={item} index={getIndex?.() ?? 0} drag={drag} isActive={isActive} onUpdate={onUpdate} onRemove={onRemove} />}
+        contentContainerStyle={{ paddingBottom: 48, gap: 10 }}
+        // Allow internal scrolling for better gesture handling within parent ScrollView
+        scrollEnabled
+        // REMOVED: itemHeight={ITEM_HEIGHT} - This prop is not valid for DraggableFlatList
+      />
     </View>
   );
 }

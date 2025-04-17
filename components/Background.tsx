@@ -1,7 +1,7 @@
 import { makeStyles } from "@rneui/themed";
 import { View } from "react-native";
 import type { ReactNode } from "react";
-import { StyleProp, ViewStyle } from "react-native";
+import type { StyleProp, ViewStyle } from "react-native";
 import React from "react";
 
 interface BackgroundProps {
@@ -11,11 +11,7 @@ interface BackgroundProps {
 
 const Background = ({ children, style }: Readonly<BackgroundProps>) => {
   const styles = useStyles();
-  return (
-    <View style={style ? [style, styles.container] : styles.container}>
-      {children}
-    </View>
-  );
+  return <View style={style ? [style, styles.container] : styles.container}>{children}</View>;
 };
 
 const useStyles = makeStyles((theme) => ({
