@@ -1,5 +1,5 @@
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { Text, Button, CheckBox, Icon, useTheme } from "@rneui/themed";
+import { Text, Button, CheckBox, Icon } from "@rneui/themed";
 import { useRouter } from "expo-router";
 import { useCallback, useState } from "react";
 import { View, Alert, ScrollView, Pressable } from "react-native";

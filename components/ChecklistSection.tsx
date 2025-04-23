@@ -1,10 +1,9 @@
-// components/ChecklistSection.tsx
 import { FontAwesome6 } from "@expo/vector-icons";
 import { Button, useThemeMode } from "@rneui/themed";
 import { View } from "react-native";
-import DraggableFlatList, { type DragEndParams, type RenderItemParams } from "react-native-draggable-flatlist"; // Ensure types are imported if needed elsewhere
+import DraggableFlatList, { type DragEndParams, type RenderItemParams } from "react-native-draggable-flatlist";
 
-import DraggableRoutineItem from "@/components/DraggableRoutineItem"; // You don't need ITEM_HEIGHT here anymore
+import DraggableRoutineItem from "@/components/DraggableRoutineItem"; 
 import type { TaskFormData } from "~/types";
 
 export default function ChecklistSection({
@@ -31,7 +30,6 @@ export default function ChecklistSection({
         data={items}
         keyExtractor={(item) => item.id.toString()}
         onDragEnd={({ data }: DragEndParams<TaskFormData["checklistItems"][number]>) => {
-          // Added type argument for clarity
           setFormData((prev) => ({
             ...prev,
             checklistItems: data.map((item, idx) => ({
@@ -44,9 +42,7 @@ export default function ChecklistSection({
           { item, getIndex, drag, isActive }: RenderItemParams<TaskFormData["checklistItems"][number]> // Added type argument for clarity
         ) => <DraggableRoutineItem item={item} index={getIndex?.() ?? 0} drag={drag} isActive={isActive} onUpdate={onUpdate} onRemove={onRemove} />}
         contentContainerStyle={{ paddingBottom: 48, gap: 10 }}
-        // Allow internal scrolling for better gesture handling within parent ScrollView
         scrollEnabled
-        // REMOVED: itemHeight={ITEM_HEIGHT} - This prop is not valid for DraggableFlatList
       />
     </View>
   );

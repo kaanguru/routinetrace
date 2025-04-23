@@ -8,7 +8,6 @@ import type { TaskFormData } from "~/types";
 
 export const ITEM_HEIGHT = 45;
 
-// props come from DraggableFlatList's renderItem
 const DraggableRoutineItem = memo(
   ({
     item,
