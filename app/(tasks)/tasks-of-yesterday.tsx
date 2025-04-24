@@ -17,6 +17,8 @@ import { Task } from "@/types";
 import wasTaskDueYesterday from "@/utils/tasks/wasTaskDueYesterday";
 import { FlashList ,ListRenderItem} from "@shopify/flash-list";
 
+const ESTIMATED_ITEM_HEIGHT = 80;
+
 export default function TasksOfYesterday() {
   const { data: notCompletedTasks } = useTasksQuery("not-completed");
   const [tasksDueYesterday, setTasksDueYesterday] =
@@ -64,6 +66,8 @@ export default function TasksOfYesterday() {
           data={tasksDueYesterday}
           renderItem={taskOfYesterday}
           keyExtractor={(item) => item.id.toString()}
+          estimatedItemSize={ESTIMATED_ITEM_HEIGHT}
+
         />
       </View>
     </SafeAreaView>
