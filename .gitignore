@@ -46,4 +46,5 @@ dist/*
 .yarn/sdks/
 .pnp.cjs.d # If it exists
 .yarn/*
-.yarn/install-state.gz
+.yarn/**
+preview-app.apk

@@ -95,6 +95,19 @@ create index IF not exists idx_task_completion_history_task_id on public.task_co
 - [TanStack Query (FKA React Query)](https://tanstack.com/query/latest/docs/framework/react/overview)
 - [TanStack Form](https://tanstack.com/form/latest)
 
+- [Context7](https://context7.com/): Context7 is Up-to-date documentation for LLMs and AI code editors
+
+- When using Context7 , make sure that you keep the range of output in the range of 2k to 10k based on what you think is the best for the user.
+
+## Context7 compatible library IDs for quick access
+
+/expo/expo
+/supabase/supabase-js
+/tanstack/form
+/tanstack/query
+/react-native-elements/react-native-elements
+/supabase/supabase
+
 ## State Management
 
 - Don't change utils\supabase.ts file

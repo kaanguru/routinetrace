@@ -5,9 +5,7 @@ import {
   Text,
   Pressable,
   View,
-  FlatList,
   SafeAreaView,
-  ListRenderItem,
 } from "react-native";
 
 import Header from "@/components/Header";
@@ -17,6 +15,9 @@ import { Tables } from "@/database.types";
 import useTasksQuery from "@/hooks/useTasksQueries";
 import { Task } from "@/types";
 import wasTaskDueYesterday from "@/utils/tasks/wasTaskDueYesterday";
+import { FlashList ,ListRenderItem} from "@shopify/flash-list";
+
+const ESTIMATED_ITEM_HEIGHT = 80;
 
 export default function TasksOfYesterday() {
   const { data: notCompletedTasks } = useTasksQuery("not-completed");
@@ -61,10 +62,12 @@ export default function TasksOfYesterday() {
         <Text>🎧 Check your tasks before you turn into a human metronome</Text>
         <TuneUp />
         <Divider />
-        <FlatList
+        <FlashList
           data={tasksDueYesterday}
           renderItem={taskOfYesterday}
           keyExtractor={(item) => item.id.toString()}
+          estimatedItemSize={ESTIMATED_ITEM_HEIGHT}
+
         />
       </View>
     </SafeAreaView>
