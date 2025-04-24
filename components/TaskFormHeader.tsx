@@ -60,7 +60,6 @@ function TaskFormHeader({
 
       {formData.repeatPeriod === "Weekly" && (
         <View style={{ marginTop: 10, padding: 10 }}>
-          <View style={{ flexDirection: "row", alignItems: "flex-start" }}>
             <RepeatFrequencySlider
               period={formData.repeatPeriod}
               frequency={formData.repeatFrequency}
@@ -68,7 +67,6 @@ function TaskFormHeader({
                 setFormData((prev) => ({ ...prev, repeatFrequency: value }))
               }
             />
-          </View>
           <WeekdaySelector
             selectedDays={formData.repeatOnWk}
             onDayToggle={(day, isSelected) => {
