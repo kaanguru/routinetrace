@@ -2,12 +2,14 @@ import { Ionicons } from "@expo/vector-icons";
 import { Card, Button, useThemeMode } from "@rneui/themed";
 import { router } from "expo-router";
 import { useCallback } from "react";
-import { Text, Pressable, View, FlatList } from "react-native";
+import { Text, Pressable, View, StyleSheet } from "react-native";
 
 import Header from "~/components/Header";
 import { Tables } from "@/database.types";
 import { useToggleComplete } from "~/hooks/useTasksMutations";
 import useTasksQueries from "~/hooks/useTasksQueries";
+import { FlashList } from "@shopify/flash-list";
+const ESTIMATED_ITEM_HEIGHT = 139;
 
 export default function CompletedTasks() {
   const { mode } = useThemeMode();
@@ -60,20 +62,70 @@ export default function CompletedTasks() {
   }
 
   return (
-    <View>
+    <View style={styles.container}>
       <Header headerTitle="Completed Tasks" />
-      <FlatList
+      <FlashList
         data={tasks}
         renderItem={renderItem}
         keyExtractor={(item) => item.id.toString()}
         ListEmptyComponent={<Text>No completed tasks found</Text>}
         onRefresh={refetch}
         refreshing={isLoading}
-        contentContainerStyle={{ paddingBottom: 20, paddingEnd: 20 }}
-        maxToRenderPerBatch={3}
-        windowSize={6}
-        removeClippedSubviews
+        contentContainerStyle={{ paddingBottom: 20 }}
+        estimatedItemSize={ESTIMATED_ITEM_HEIGHT}
+
       />
     </View>
   );
 }
+const styles = StyleSheet.create({
+  container: {
+    flex: 1, 
+  },
+  listContainer: {
+    flex: 1, 
+  },
+  centered: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  activityIndicator: {
+      marginTop: 20,
+  },
+  errorText: {
+      marginBottom: 10,
+      color: 'red',
+      textAlign: 'center',
+  },
+  emptyText: {
+      textAlign: 'center',
+      marginTop: 50,
+      fontSize: 16,
+      color: 'grey',
+  },
+  card: {
+    marginHorizontal: 10,
+    marginVertical: 5,
+    borderRadius: 8,
+    padding: 0,
+  },
+  cardPressable: {
+     padding: 15,
+  },
+  cardContent: {
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    justifyContent: 'space-between',
+  },
+  textContainer: {
+    flex: 1, 
+    marginRight: 10, 
+  },
+
+  listContent: {
+    paddingBottom: 20, 
+    paddingTop: 10, 
+  },
+});
