@@ -7,7 +7,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { ActivityIndicator, Alert, ScrollView, View, Text } from "react-native";
 
 import ChecklistSection from "@/components/ChecklistSection";
-import { FormInput } from "@/components/TaskFormInput";
+import TaskFormInput from "@/components/TaskFormInput";
 import Header from "@/components/Header";
 import { RepeatFrequencySlider } from "@/components/RepeatFrequencySlider";
 import RepeatPeriodSelector from "@/components/RepeatPeriodSelector";
@@ -23,6 +23,9 @@ import { ErrorBoundary } from "react-error-boundary";
 import ErrorFallback from "@/components/error/ErrorFallback";
 import handleErrorBoundaryError from "@/utils/errorHandler";
 
+import DraggableFlatList, { DragEndParams, RenderItemParams } from "react-native-draggable-flatlist";
+import DraggableRoutineItem from "@/components/DraggableRoutineItem";
+import TaskFormHeader from "@/components/TaskFormHeader";
 const EditTask = () => {
   const router = useRouter();
   const { id: taskID } = useLocalSearchParams<{ id: string }>();
@@ -152,7 +155,7 @@ const EditTask = () => {
       <ScrollView>
         <View>
           <View>
-            <FormInput
+            <TaskFormInput
               title={formData.title}
               notes={formData.notes}
               setTitle={(title: string) =>
@@ -278,12 +281,42 @@ const EditTask = () => {
               <Text>Error loading checklist items</Text>
             ) : (
               <ChecklistSection
-                items={formData.checklistItems}
-                onAdd={handleAddChecklistItem}
-                onRemove={handleRemoveChecklistItem}
-                onUpdate={handleUpdateChecklistItem}
-                setFormData={setFormData}
-              />
+                ListHeaderComponent={
+                  <TaskFormHeader
+                    formData={formData}
+                    onAdd={handleAddChecklistItem}
+                    setFormData={setFormData}
+                    showDatePicker={showDatePicker}
+                    setShowDatePicker={setShowDatePicker}
+                  />
+                }
+              >
+                <DraggableFlatList
+                  data={formData.checklistItems}
+                  keyExtractor={(item) => item.id.toString()}
+                  onDragEnd={(params: DragEndParams<TaskFormData["checklistItems"][number]>) => {
+                    setFormData((prev) => ({
+                      ...prev,
+                      checklistItems: params.data.map((item, idx) => ({
+                        ...item,
+                        position: idx,
+                      })),
+                    }));
+                  }}
+                  renderItem={(params: RenderItemParams<TaskFormData["checklistItems"][number]>) => (
+                    <DraggableRoutineItem
+                      item={params.item}
+                      index={params.index}
+                      drag={params.drag}
+                      isActive={params.isActive}
+                      onUpdate={handleUpdateChecklistItem}
+                      onRemove={handleRemoveChecklistItem}
+                    />
+                  )}
+                  contentContainerStyle={{ paddingBottom: 48, gap: 10 }}
+                  scrollEnabled
+                />
+              </ChecklistSection>
             )}
           </View>
         </View>
