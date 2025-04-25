@@ -16,9 +16,9 @@ Sentry.init({
 
 const queryClient = new QueryClient();
 
-// if (__DEV__) {
-//   require("@/ReactotronConfig");
-// }
+if (__DEV__) {
+  require("@/ReactotronConfig");
+}
 
 export default Sentry.wrap(function RootLayout() {
   const theme = createTheme(themeStyles);
