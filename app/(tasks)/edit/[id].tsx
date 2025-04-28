@@ -39,19 +39,26 @@ import createTaskUpdate from "@/utils/createTaskUpdate";
 import handleErrorBoundaryError from "@/utils/errorHandler";
 
 export default function EditTask() {
+  // Debug
   const info = useRenderInfo("EditTaskScreen");
   console.log(info?.name + " renders: " + info?.renders);
 
+  // Theme and routing
   const { mode } = useThemeMode();
   const router = useRouter();
   const { id: taskID } = useLocalSearchParams<{ id: string }>();
+
+  // Data fetching
+  const { data: theTask, isLoading } = useTaskById(taskID);
   const { checkListItems, isCheckListItemsLoading, isCheckListItemsError } =
     useChecklistItems(taskID);
-  const { data: theTask, isLoading } = useTaskById(taskID);
+
+  // Mutations
   const updateTaskMutation = useUpdateTask();
   const deleteTaskMutation = useDeleteTask();
   const { updateChecklistItem } = useChecklistItemMutations(taskID);
 
+  // Form state
   const [formData, setFormData] = useState<TaskFormData>({
     title: "",
     notes: "",
@@ -62,35 +69,30 @@ export default function EditTask() {
     isCustomStartDateEnabled: false,
     checklistItems: [],
   });
-
   const [editingItemIndex, setEditingItemIndex] = useState<number | null>(null);
 
+  // Form handlers
   const setTitle = useCallback((title: string) => {
     setFormData((prev) => ({ ...prev, title }));
   }, []);
-
   const setNotes = useCallback((notes: string) => {
     setFormData((prev) => ({ ...prev, notes }));
   }, []);
-
   const setRepeatPeriod = useCallback((value: RepeatPeriod | "" | null) => {
     setFormData((prev) => ({
       ...prev,
       repeatPeriod: value as RepeatPeriod | "",
     }));
   }, []);
-
   const setRepeatFrequency = useCallback((value: number) => {
     setFormData((prev) => ({ ...prev, repeatFrequency: value }));
   }, []);
-
   const toggleCustomStartDate = useCallback(() => {
     setFormData((prev) => ({
       ...prev,
       isCustomStartDateEnabled: !prev.isCustomStartDateEnabled,
     }));
   }, []);
-
   const setCustomStartDate = useCallback((date: Date | undefined) => {
     if (date) {
       setFormData((prev) => ({
@@ -99,11 +101,9 @@ export default function EditTask() {
       }));
     }
   }, []);
-
   const toggleWeekDay = useCallback((day: DayOfWeek, isSelected: boolean) => {
     setFormData((prev) => {
       const currentlySelected = prev.repeatOnWk.includes(day);
-
       if (isSelected && !currentlySelected) {
         return { ...prev, repeatOnWk: [...prev.repeatOnWk, day] };
       } else if (!isSelected && currentlySelected) {
@@ -488,10 +488,9 @@ export default function EditTask() {
     <Background>
       <Header headerTitle={formData.title || "Edit Task"} />
       <View style={{ flex: 1 }}>
-        {/* Use ScrollView instead of FlashList */}
         <ScrollView
           contentContainerStyle={{ paddingBottom: 90 }} // Apply padding for floating buttons
-          keyboardShouldPersistTaps="handled" // Helps with inputs inside ScrollView
+          keyboardShouldPersistTaps="handled"
         >
           {/* --- Header Section (Form fields) --- */}
           <View style={{ flex: 1, padding: 8 }}>
