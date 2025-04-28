@@ -4,7 +4,7 @@ import { Text, Button, CheckBox, Icon, useThemeMode } from "@rneui/themed";
 import { View, Pressable } from "react-native";
 
 import TaskFormInput from "@/components/TaskFormInput";
-import { RepeatFrequencySlider } from "@/components/RepeatFrequencySlider";
+import RepeatFrequencySlider from "@/components/RepeatFrequencySlider";
 import RepeatPeriodSelector from "@/components/RepeatPeriodSelector";
 import WeekdaySelector from "@/components/WeekDaySelector";
 import { RepeatPeriod, TaskFormData } from "@/types";
@@ -26,7 +26,6 @@ function TaskFormHeader({
 
   return (
     <View>
-     
       <TaskFormInput
         title={formData.title}
         notes={formData.notes}
@@ -60,13 +59,13 @@ function TaskFormHeader({
 
       {formData.repeatPeriod === "Weekly" && (
         <View style={{ marginTop: 10, padding: 10 }}>
-            <RepeatFrequencySlider
-              period={formData.repeatPeriod}
-              frequency={formData.repeatFrequency}
-              onChange={(value) =>
-                setFormData((prev) => ({ ...prev, repeatFrequency: value }))
-              }
-            />
+          <RepeatFrequencySlider
+            period={formData.repeatPeriod}
+            frequency={formData.repeatFrequency}
+            onChange={(value) =>
+              setFormData((prev) => ({ ...prev, repeatFrequency: value }))
+            }
+          />
           <WeekdaySelector
             selectedDays={formData.repeatOnWk}
             onDayToggle={(day, isSelected) => {
@@ -149,7 +148,7 @@ function TaskFormHeader({
           }}
         />
       )}
-       <Button
+      <Button
         type="solid"
         onPress={onAdd}
         title="Add Routines"
