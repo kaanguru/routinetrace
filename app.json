@@ -17,6 +17,7 @@
         "foregroundImage": "./assets/icons/adaptive-icon.png",
         "backgroundColor": "#fffaec"
       },
+      "softwareKeyboardLayoutMode": "pan",
       "package": "com.kaanguru.routinetrace"
     },
     "web": {

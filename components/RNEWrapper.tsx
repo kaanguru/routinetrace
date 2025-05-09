@@ -14,6 +14,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState, createContext, useContext } from "react";
 import { ActivityIndicator, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { KeyboardProvider } from "react-native-keyboard-controller";
 
 import { useAuth } from "@/context/AuthenticationProvider";
 import { SoundProvider } from "~/context/SoundContext";
@@ -148,25 +149,27 @@ export default function RNEWrapper() {
     <InitializationContext.Provider
       value={{ initialized, hasTasksFromYesterday }}
     >
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <SoundProvider>
-          <Stack
-            screenOptions={{
-              headerShown: false,
-              animation: "none",
-            }}
-          >
-            <Stack.Screen name="(drawer)" />
-            <Stack.Screen
-              name="(onboarding)"
-              options={{
+      <KeyboardProvider>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <SoundProvider>
+            <Stack
+              screenOptions={{
                 headerShown: false,
-                animation: "slide_from_right",
+                animation: "none",
               }}
-            />
-          </Stack>
-        </SoundProvider>
-      </GestureHandlerRootView>
+            >
+              <Stack.Screen name="(drawer)" />
+              <Stack.Screen
+                name="(onboarding)"
+                options={{
+                  headerShown: false,
+                  animation: "slide_from_right",
+                }}
+              />
+            </Stack>
+          </SoundProvider>
+        </GestureHandlerRootView>
+      </KeyboardProvider>
     </InitializationContext.Provider>
   );
 }

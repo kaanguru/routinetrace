@@ -1,4 +1,6 @@
-import { Text, Button } from "@rneui/themed";
+import { Button } from "@rneui/themed";
+import { KeyboardAvoidingView } from "react-native-keyboard-controller";
+
 import { useRouter } from "expo-router";
 import { useCallback, useState } from "react";
 import { View, Alert } from "react-native";
@@ -34,9 +36,11 @@ export default function CreateTask() {
     checklistItems: [],
   });
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const { mutateAsync: createTask, isPending: isCreatingTask } = useCreateTask(); // Use mutateAsync
+  const { mutateAsync: createTask, isPending: isCreatingTask } =
+    useCreateTask(); // Use mutateAsync
   const { data: user } = useUser();
-  const { mutateAsync: updateHealthAndHappiness } = useUpdateHealthAndHappiness(); // Use mutateAsync
+  const { mutateAsync: updateHealthAndHappiness } =
+    useUpdateHealthAndHappiness(); // Use mutateAsync
   const { data: healthAndHappiness } = useHealthAndHappinessQuery(user?.id);
 
   const handleCreate = async () => {
@@ -56,7 +60,8 @@ export default function CreateTask() {
             updateHealthAndHappiness({
               user_id: user.id,
               health: (healthAndHappiness.health ?? 0) + genRandomInt(2, 4),
-              happiness: (healthAndHappiness.happiness ?? 0) + genRandomInt(8, 24),
+              happiness:
+                (healthAndHappiness.happiness ?? 0) + genRandomInt(8, 24),
             }),
             (error) => error as Error
           );
@@ -96,25 +101,35 @@ export default function CreateTask() {
     }));
   }, []);
 
-  const handleUpdateChecklistItem = useCallback((index: number, content: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      checklistItems: prev.checklistItems.toSpliced(index, 1, {
-        ...prev.checklistItems[index],
-        content,
-      }),
-    }));
-  }, []);
+  const handleUpdateChecklistItem = useCallback(
+    (index: number, content: string) => {
+      setFormData((prev) => ({
+        ...prev,
+        checklistItems: prev.checklistItems.toSpliced(index, 1, {
+          ...prev.checklistItems[index],
+          content,
+        }),
+      }));
+    },
+    []
+  );
   return (
-    <Background>
-      <Header headerTitle="➕" />
-        <View style={{ marginVertical: 0, paddingHorizontal: 12 ,flex:1 , justifyContent:"space-between"}}>
+    <KeyboardAvoidingView style={{ flex: 1 }} keyboardVerticalOffset={90}>
+      <Background>
+        <Header headerTitle="➕" />
+        <View
+          style={{
+            marginVertical: 0,
+            paddingHorizontal: 12,
+            flex: 1,
+            justifyContent: "space-between",
+          }}
+        >
           <ChecklistSection
             ListHeaderComponent={
               <TaskFormHeader
                 formData={formData}
                 onAdd={handleAddChecklistItem}
-
                 setFormData={setFormData}
                 showDatePicker={showDatePicker}
                 setShowDatePicker={setShowDatePicker}
@@ -135,14 +150,12 @@ export default function CreateTask() {
                   })),
                 }));
               }}
-              renderItem={(
-                {
-                  item,
-                  getIndex,
-                  drag,
-                  isActive,
-                }: RenderItemParams<TaskFormData["checklistItems"][number]>
-              ) => (
+              renderItem={({
+                item,
+                getIndex,
+                drag,
+                isActive,
+              }: RenderItemParams<TaskFormData["checklistItems"][number]>) => (
                 <DraggableRoutineItem
                   item={item}
                   index={getIndex?.() ?? 0}
@@ -156,8 +169,20 @@ export default function CreateTask() {
               scrollEnabled
             />
           </ChecklistSection>
-      <Button onPress={handleCreate} testID="create-task-button" disabled={isCreatingTask} title={isCreatingTask ? "Creating..." : "Create"} style={{ position: "absolute", bottom: 0, width: '100%', padding: 10 }}  />
+          <Button
+            onPress={handleCreate}
+            testID="create-task-button"
+            disabled={isCreatingTask}
+            title={isCreatingTask ? "Creating..." : "Create"}
+            style={{
+              position: "absolute",
+              bottom: 0,
+              width: "100%",
+              padding: 10,
+            }}
+          />
         </View>
-    </Background>
+      </Background>
+    </KeyboardAvoidingView>
   );
 }

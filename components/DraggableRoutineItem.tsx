@@ -3,6 +3,7 @@ import { useThemeMode, Input } from "@rneui/themed";
 import { memo } from "react";
 import { Pressable, View } from "react-native";
 import Animated from "react-native-reanimated";
+import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 
 import type { TaskFormData } from "~/types";
 
@@ -32,36 +33,53 @@ const DraggableRoutineItem = memo(
           opacity: isActive ? 0.9 : 1,
         }}
       >
-        <View
-          style={{
-            flexDirection: "row",
-            width: "86%",
-            justifyContent: "flex-start",
-            backgroundColor: mode === "dark" ? "#051824" : "#FFFAEB",
-            alignItems: "flex-start",
-            height: ITEM_HEIGHT,
-          }}
-        >
-          <Pressable onLongPress={drag} style={{ paddingTop: 10, marginRight: 6 }}>
-            <FontAwesome5 name="grip-vertical" size={18} color={mode === "dark" ? "#FFFAEB" : "#051824"} />
-          </Pressable>
-          <Input
-            placeholder="Checklist item"
-            value={item.content}
-            onChangeText={(text) => {
-              onUpdate(index, text);
-            }}
-            placeholderTextColor="#9CA3AF"
-            autoFocus={false}
+        <KeyboardAwareScrollView bottomOffset={200}>
+          <View
             style={{
-              color: mode === "dark" ? "#FFFAEB" : "#051824",
-              fontSize: 16,
+              flexDirection: "row",
+              width: "86%",
+              justifyContent: "flex-start",
+              backgroundColor: mode === "dark" ? "#051824" : "#FFFAEB",
+              alignItems: "flex-start",
+              height: ITEM_HEIGHT,
             }}
-          />
-          <Pressable onPress={() => onRemove(index)} hitSlop={10} style={{ padding: 10 }}>
-            <Ionicons name="trash-bin" size={24} color={mode === "dark" ? "#FFFAEB" : "#051824"} />
-          </Pressable>
-        </View>
+          >
+            <Pressable
+              onLongPress={drag}
+              style={{ paddingTop: 10, marginRight: 6 }}
+            >
+              <FontAwesome5
+                name="grip-vertical"
+                size={18}
+                color={mode === "dark" ? "#FFFAEB" : "#051824"}
+              />
+            </Pressable>
+            <Input
+              placeholder="Checklist item"
+              value={item.content}
+              onChangeText={(text) => {
+                onUpdate(index, text);
+              }}
+              placeholderTextColor="#9CA3AF"
+              autoFocus={false}
+              style={{
+                color: mode === "dark" ? "#FFFAEB" : "#051824",
+                fontSize: 16,
+              }}
+            />
+            <Pressable
+              onPress={() => onRemove(index)}
+              hitSlop={10}
+              style={{ padding: 10 }}
+            >
+              <Ionicons
+                name="trash-bin"
+                size={24}
+                color={mode === "dark" ? "#FFFAEB" : "#051824"}
+              />
+            </Pressable>
+          </View>
+        </KeyboardAwareScrollView>
       </Animated.View>
     );
   }

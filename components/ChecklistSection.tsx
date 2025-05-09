@@ -9,13 +9,13 @@ export default function ChecklistSection({
 }>) {
   return (
     <View style={{ width: "100%", marginVertical: 20 }}>
-      {ListHeaderComponent && (
-        typeof ListHeaderComponent === 'function'
-          ? <ListHeaderComponent />
-          : ListHeaderComponent
-      )}
+      {ListHeaderComponent &&
+        (typeof ListHeaderComponent === "function" ? (
+          <ListHeaderComponent />
+        ) : (
+          ListHeaderComponent
+        ))}
       {children}
-      
     </View>
   );
 }
