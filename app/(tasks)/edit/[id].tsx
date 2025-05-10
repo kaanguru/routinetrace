@@ -6,13 +6,12 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { ActivityIndicator, Alert, View, ScrollView } from "react-native";
 import { Result, ok, err, ResultAsync } from "neverthrow";
-// import { useRenderInfo } from "@uidotdev/usehooks"; // Keep if needed for debugging
 
 // Components
 import Header from "@/components/Header";
 import Background from "@/components/Background";
-import TaskDetailsForm from "@/components/edit/TaskDetailsForm"; // Import new component
-import ChecklistEditor from "@/components/edit/ChecklistEditor"; // Import new component
+import TaskDetailsForm from "@/components/edit/TaskDetailsForm";
+import ChecklistEditor from "@/components/edit/ChecklistEditor";
 
 // Styles
 import { editStyles, getActionButtonsContainerStyle } from "@/theme/editStyles";
@@ -24,18 +23,14 @@ import { useUpdateTask, useDeleteTask } from "@/hooks/useTasksMutations";
 import { useTaskById } from "@/hooks/useTasksQueries";
 
 // Types
-import { RepeatPeriod, TaskFormData, DayOfWeek, Item } from "@/types";
+import { RepeatPeriod, TaskFormData, DayOfWeek } from "@/types";
 
 // Utilities
 import createTaskUpdate from "@/utils/edit/createTaskUpdate";
 import validateEditFormData from "@/utils/edit/validateEditFormData";
 import updateChecklistItemContentAtIndex from "@/utils/edit/updateChecklistItemContentAtIndex";
-import handleErrorBoundaryError from "@/utils/errorHandler"; // Assuming you have this
 
 export default function EditTask() {
-  // const info = useRenderInfo("EditTaskScreen");
-  // console.log(info?.name + " renders: " + info?.renders);
-
   // Theme and routing
   const { mode } = useThemeMode();
   const router = useRouter();
@@ -399,7 +394,7 @@ export default function EditTask() {
   return (
     <Background>
       <Header headerTitle={formData.title || "Edit Task"} />
-      <View style={editStyles.flexContainer}>
+      <View style={{ flex: 1, justifyContent: "center" }}>
         <ScrollView
           contentContainerStyle={editStyles.scrollViewContent}
           keyboardShouldPersistTaps="handled"
