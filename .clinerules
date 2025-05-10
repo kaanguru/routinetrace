@@ -102,10 +102,15 @@ create index IF not exists idx_task_completion_history_task_id on public.task_co
 ## Context7 compatible library IDs for quick access
 
 /expo/expo
+
 /supabase/supabase-js
+
 /tanstack/form
+
 /tanstack/query
+
 /react-native-elements/react-native-elements
+
 /supabase/supabase
 
 ## State Management
