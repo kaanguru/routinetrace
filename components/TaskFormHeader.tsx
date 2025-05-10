@@ -14,13 +14,11 @@ function TaskFormHeader({
   setFormData,
   showDatePicker,
   setShowDatePicker,
-  onAdd,
 }: {
   formData: TaskFormData;
   setFormData: React.Dispatch<React.SetStateAction<TaskFormData>>;
   showDatePicker: boolean;
   setShowDatePicker: React.Dispatch<React.SetStateAction<boolean>>;
-  onAdd: () => void;
 }) {
   const { mode } = useThemeMode();
 
@@ -148,21 +146,6 @@ function TaskFormHeader({
           }}
         />
       )}
-      <Button
-        type="solid"
-        onPress={onAdd}
-        title="Add Routines"
-        size="sm"
-        containerStyle={{ height: 40, marginBottom: 10 }}
-      >
-        <FontAwesome6
-          name="add"
-          size={16}
-          color={mode === "dark" ? "#FFFAEB" : "#051824"}
-          style={{ marginRight: 5 }}
-        />
-        Add Routines
-      </Button>
     </View>
   );
 }

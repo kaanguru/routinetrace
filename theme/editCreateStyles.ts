@@ -115,7 +115,7 @@ const editStyles = StyleSheet.create({
   // Checklist Item specific styles
   checklistItemRow: {
     flexDirection: "row",
-    alignItems: "center",
+    // alignItems: "center",
     justifyContent: "space-between",
   },
   checklistItemInputContainer: {
@@ -123,12 +123,13 @@ const editStyles = StyleSheet.create({
     marginRight: 8,
   },
   checklistItemInput: {
-    // Add styles if needed, e.g., fontSize, fontFamily
-    height: 30,
+    height: 20,
   },
   checklistItemInputInnerContainer: {
     // borderBottomWidth: 0, // Remove RNE Input underline
-    // paddingHorizontal: 1, // Remove RNE Input default padding
+    paddingHorizontal: 0, // Remove RNE Input default padding
+    paddingVertical: 0, // Remove RNE Input default padding
+    marginBottom: -28,
   },
   checklistItemActions: {
     flexDirection: "row",

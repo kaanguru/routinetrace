@@ -14,7 +14,10 @@ import TaskDetailsForm from "@/components/edit/TaskDetailsForm";
 import ChecklistEditor from "@/components/edit/ChecklistEditor";
 
 // Styles
-import { editStyles, getActionButtonsContainerStyle } from "@/theme/editStyles";
+import {
+  editStyles,
+  getActionButtonsContainerStyle,
+} from "@/theme/editCreateStyles";
 
 // Hooks
 import useChecklistItemMutations from "@/hooks/useCheckListMutations";
@@ -169,7 +172,7 @@ export default function EditTask() {
       } = {
         id: `new-${Date.now()}-${newPosition}`,
         content: "",
-        isComplete: false, // Use isComplete (camelCase)
+        isComplete: false,
         position: newPosition,
       };
       // Ensure positions are sequential after adding
@@ -181,10 +184,9 @@ export default function EditTask() {
       );
       return { ...prev, checklistItems: updatedItems };
     });
-    // Edit the new item immediately
-    // Note: formData might not be updated immediately, use the length from the prev state
-    setTimeout(() => setEditingItemIndex(formData.checklistItems.length), 0);
-  }, [formData.checklistItems.length]); // Depend on length for correct index
+
+    setTimeout(() => setEditingItemIndex(formData.checklistItems.length), 3);
+  }, [formData.checklistItems.length]);
 
   const handleRemoveChecklistItem = useCallback(
     (indexToRemove: number) => {
@@ -423,7 +425,7 @@ export default function EditTask() {
             onUpdateItem={handleUpdateChecklistItemContent}
             onMoveItemUp={handleMoveChecklistItemUp}
             onMoveItemDown={handleMoveChecklistItemDown}
-            isLoading={isCheckListItemsLoading && !checkListItems} // Show loading only if items haven't loaded yet
+            isLoading={isCheckListItemsLoading && !checkListItems}
             isError={isCheckListItemsError}
           />
         </ScrollView>

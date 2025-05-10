@@ -16,7 +16,7 @@ import ErrorFallback from "@/components/error/ErrorFallback";
 import { RepeatPeriod, TaskFormData, DayOfWeek } from "@/types";
 
 // Styles
-import { editStyles } from "@/theme/editStyles";
+import { editStyles } from "@/theme/editCreateStyles";
 
 // Utilities
 import handleErrorBoundaryError from "@/utils/errorHandler";

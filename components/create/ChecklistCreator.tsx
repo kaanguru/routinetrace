@@ -4,9 +4,6 @@ import { View, TouchableOpacity, ActivityIndicator } from "react-native";
 import { Input, Button, Text, useThemeMode } from "@rneui/themed";
 import { FontAwesome6, MaterialIcons } from "@expo/vector-icons";
 
-// Types
-import { Item } from "@/types"; // Assuming ChecklistItem is defined in types
-
 // Styles
 import {
   editStyles,
@@ -14,11 +11,11 @@ import {
   getChecklistItemStyle,
 } from "@/theme/editCreateStyles";
 
-interface ChecklistEditorProps {
+interface ChecklistCreatorProps {
   checklistItems: {
     id: string;
     content: string;
-    isComplete: boolean; // Use isComplete (camelCase)
+    isComplete: boolean;
     position: number;
   }[];
   editingItemIndex: number | null;
@@ -28,11 +25,9 @@ interface ChecklistEditorProps {
   onUpdateItem: (index: number, content: string) => void;
   onMoveItemUp: (index: number) => void;
   onMoveItemDown: (index: number) => void;
-  isLoading: boolean;
-  isError: boolean;
 }
 
-export default function ChecklistEditor({
+export default function ChecklistCreator({
   checklistItems,
   editingItemIndex,
   setEditingItemIndex,
@@ -41,9 +36,7 @@ export default function ChecklistEditor({
   onUpdateItem,
   onMoveItemUp,
   onMoveItemDown,
-  isLoading,
-  isError,
-}: ChecklistEditorProps) {
+}: ChecklistCreatorProps) {
   const { mode } = useThemeMode();
   const moveButtonStyle = getMoveButtonStyle(mode);
 
@@ -69,40 +62,24 @@ export default function ChecklistEditor({
         />
       </View>
 
-      {isLoading && <ActivityIndicator color="#ff006e" />}
-      {isError && (
-        <Text style={editStyles.checklistErrorText}>
-          Error loading checklist items
-        </Text>
-      )}
-
       {checklistItems.map((item, index) => {
         const isEditing = editingItemIndex === index;
         const itemStyle = getChecklistItemStyle(isEditing, mode);
 
         return (
           <View style={itemStyle.container} key={item.id?.toString() ?? index}>
-            <View style={editStyles.checklistItemRow}>
-              <View style={{ flex: 1, marginRight: 8 }}>
+            <View id="checklistItem" style={editStyles.checklistItemRow}>
+              <View
+                id="checklistItemCheckbox"
+                style={{ flex: 1, marginRight: 8 }}
+              >
                 <Input
-                  nativeID={`checklistItemInput-${index}`} // More specific ID
+                  nativeID={`checklistItemInput-${index}`}
                   placeholder="Enter routine..."
                   value={item.content}
                   onChangeText={(content) => onUpdateItem(index, content)}
                   autoFocus={isEditing}
-                  onBlur={() => {
-                    // Optional: only blur if *this* item was being edited
-                    // if (isEditing) setEditingItemIndex(null);
-                    // Keeping it simple: blurring any input stops editing mode for now
-                    // setEditingItemIndex(null);
-                    // Let's refine: Only stop editing if the input losing focus *is* the one being edited
-                    if (isEditing) {
-                      // Maybe add a small delay in case a button press caused the blur
-                      // setTimeout(() => setEditingItemIndex(null), 100);
-                      // Or rely on the "Done" button to explicitly exit edit mode
-                    }
-                  }}
-                  onSubmitEditing={() => setEditingItemIndex(null)} // Stop editing on submit
+                  onSubmitEditing={() => setEditingItemIndex(null)}
                   inputContainerStyle={
                     editStyles.checklistItemInputInnerContainer
                   }
