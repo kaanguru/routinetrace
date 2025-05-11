@@ -25,6 +25,14 @@
       "favicon": "./assets/icons/favicon.png"
     },
     "plugins": [
+      [
+        "@sentry/react-native/expo",
+        {
+          "url": "https://sentry.io/",
+          "project": "routinetrace",
+          "organization": "cemkaanguru"
+        }
+      ],
       "expo-router",
       [
         "expo-splash-screen",
