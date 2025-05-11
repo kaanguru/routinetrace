@@ -14,7 +14,6 @@
     "lint": "expo lint",
     "logs": "react-native log-android",
     "start": "expo start --android -c",
-    "start.c": "expo start --android",
     "test": "jest --watchAll",
     "web": "expo start --web",
     "update:sdk": "expo install expo@latest && expo install --fix",
