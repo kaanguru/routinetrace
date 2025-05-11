@@ -48,7 +48,8 @@
           "project": "routinetrace",
           "organization": "cemkaanguru"
         }
-      ]
+      ],
+      "expo-asset"
     ],
     "experiments": {
       "typedRoutes": true
