@@ -10,7 +10,7 @@ echo "Removing android build folder..."
 rm -rf android/build
 
 echo "Deleting pnpm-lock..."
-rm -f pnpm-lock.lock
+rm -f pnpm-lock.yaml
 
 echo "Cleaning pnpm cache..."
 pnpm store prune
