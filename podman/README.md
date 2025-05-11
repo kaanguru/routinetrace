@@ -11,7 +11,7 @@ Docker image for Expo builds to build android apps
 ## Usage with podman
 
 1. Clone this repository put it inside a subfolder like `podman`
-2. Build the image `podman compose up -d`
+2. Build the image `podman compose up -d` (win) or `podman-compose up -d` (lin)
 3. Get into container bash `podman exec -it expo-android-builder bash`
 4. Add 'android/\*' to .gitignore file
 5. Login to expo `eas login`
