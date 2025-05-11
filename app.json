@@ -13,6 +13,7 @@
       "bundleIdentifier": "com.kaanguru.routinetrace"
     },
     "android": {
+      "edgeToEdgeEnabled": true,
       "adaptiveIcon": {
         "foregroundImage": "./assets/icons/adaptive-icon.png",
         "backgroundColor": "#fffaec"
@@ -25,14 +26,6 @@
       "favicon": "./assets/icons/favicon.png"
     },
     "plugins": [
-      [
-        "@sentry/react-native/expo",
-        {
-          "url": "https://sentry.io/",
-          "project": "routinetrace",
-          "organization": "cemkaanguru"
-        }
-      ],
       "expo-router",
       [
         "expo-splash-screen",
@@ -49,14 +42,7 @@
         }
       ],
       "expo-font",
-      [
-        "@sentry/react-native/expo",
-        {
-          "url": "https://sentry.io/",
-          "project": "routinetrace",
-          "organization": "cemkaanguru"
-        }
-      ],
+
       "expo-asset"
     ],
     "experiments": {

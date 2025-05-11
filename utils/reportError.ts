@@ -1,4 +1,4 @@
-import * as Sentry from "@sentry/react-native";
+// import * as Sentry from "@sentry/react-native";
 import { Result, ResultAsync } from "neverthrow";
 /**
  * Reports errors from a `Result` or `ResultAsync` instance to Sentry and logs them.
@@ -32,11 +32,11 @@ export default function reportError<T, E>(
 }
 
 function handleError<E>(error: E): void {
-  if (error instanceof Error) {
+  /*   if (error instanceof Error) {
     Sentry.captureException(error);
   } else {
     const errorObj = new Error(String(error));
     Sentry.captureException(errorObj, { extra: { originalError: error } });
-  }
+  } */
   console.error("Error ❌❌❌:", error);
 }

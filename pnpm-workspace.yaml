@@ -1,5 +1,2 @@
-ignoredBuiltDependencies:
-  - '@sentry/cli'
-
 onlyBuiltDependencies:
   - unrs-resolver
