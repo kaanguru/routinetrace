@@ -11,7 +11,6 @@ import {
   Dialog,
   useThemeMode,
   Card,
-  Button,
   CheckBox,
   Divider,
 } from "@rneui/themed";

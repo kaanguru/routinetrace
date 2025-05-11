@@ -1,5 +1,5 @@
 import { MaterialIcons, FontAwesome5 } from "@expo/vector-icons";
-import { Text, useThemeMode } from "@rneui/themed";
+import { Text, useTheme, useThemeMode } from "@rneui/themed";
 import { memo } from "react";
 import { ActivityIndicator, Pressable, View, StyleSheet } from "react-native";
 import Animated from "react-native-reanimated";
@@ -9,6 +9,7 @@ import useChecklistItems from "~/hooks/useCheckListQueries";
 import { TaskItemProps } from "~/types";
 import shortenText from "~/utils/shortenText";
 import AnimatedCheckBox from "./lotties/AnimatedCheckBox";
+import themeStyles from "@/theme/themeStyles";
 
 // Constants
 const ITEM_HEIGHT = 99;
@@ -110,10 +111,11 @@ const DraggableTaskItem = memo(function TaskItem({
   onToggleComplete,
   onPress,
   isFiltered,
-  dragActivator, // New prop from DraggableFlatList
-  isActive, // New prop to indicate if item is being dragged
+  dragActivator,
+  isActive,
 }: TaskItemProps & { dragActivator?: () => void; isActive?: boolean }) {
   const { mode } = useThemeMode();
+  const { theme } = useTheme();
   const { checkListItemsLength, isCheckListItemsLoading } = useChecklistItems(
     task.id
   );
@@ -164,7 +166,8 @@ const DraggableTaskItem = memo(function TaskItem({
                 <MaterialIcons
                   name="event-repeat"
                   size={16}
-                  color={mode === "light" ? "#FFFAEB" : "#051824"}
+                  color="white"
+                  style={{ marginRight: 10 }}
                 />
               </View>
             ) : (
@@ -189,7 +192,7 @@ const DraggableTaskItem = memo(function TaskItem({
             <FontAwesome5
               name="grip-vertical"
               size={18}
-              color={mode === "light" ? "#FFFAEB" : "#051824"}
+              color={mode === "light" ? theme.colors.white : theme.colors.black}
               style={styles.dragHandleIcon}
             />
           </Pressable>
@@ -197,6 +200,7 @@ const DraggableTaskItem = memo(function TaskItem({
       </LinearGradient>
     </View>
   );
-}, areEqual);
+},
+areEqual);
 
 export default DraggableTaskItem;
