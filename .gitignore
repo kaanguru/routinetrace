@@ -48,3 +48,4 @@ dist/*
 .yarn/*
 .yarn/**
 preview-app.apk
+.vscode/**
