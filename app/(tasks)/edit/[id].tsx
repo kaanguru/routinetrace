@@ -3,20 +3,13 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Button, Text, useThemeMode } from "@rneui/themed";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-  useRef,
-} from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
   View,
   ScrollView,
   KeyboardAvoidingView,
-  Platform,
 } from "react-native";
 import { Result, ok, err, ResultAsync } from "neverthrow";
 
@@ -78,20 +71,6 @@ export default function EditTask() {
   });
   const [editingItemIndex, setEditingItemIndex] = useState<number | null>(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
-  const scrollViewRef = useRef<ScrollView>(null);
-
-  const handleInputFocus = useCallback(
-    (event: any) => {
-      if (scrollViewRef.current && isKeyboardVisible) {
-        scrollViewRef.current.scrollTo({
-          y: event.nativeEvent.pageY - 100,
-          animated: true,
-        });
-      }
-    },
-    [isKeyboardVisible],
-  );
 
   // --- Derived State ---
   const isLoading = useMemo(
@@ -103,7 +82,7 @@ export default function EditTask() {
   useEffect(() => {
     function loadTaskData(): Result<void, Error> {
       if (!originalTask || isCheckListItemsLoading) {
-        return ok(undefined); // Wait for data
+        return ok(undefined);
       }
 
       try {
@@ -115,12 +94,12 @@ export default function EditTask() {
           repeatFrequency: originalTask.repeat_frequency || 1,
           repeatOnWk: originalTask.repeat_on_wk || [],
           customStartDate: originalTask.updated_at
-            ? new Date(originalTask.updated_at) // Use specific custom_start_date if available
-            : new Date(), // Fallback needed? Or maybe null? Let's keep new Date() for now
-          isCustomStartDateEnabled: !!originalTask.updated_at, // Logic based on custom_start_date existence
+            ? new Date(originalTask.updated_at)
+            : new Date(),
+          isCustomStartDateEnabled: !!originalTask.updated_at,
           checklistItems:
             checkListItems?.map((item) => ({
-              id: item.id.toString(), // Ensure ID is string for keys
+              id: item.id.toString(),
               content: item.content,
               isComplete: item.is_complete,
               position: item.position ?? 0,
@@ -138,7 +117,7 @@ export default function EditTask() {
       (error) => {
         console.error("Error in loadTaskData effect:", error);
         reportError(err(error));
-      }
+      },
     );
   }, [originalTask, checkListItems, isCheckListItemsLoading]); // Dependencies
 
@@ -188,7 +167,6 @@ export default function EditTask() {
   const handleAddChecklistItem = useCallback(() => {
     setFormData((prev) => {
       const newPosition = prev.checklistItems.length;
-      // Correct the type and properties to match TaskFormData['checklistItems'][number]
       const newItem: {
         id: string;
         content: string;
@@ -200,26 +178,24 @@ export default function EditTask() {
         isComplete: false,
         position: newPosition,
       };
-      // Ensure positions are sequential after adding
       const updatedItems = [...prev.checklistItems, newItem].map(
         (item, index) => ({
           ...item,
           position: index,
-        })
+        }),
       );
       return { ...prev, checklistItems: updatedItems };
     });
 
-    setTimeout(() => setEditingItemIndex(formData.checklistItems.length), 3);
+    setEditingItemIndex(formData.checklistItems.length);
   }, [formData.checklistItems.length]);
 
   const handleRemoveChecklistItem = useCallback(
     (indexToRemove: number) => {
       setFormData((prev) => {
         const filteredItems = prev.checklistItems.filter(
-          (_, i) => i !== indexToRemove
+          (_, i) => i !== indexToRemove,
         );
-        // Ensure positions are sequential after removal
         const itemsWithUpdatedPositions = filteredItems.map((item, index) => ({
           ...item,
           position: index,
@@ -227,7 +203,6 @@ export default function EditTask() {
         return { ...prev, checklistItems: itemsWithUpdatedPositions };
       });
 
-      // Adjust editing index
       if (editingItemIndex === indexToRemove) {
         setEditingItemIndex(null);
       } else if (
@@ -237,16 +212,16 @@ export default function EditTask() {
         setEditingItemIndex(editingItemIndex - 1);
       }
     },
-    [editingItemIndex] // Depend on editing index
+    [editingItemIndex],
   );
 
   const handleUpdateChecklistItemContent = useCallback(
     (index: number, content: string) => {
       setFormData((prev) =>
-        updateChecklistItemContentAtIndex(prev, index, content)
+        updateChecklistItemContentAtIndex(prev, index, content),
       );
     },
-    []
+    [],
   );
 
   const handleMoveChecklistItemUp = useCallback(
@@ -258,18 +233,16 @@ export default function EditTask() {
           newItems[index - 1],
           newItems[index],
         ];
-        // Update positions
         const itemsWithUpdatedPositions = newItems.map((item, idx) => ({
           ...item,
           position: idx,
         }));
-        // Adjust editing index
         if (editingItemIndex === index) setEditingItemIndex(index - 1);
         else if (editingItemIndex === index - 1) setEditingItemIndex(index);
         return { ...prev, checklistItems: itemsWithUpdatedPositions };
       });
     },
-    [editingItemIndex] // Depend on editing index
+    [editingItemIndex],
   );
 
   const handleMoveChecklistItemDown = useCallback(
@@ -281,18 +254,16 @@ export default function EditTask() {
           newItems[index + 1],
           newItems[index],
         ];
-        // Update positions
         const itemsWithUpdatedPositions = newItems.map((item, idx) => ({
           ...item,
           position: idx,
         }));
-        // Adjust editing index
         if (editingItemIndex === index) setEditingItemIndex(index + 1);
         else if (editingItemIndex === index + 1) setEditingItemIndex(index);
         return { ...prev, checklistItems: itemsWithUpdatedPositions };
       });
     },
-    [editingItemIndex] // Depend on editing index
+    [editingItemIndex],
   );
 
   // --- Main Actions ---
@@ -311,18 +282,17 @@ export default function EditTask() {
         const taskUpdatePayload = createTaskUpdate(
           formData,
           originalTask,
-          taskID
+          taskID,
         );
 
-        // Wrap mutations in ResultAsync for consistent error handling pattern
         const updateTaskPromise = ResultAsync.fromPromise(
           updateTaskMutation.mutateAsync(taskUpdatePayload),
           (e) =>
             new Error(
               `Task update failed: ${
                 e instanceof Error ? e.message : String(e)
-              }`
-            )
+              }`,
+            ),
         );
 
         updateTaskPromise.match(
@@ -335,19 +305,19 @@ export default function EditTask() {
             console.error("Task update failed:", error);
             reportError(error); // Use the error object directly
             Alert.alert("Error", `Failed to update task: ${error.message}`);
-          }
+          },
         );
       },
       (validationError) => {
         Alert.alert("Validation Error", validationError.message);
-      }
+      },
     );
   }, [
     formData,
     originalTask,
     taskID,
     updateTaskMutation,
-    updateChecklistItem, // The mutation function from the hook
+    updateChecklistItem,
     router,
   ]);
 
@@ -356,15 +326,15 @@ export default function EditTask() {
       if (!taskID) {
         return ResultAsync.fromPromise(
           Promise.reject(new Error("Task ID is not available")),
-          (e) => e as Error
+          (e) => e as Error,
         );
       }
       return ResultAsync.fromPromise(
         deleteTaskMutation.mutateAsync(taskID),
         (e) =>
           new Error(
-            `Deletion failed: ${e instanceof Error ? e.message : String(e)}`
-          )
+            `Deletion failed: ${e instanceof Error ? e.message : String(e)}`,
+          ),
       );
     };
 
@@ -376,13 +346,13 @@ export default function EditTask() {
         onPress: () => {
           confirmAndDelete().match(
             () => {
-              router.push("/(drawer)"); // Navigate on success
+              router.push("/(drawer)");
             },
             (error) => {
               console.error("Task deletion failed:", error);
               reportError(error);
               Alert.alert("Error", `Failed to delete task: ${error.message}`);
-            }
+            },
           );
         },
       },
@@ -420,7 +390,10 @@ export default function EditTask() {
   return (
     <Background>
       <Header headerTitle={formData.title || "Edit Task"} />
-      <View style={{ flex: 1, justifyContent: "center" }}>
+      <KeyboardAvoidingView
+        behavior="height"
+        style={{ flex: 1, justifyContent: "center" }}
+      >
         <ScrollView
           contentContainerStyle={editStyles.scrollViewContent}
           keyboardShouldPersistTaps="handled"
@@ -453,7 +426,7 @@ export default function EditTask() {
             isError={isCheckListItemsError}
           />
         </ScrollView>
-      </View>
+      </KeyboardAvoidingView>
 
       {/* Floating Action Buttons */}
       <View style={actionButtonsContainerStyle}>
