@@ -1,10 +1,10 @@
 import { Button } from "@rneui/themed";
 import { useRouter } from "expo-router";
 import { useCallback, useState } from "react";
-import { View, Alert, ScrollView } from "react-native";
+import { Alert, ScrollView, KeyboardAvoidingView } from "react-native";
 
 import { ResultAsync, okAsync, err } from "neverthrow";
-import reportError from "@/utils/reportError";
+import { reportError } from "@/utils/reportError";
 
 import ChecklistCreator from "@/components/create/ChecklistCreator";
 import Header from "@/components/Header";
@@ -59,7 +59,7 @@ export default function CreateTask() {
               happiness:
                 (healthAndHappiness.happiness ?? 0) + genRandomInt(8, 24),
             }),
-            (error) => error as Error
+            (error) => error as Error,
           );
         }
         return okAsync(undefined); // Return ok if no user or healthAndHappiness data
@@ -71,7 +71,7 @@ export default function CreateTask() {
         (error) => {
           reportError(err(error));
           Alert.alert("Error", error.message || "An unexpected error occurred");
-        }
+        },
       );
   };
   // --- Checklist Item Handlers (Passed to ChecklistCreator) ---
@@ -93,19 +93,19 @@ export default function CreateTask() {
         (item, index) => ({
           ...item,
           position: index,
-        })
+        }),
       );
       return { ...prev, checklistItems: updatedItems };
     });
 
-    setTimeout(() => setEditingItemIndex(formData.checklistItems.length), 3);
+    setEditingItemIndex(formData.checklistItems.length);
   }, [formData.checklistItems.length]);
 
   const handleRemoveChecklistItem = useCallback(
     (indexToRemove: number) => {
       setFormData((prev) => {
         const filteredItems = prev.checklistItems.filter(
-          (_, i) => i !== indexToRemove
+          (_, i) => i !== indexToRemove,
         );
         // Ensure positions are sequential after removal
         const itemsWithUpdatedPositions = filteredItems.map((item, index) => ({
@@ -125,16 +125,16 @@ export default function CreateTask() {
         setEditingItemIndex(editingItemIndex - 1);
       }
     },
-    [editingItemIndex] // Depend on editing index
+    [editingItemIndex], // Depend on editing index
   );
 
   const handleUpdateChecklistItemContent = useCallback(
     (index: number, content: string) => {
       setFormData((prev) =>
-        updateChecklistItemContentAtIndex(prev, index, content)
+        updateChecklistItemContentAtIndex(prev, index, content),
       );
     },
-    []
+    [],
   );
 
   const handleMoveChecklistItemUp = useCallback(
@@ -157,7 +157,7 @@ export default function CreateTask() {
         return { ...prev, checklistItems: itemsWithUpdatedPositions };
       });
     },
-    [editingItemIndex] // Depend on editing index
+    [editingItemIndex], // Depend on editing index
   );
 
   const handleMoveChecklistItemDown = useCallback(
@@ -180,14 +180,15 @@ export default function CreateTask() {
         return { ...prev, checklistItems: itemsWithUpdatedPositions };
       });
     },
-    [editingItemIndex] // Depend on editing index
+    [editingItemIndex], // Depend on editing index
   );
   return (
     <Background>
       <Header headerTitle="➕" />
-      <View
+      <KeyboardAvoidingView
+        behavior="height"
         style={{
-          marginVertical: 0,
+          marginVertical: 3,
           paddingHorizontal: 12,
           flex: 1,
           justifyContent: "space-between",
@@ -211,20 +212,19 @@ export default function CreateTask() {
             onMoveItemDown={handleMoveChecklistItemDown}
           />
         </ScrollView>
-
-        <Button
-          onPress={handleCreate}
-          testID="create-task-button"
-          disabled={isCreatingTask}
-          title={isCreatingTask ? "Creating..." : "Create"}
-          style={{
-            position: "absolute",
-            bottom: 0,
-            width: "100%",
-            padding: 10,
-          }}
-        />
-      </View>
+      </KeyboardAvoidingView>
+      <Button
+        onPress={handleCreate}
+        testID="create-task-button"
+        disabled={isCreatingTask}
+        title={isCreatingTask ? "Creating..." : "Create"}
+        style={{
+          position: "absolute",
+          bottom: 0,
+          width: "100%",
+          padding: 10,
+        }}
+      />
     </Background>
   );
 }

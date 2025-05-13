@@ -12,4 +12,4 @@ pnpm install
 pnpm expo prebuild -p android --clean
 
 # Build again
-pnpm android:build
+pnpm android:build:timed
