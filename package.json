@@ -17,8 +17,8 @@
     "test": "jest --watchAll",
     "web": "expo start --web",
     "update:sdk": "expo install expo@latest && expo install --fix",
-    "android:build": "EAS_NO_VCS=1 npx eas build -p android --profile preview --local --output dist/android/local/dev-app.apk",
-    "android:build:timed": "time EAS_NO_VCS=1 npx eas build -p android --profile development --local --output dist/android/local/dev-app.apk"
+    "android:build": "EAS_NO_VCS=1 npx eas build -p android --profile preview --local --output dist/android/local/pre-app.apk",
+    "android:build:timed": "time EAS_NO_VCS=1 npx eas build -p android --profile development --local --output dist/android/local/pre-app.apk"
   },
   "jest": {
     "preset": "jest-expo"
