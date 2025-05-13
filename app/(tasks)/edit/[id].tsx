@@ -3,8 +3,21 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Button, Text, useThemeMode } from "@rneui/themed";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { ActivityIndicator, Alert, View, ScrollView } from "react-native";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  useRef,
+} from "react";
+import {
+  ActivityIndicator,
+  Alert,
+  View,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import { Result, ok, err, ResultAsync } from "neverthrow";
 
 // Components
@@ -65,11 +78,25 @@ export default function EditTask() {
   });
   const [editingItemIndex, setEditingItemIndex] = useState<number | null>(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
+  const scrollViewRef = useRef<ScrollView>(null);
+
+  const handleInputFocus = useCallback(
+    (event: any) => {
+      if (scrollViewRef.current && isKeyboardVisible) {
+        scrollViewRef.current.scrollTo({
+          y: event.nativeEvent.pageY - 100,
+          animated: true,
+        });
+      }
+    },
+    [isKeyboardVisible],
+  );
 
   // --- Derived State ---
   const isLoading = useMemo(
     () => isTaskLoading || isCheckListItemsLoading,
-    [isTaskLoading, isCheckListItemsLoading]
+    [isTaskLoading, isCheckListItemsLoading],
   );
 
   // --- Effects ---
@@ -135,8 +162,6 @@ export default function EditTask() {
     setFormData((prev) => ({
       ...prev,
       isCustomStartDateEnabled: !prev.isCustomStartDateEnabled,
-      // Optionally reset date if disabling
-      // customStartDate: !prev.isCustomStartDateEnabled ? prev.customStartDate : null,
     }));
   }, []);
   const setCustomStartDate = useCallback((date: Date | undefined) => {
@@ -302,8 +327,7 @@ export default function EditTask() {
 
         updateTaskPromise.match(
           () => {
-            // Chain checklist update only after successful task update
-            const updateChecklistResult = updateChecklistItem(formData);
+            updateChecklistItem(formData);
 
             router.back();
           },

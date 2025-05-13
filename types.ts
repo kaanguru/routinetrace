@@ -1,14 +1,14 @@
 // Types
 
-import { Tables } from './database.types';
+import { Tables } from "./database.types";
 
-type RepeatPeriod = 'Daily' | 'Weekly' | 'Monthly' | 'Yearly';
-type DayOfWeek = 'Mon' | 'Tue' | 'Wed' | 'Thu' | 'Fri' | 'Sat' | 'Sun';
+type RepeatPeriod = "Daily" | "Weekly" | "Monthly" | "Yearly";
+type DayOfWeek = "Mon" | "Tue" | "Wed" | "Thu" | "Fri" | "Sat" | "Sun";
 
 interface TaskFormData {
   title: string;
   notes: string;
-  repeatPeriod: RepeatPeriod | '';
+  repeatPeriod: RepeatPeriod | "";
   repeatFrequency: number | null;
   repeatOnWk: DayOfWeek[];
   customStartDate: Date | null;
@@ -20,8 +20,8 @@ interface TaskFormData {
     position: number;
   }[];
 }
-type Task = Tables<'tasks'>;
-type Item = Tables<'checklistitems'>;
+type Task = Tables<"tasks">;
+type Item = Tables<"checklistitems">;
 type Success = {
   success: boolean;
   error?: string | null;
@@ -34,7 +34,7 @@ type Result<T> =
       error: string;
     };
 
-type TaskFilter = 'all' | 'completed' | 'not-completed';
+type TaskFilter = "all" | "completed" | "not-completed";
 interface FormInputProps {
   title: string;
   notes: string;
@@ -54,10 +54,12 @@ export type {
 };
 
 export interface TaskItemProps {
-  task: Readonly<Tables<'tasks'>>;
+  task: Readonly<Tables<"tasks">>;
   index: number;
   onReorder: (from: number, to: number) => void;
-  onToggleComplete: (params: Readonly<{ taskID: number; isComplete: boolean }>) => void;
+  onToggleComplete: (
+    params: Readonly<{ taskID: number; isComplete: boolean }>,
+  ) => void;
   onPress: () => void;
   isFiltered: boolean; // Add isFiltered to the props
 }

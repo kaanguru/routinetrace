@@ -4,9 +4,6 @@ import { View, TouchableOpacity, ActivityIndicator } from "react-native";
 import { Input, Button, Text, useThemeMode } from "@rneui/themed";
 import { FontAwesome6, MaterialIcons } from "@expo/vector-icons";
 
-// Types
-import { Item } from "@/types"; // Assuming ChecklistItem is defined in types
-
 // Styles
 import {
   editStyles,
@@ -90,18 +87,6 @@ export default function ChecklistEditor({
                   value={item.content}
                   onChangeText={(content) => onUpdateItem(index, content)}
                   autoFocus={isEditing}
-                  onBlur={() => {
-                    // Optional: only blur if *this* item was being edited
-                    // if (isEditing) setEditingItemIndex(null);
-                    // Keeping it simple: blurring any input stops editing mode for now
-                    // setEditingItemIndex(null);
-                    // Let's refine: Only stop editing if the input losing focus *is* the one being edited
-                    if (isEditing) {
-                      // Maybe add a small delay in case a button press caused the blur
-                      // setTimeout(() => setEditingItemIndex(null), 100);
-                      // Or rely on the "Done" button to explicitly exit edit mode
-                    }
-                  }}
                   onSubmitEditing={() => setEditingItemIndex(null)} // Stop editing on submit
                   inputContainerStyle={
                     editStyles.checklistItemInputInnerContainer

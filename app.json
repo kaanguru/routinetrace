@@ -18,7 +18,8 @@
         "foregroundImage": "./assets/icons/adaptive-icon.png",
         "backgroundColor": "#fffaec"
       },
-      "package": "com.kaanguru.routinetrace"
+      "package": "com.kaanguru.routinetrace",
+      "softwareKeyboardLayoutMode": "pan"
     },
     "web": {
       "bundler": "metro",
