@@ -47,11 +47,11 @@ export default function Login() {
         },
         (transformedError) => {
           Alert.alert("Login Failed", transformedError.message);
-        }
+        },
       );
       setLoading(false);
     },
-    [signInWithEmail]
+    [signInWithEmail],
   );
 
   return (

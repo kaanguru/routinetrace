@@ -15,7 +15,7 @@ export default function generateID(): string {
 
   const randomPart = Array.from(
     { length: RANDOM_PART_LENGTH },
-    () => BASE62_CHARS[Math.floor(Math.random() * BASE62_CHARS.length)]
+    () => BASE62_CHARS[Math.floor(Math.random() * BASE62_CHARS.length)],
   ).join("");
 
   return `${timestampPart}-${randomPart}`;

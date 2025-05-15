@@ -210,6 +210,7 @@ export default function CreateTask() {
             onUpdateItem={handleUpdateChecklistItemContent}
             onMoveItemUp={handleMoveChecklistItemUp}
             onMoveItemDown={handleMoveChecklistItemDown}
+            repeatPeriod={formData.repeatPeriod}
           />
         </ScrollView>
       </KeyboardAvoidingView>
@@ -218,12 +219,6 @@ export default function CreateTask() {
         testID="create-task-button"
         disabled={isCreatingTask}
         title={isCreatingTask ? "Creating..." : "Create"}
-        style={{
-          position: "absolute",
-          bottom: 0,
-          width: "100%",
-          padding: 10,
-        }}
       />
     </Background>
   );

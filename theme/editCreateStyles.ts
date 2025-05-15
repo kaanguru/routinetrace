@@ -170,7 +170,7 @@ const editStyles = StyleSheet.create({
 // Function to get dynamic styles for ChecklistItem based on state
 function getChecklistItemStyle(
   isEditing: boolean,
-  mode: "light" | "dark"
+  mode: "light" | "dark",
 ): { container: object } {
   const baseBgColor = mode === "dark" ? "#18171A" : "#FFFAEB"; // White equivalent
   const editingBgColor = mode === "dark" ? "#232129" : "#FFEFC2"; // Amber-100

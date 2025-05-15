@@ -1,6 +1,6 @@
-import LottieView from 'lottie-react-native';
-import React from 'react';
-import { StyleProp, ViewStyle } from 'react-native';
+import LottieView from "lottie-react-native";
+import React from "react";
+import { StyleProp, ViewStyle } from "react-native";
 
 interface HappyProps {
   height?: number;
@@ -8,7 +8,11 @@ interface HappyProps {
   style?: StyleProp<ViewStyle>;
 }
 
-export default function Happy({ height = 530, width = 199, style }: Readonly<HappyProps>) {
+export default function Happy({
+  height = 530,
+  width = 199,
+  style,
+}: Readonly<HappyProps>) {
   return (
     <LottieView
       autoPlay
@@ -21,12 +25,12 @@ export default function Happy({ height = 530, width = 199, style }: Readonly<Hap
         {
           width: width,
           height: height,
-          alignSelf: 'center',
+          alignSelf: "center",
           zIndex: 10,
         },
         style,
       ]}
-      source={require('~/assets/lottie/happy.json')}
+      source={require("~/assets/lottie/happy.json")}
       resizeMode="cover"
     />
   );

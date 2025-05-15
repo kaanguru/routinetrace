@@ -1,6 +1,6 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { supabase } from '~/utils/supabase';
+import { supabase } from "~/utils/supabase";
 
 interface HealthAndHappiness {
   updated_at: string;
@@ -16,7 +16,7 @@ function useCreateHealthAndHappiness(user_id: string | undefined) {
   return useMutation<HealthAndHappiness, Error, void>({
     mutationFn: async () => {
       if (!user_id) {
-        throw new Error('User ID is required to create health and happiness.');
+        throw new Error("User ID is required to create health and happiness.");
       }
 
       const optimisticData: HealthAndHappiness = {
@@ -28,28 +28,37 @@ function useCreateHealthAndHappiness(user_id: string | undefined) {
       };
 
       // Optimistically update the cache
-      queryClient.setQueryData(['health-and-happiness', user_id], optimisticData);
+      queryClient.setQueryData(
+        ["health-and-happiness", user_id],
+        optimisticData,
+      );
 
       const { data, error } = await supabase
-        .from('health_and_happiness')
+        .from("health_and_happiness")
         .insert({ user_id })
         .select()
         .single();
 
       if (error) {
-        console.error('Error creating health and happiness:', error);
-        throw new Error('Failed to create health and happiness. Please try again.');
+        console.error("Error creating health and happiness:", error);
+        throw new Error(
+          "Failed to create health and happiness. Please try again.",
+        );
       }
 
       return data as HealthAndHappiness;
     },
     onSuccess: (data) => {
-      queryClient.setQueryData(['health-and-happiness', user_id], data);
-      queryClient.invalidateQueries({ queryKey: ['health-and-happiness', user_id] });
+      queryClient.setQueryData(["health-and-happiness", user_id], data);
+      queryClient.invalidateQueries({
+        queryKey: ["health-and-happiness", user_id],
+      });
     },
     onError: (error, variables, context) => {
-      console.error('Error creating health and happiness:', error);
-      queryClient.invalidateQueries({ queryKey: ['health-and-happiness', user_id] });
+      console.error("Error creating health and happiness:", error);
+      queryClient.invalidateQueries({
+        queryKey: ["health-and-happiness", user_id],
+      });
     },
   });
 }
@@ -59,10 +68,14 @@ function useUpdateHealthAndHappiness() {
 
   return useMutation({
     mutationFn: async (
-      params: Readonly<{ user_id: string | undefined; health: number; happiness: number }>,
+      params: Readonly<{
+        user_id: string | undefined;
+        health: number;
+        happiness: number;
+      }>,
     ) => {
       if (!params.user_id) {
-        throw new Error('User ID is required to update health and happiness.');
+        throw new Error("User ID is required to update health and happiness.");
       }
 
       const optimisticData: HealthAndHappiness = {
@@ -74,18 +87,29 @@ function useUpdateHealthAndHappiness() {
       };
 
       // Optimistically update the cache
-      queryClient.setQueryData(['health-and-happiness', params.user_id], optimisticData);
+      queryClient.setQueryData(
+        ["health-and-happiness", params.user_id],
+        optimisticData,
+      );
 
-      const data = await upsertHealthAndHappiness(params.user_id, params.health, params.happiness);
+      const data = await upsertHealthAndHappiness(
+        params.user_id,
+        params.health,
+        params.happiness,
+      );
       return data;
     },
     onSuccess: (data, params) => {
-      queryClient.setQueryData(['health-and-happiness', params.user_id], data);
-      queryClient.invalidateQueries({ queryKey: ['health-and-happiness', params.user_id] });
+      queryClient.setQueryData(["health-and-happiness", params.user_id], data);
+      queryClient.invalidateQueries({
+        queryKey: ["health-and-happiness", params.user_id],
+      });
     },
     onError: (error, variables, context) => {
-      console.error('Error updating health and happiness:', error);
-      queryClient.invalidateQueries({ queryKey: ['health-and-happiness', variables.user_id] });
+      console.error("Error updating health and happiness:", error);
+      queryClient.invalidateQueries({
+        queryKey: ["health-and-happiness", variables.user_id],
+      });
     },
   });
 }
@@ -96,11 +120,11 @@ async function upsertHealthAndHappiness(
   happiness: number,
 ) {
   if (!user_id) {
-    throw new Error('User ID is required to update health and happiness.');
+    throw new Error("User ID is required to update health and happiness.");
   }
 
   const { data, error } = await supabase
-    .from('health_and_happiness')
+    .from("health_and_happiness")
     .upsert(
       {
         updated_at: new Date().toISOString(),
@@ -108,14 +132,14 @@ async function upsertHealthAndHappiness(
         health: health,
         user_id: user_id,
       },
-      { onConflict: 'user_id' },
+      { onConflict: "user_id" },
     )
     .select()
     .single();
 
   if (error) {
-    console.error('Error updating health and happiness:', error);
-    throw new Error('Failed to update health and happiness. Please try again.');
+    console.error("Error updating health and happiness:", error);
+    throw new Error("Failed to update health and happiness. Please try again.");
   }
 
   return data;

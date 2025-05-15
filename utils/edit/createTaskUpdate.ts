@@ -1,6 +1,6 @@
 // Helper function to create the task object for updates
-import { Tables } from '~/database.types';
-import { Task, TaskFormData } from '~/types';
+import { Tables } from "~/database.types";
+import { Task, TaskFormData } from "~/types";
 
 export default function createTaskUpdate(
   formData: Readonly<TaskFormData>,
@@ -18,7 +18,7 @@ export default function createTaskUpdate(
     repeat_period: formData.repeatPeriod || null,
     repeat_frequency: formData.repeatPeriod ? formData.repeatFrequency : null,
     repeat_on_wk: formData.repeatPeriod
-      ? (formData.repeatOnWk as Tables<'tasks'>['repeat_on_wk'])
+      ? (formData.repeatOnWk as Tables<"tasks">["repeat_on_wk"])
       : null,
     created_at: formData.customStartDate?.toISOString() || theTask.created_at,
   };

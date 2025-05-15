@@ -113,12 +113,12 @@ export default function Index() {
       setReorderedTasks(newTasks);
       updateTaskPositionsMutation(newTasks);
     },
-    [reorderedTasks, updateTaskPositionsMutation]
+    [reorderedTasks, updateTaskPositionsMutation],
   );
 
   const handleFilterTodayPress = useCallback(
     () => setIsFiltered((prev) => !prev),
-    []
+    [],
   );
 
   const handleOnToggleComplete = useCallback(
@@ -135,9 +135,9 @@ export default function Index() {
                 (healthAndHappiness?.happiness ?? 0) + genRandomInt(2, 8),
             });
             isSoundEnabled && playSound();
-            setTimeout(() => setShowConfetti(false), 200);
+            setTimeout(() => setShowConfetti(false), 2000);
           },
-        }
+        },
       );
     },
     [
@@ -147,13 +147,15 @@ export default function Index() {
       healthAndHappiness,
       updateHealthAndHappiness,
       user,
-    ]
+    ],
   );
 
   const handleFABPress = useCallback(() => {
     const shouldShowWarning = tasks.filter(isTaskDueToday).length > 8;
     router.push(
-      shouldShowWarning ? "/(tasks)/soManyTasksWarning" : "/(tasks)/create-task"
+      shouldShowWarning
+        ? "/(tasks)/soManyTasksWarning"
+        : "/(tasks)/create-task",
     );
   }, [router, tasks]);
 
@@ -185,7 +187,7 @@ export default function Index() {
         isActive={isActive}
       />
     ),
-    [router, handleReorder, handleOnToggleComplete, isFiltered]
+    [router, handleReorder, handleOnToggleComplete, isFiltered],
   );
 
   const keyExtractor = useCallback((item: Task) => item.id.toString(), []);
@@ -232,23 +234,29 @@ export default function Index() {
         <FAB
           style={{
             position: "absolute",
-            margin: 16,
-            right: 0,
-            bottom: 0,
-            boxShadow: [
-              {
-                offsetX: -3,
-                offsetY: 3,
-                blurRadius: 15,
-                color: "#FF006E",
-              },
-              {
-                offsetX: 5,
-                offsetY: -5,
-                blurRadius: 15,
-                color: "#6A18DC",
-              },
-            ],
+            margin: 32,
+            right: 5,
+            bottom: 5,
+            // boxShadow is not a valid React Native style property
+            // boxShadow: [
+            //   {
+            //     offsetX: -3,
+            //     offsetY: 3,
+            //     blurRadius: 15,
+            //     color: "#FF006E",
+            //   },
+            //   {
+            //     offsetX: 5,
+            //     offsetY: -5,
+            //     blurRadius: 15,
+            //     color: "#6A18DC",
+            //   },
+            // ],
+            shadowColor: "#000", // Example shadow properties
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.25,
+            shadowRadius: 3.84,
+            elevation: 5, // For Android
           }}
           onPress={handleFABPress}
         >

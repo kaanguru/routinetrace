@@ -19,7 +19,7 @@ export default function CompletedTasks() {
 
   const handleMarkIncomplete = useCallback(
     (taskID: number) => toggleComplete({ taskID, isComplete: false }),
-    []
+    [],
   );
 
   function renderItem({ item }: Readonly<{ item: Tables<"tasks"> }>) {
@@ -73,37 +73,36 @@ export default function CompletedTasks() {
         refreshing={isLoading}
         contentContainerStyle={{ paddingBottom: 20 }}
         estimatedItemSize={ESTIMATED_ITEM_HEIGHT}
-
       />
     </View>
   );
 }
 const styles = StyleSheet.create({
   container: {
-    flex: 1, 
+    flex: 1,
   },
   listContainer: {
-    flex: 1, 
+    flex: 1,
   },
   centered: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     padding: 20,
   },
   activityIndicator: {
-      marginTop: 20,
+    marginTop: 20,
   },
   errorText: {
-      marginBottom: 10,
-      color: 'red',
-      textAlign: 'center',
+    marginBottom: 10,
+    color: "red",
+    textAlign: "center",
   },
   emptyText: {
-      textAlign: 'center',
-      marginTop: 50,
-      fontSize: 16,
-      color: 'grey',
+    textAlign: "center",
+    marginTop: 50,
+    fontSize: 16,
+    color: "grey",
   },
   card: {
     marginHorizontal: 10,
@@ -112,20 +111,20 @@ const styles = StyleSheet.create({
     padding: 0,
   },
   cardPressable: {
-     padding: 15,
+    padding: 15,
   },
   cardContent: {
-    flexDirection: 'row', 
-    alignItems: 'center', 
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   textContainer: {
-    flex: 1, 
-    marginRight: 10, 
+    flex: 1,
+    marginRight: 10,
   },
 
   listContent: {
-    paddingBottom: 20, 
-    paddingTop: 10, 
+    paddingBottom: 20,
+    paddingTop: 10,
   },
 });

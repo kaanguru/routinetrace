@@ -1,6 +1,5 @@
-import { FontAwesome6 } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { Text, Button, CheckBox, Icon, useThemeMode } from "@rneui/themed";
+import { Text, CheckBox, Icon } from "@rneui/themed";
 import { View, Pressable } from "react-native";
 
 import TaskFormInput from "@/components/TaskFormInput";
@@ -20,8 +19,6 @@ function TaskFormHeader({
   showDatePicker: boolean;
   setShowDatePicker: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-  const { mode } = useThemeMode();
-
   return (
     <View>
       <TaskFormInput

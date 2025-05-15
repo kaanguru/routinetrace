@@ -1,16 +1,16 @@
 // useInitializeDailyTasks.ts
-import { Href, router } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { Href, router } from "expo-router";
+import { useEffect, useState } from "react";
 
-import { useUpdateHealthAndHappiness } from './useHealthAndHappinessMutations';
-import useHealthAndHappinessQuery from './useHealthAndHappinessQueries';
-import useUser from './useUser';
+import { useUpdateHealthAndHappiness } from "./useHealthAndHappinessMutations";
+import useHealthAndHappinessQuery from "./useHealthAndHappinessQueries";
+import useUser from "./useUser";
 
-import useTasksQuery from '~/hooks/useTasksQueries';
-import genRandomInt from '~/utils/genRandomInt';
-import { isFirstLaunchToday } from '~/utils/isFirstLaunchToday';
-import resetRecurringTasks from '~/utils/tasks/resetRecurringTasks';
-import wasTaskDueYesterday from '~/utils/tasks/wasTaskDueYesterday';
+import useTasksQuery from "~/hooks/useTasksQueries";
+import genRandomInt from "~/utils/genRandomInt";
+import { isFirstLaunchToday } from "~/utils/isFirstLaunchToday";
+import resetRecurringTasks from "~/utils/tasks/resetRecurringTasks";
+import wasTaskDueYesterday from "~/utils/tasks/wasTaskDueYesterday";
 
 function useInitializeDailyTasks() {
   const { data: notCompletedTasks } = useTasksQuery();
@@ -28,7 +28,8 @@ function useInitializeDailyTasks() {
         const isFirstLaunchTodayResult = await isFirstLaunchToday();
         if (!isFirstLaunchTodayResult) return;
 
-        const incompleteTasksFromYesterday = notCompletedTasks?.filter(wasTaskDueYesterday) || [];
+        const incompleteTasksFromYesterday =
+          notCompletedTasks?.filter(wasTaskDueYesterday) || [];
         setHasTasksFromYesterday(incompleteTasksFromYesterday.length > 0);
         if (hasTasksFromYesterday) {
           // punish user
@@ -45,18 +46,24 @@ function useInitializeDailyTasks() {
 
         await resetRecurringTasks();
       } catch (error) {
-        console.error('Error initializing tasks:', error);
+        console.error("Error initializing tasks:", error);
       } finally {
         await new Promise((resolve) => setTimeout(resolve, 200)); // Simulate some asynchronous task
         setInitialized(true);
         if (hasTasksFromYesterday) {
-          router.push('/(tasks)/tasks-of-yesterday' as Href);
+          router.push("/(tasks)/tasks-of-yesterday" as Href);
         }
       }
     };
 
     initialize();
-  }, [notCompletedTasks, updateHealthAndHappiness, user, initialized, healthAndHappiness]);
+  }, [
+    notCompletedTasks,
+    updateHealthAndHappiness,
+    user,
+    initialized,
+    healthAndHappiness,
+  ]);
 
   return { initialized, hasTasksFromYesterday };
 }

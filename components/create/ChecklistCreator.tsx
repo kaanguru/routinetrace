@@ -20,6 +20,7 @@ interface ChecklistCreatorProps {
   }[];
   editingItemIndex: number | null;
   setEditingItemIndex: (index: number | null) => void;
+  repeatPeriod: string | null;
   onAddItem: () => void;
   onRemoveItem: (index: number) => void;
   onUpdateItem: (index: number, content: string) => void;
@@ -36,6 +37,7 @@ export default function ChecklistCreator({
   onUpdateItem,
   onMoveItemUp,
   onMoveItemDown,
+  repeatPeriod,
 }: ChecklistCreatorProps) {
   const { mode } = useThemeMode();
   const moveButtonStyle = getMoveButtonStyle(mode);
@@ -44,9 +46,14 @@ export default function ChecklistCreator({
     <View>
       <View style={editStyles.addRoutineButtonContainer}>
         <Button
+          testID="add-checklistitems-button"
           type="solid"
           onPress={onAddItem}
-          title="Add Routine"
+          title={
+            repeatPeriod && repeatPeriod !== ""
+              ? "Add Routines"
+              : "Add Checklist Item"
+          }
           size="sm"
           containerStyle={editStyles.addRoutineButtonContainer}
           buttonStyle={editStyles.addRoutineButton}

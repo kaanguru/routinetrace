@@ -42,8 +42,15 @@ const DraggableRoutineItem = memo(
             height: ITEM_HEIGHT,
           }}
         >
-          <Pressable onLongPress={drag} style={{ paddingTop: 10, marginRight: 6 }}>
-            <FontAwesome5 name="grip-vertical" size={18} color={mode === "dark" ? "#FFFAEB" : "#051824"} />
+          <Pressable
+            onLongPress={drag}
+            style={{ paddingTop: 10, marginRight: 6 }}
+          >
+            <FontAwesome5
+              name="grip-vertical"
+              size={18}
+              color={mode === "dark" ? "#FFFAEB" : "#051824"}
+            />
           </Pressable>
           <Input
             placeholder="Checklist item"
@@ -58,13 +65,21 @@ const DraggableRoutineItem = memo(
               fontSize: 16,
             }}
           />
-          <Pressable onPress={() => onRemove(index)} hitSlop={10} style={{ padding: 10 }}>
-            <Ionicons name="trash-bin" size={24} color={mode === "dark" ? "#FFFAEB" : "#051824"} />
+          <Pressable
+            onPress={() => onRemove(index)}
+            hitSlop={10}
+            style={{ padding: 10 }}
+          >
+            <Ionicons
+              name="trash-bin"
+              size={24}
+              color={mode === "dark" ? "#FFFAEB" : "#051824"}
+            />
           </Pressable>
         </View>
       </Animated.View>
     );
-  }
+  },
 );
 DraggableRoutineItem.displayName = "DraggableRoutineItem";
 

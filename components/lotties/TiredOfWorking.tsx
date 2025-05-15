@@ -1,4 +1,4 @@
-import LottieView from 'lottie-react-native';
+import LottieView from "lottie-react-native";
 
 export default function TiredOfWorking() {
   return (
@@ -8,9 +8,9 @@ export default function TiredOfWorking() {
       style={{
         width: 360,
         height: 360,
-        alignSelf: 'center',
+        alignSelf: "center",
       }}
-      source={require('~/assets/lottie/yorgun.json')}
+      source={require("~/assets/lottie/yorgun.json")}
       resizeMode="cover"
     />
   );

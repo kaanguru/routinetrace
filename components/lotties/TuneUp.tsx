@@ -1,4 +1,4 @@
-import LottieView from 'lottie-react-native';
+import LottieView from "lottie-react-native";
 
 export default function TuneUp() {
   return (
@@ -8,9 +8,9 @@ export default function TuneUp() {
       style={{
         width: 240,
         height: 240,
-        alignSelf: 'center',
+        alignSelf: "center",
       }}
-      source={require('~/assets/lottie/tuneup.json')}
+      source={require("~/assets/lottie/tuneup.json")}
       resizeMode="cover"
     />
   );

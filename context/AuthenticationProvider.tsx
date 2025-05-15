@@ -13,7 +13,7 @@ const authKeys = {
 
 const authAPI = {
   async signInWithEmail(
-    creds: AuthCredentials
+    creds: AuthCredentials,
   ): Promise<ResultAsync<Session, Error>> {
     const { data, error } = await supabase.auth.signInWithPassword(creds);
     if (error) return err(error);
@@ -21,7 +21,7 @@ const authAPI = {
   },
 
   async signUpWithEmail(
-    creds: AuthCredentials
+    creds: AuthCredentials,
   ): Promise<ResultAsync<Session, Error>> {
     const { data, error } = await supabase.auth.signUp(creds);
     if (error) return err(error);
@@ -39,10 +39,10 @@ const authAPI = {
 type AuthContextType = {
   session: Session | null;
   signInWithEmail: (
-    creds: AuthCredentials
+    creds: AuthCredentials,
   ) => Promise<ResultAsync<Session, Error>>;
   signUpWithEmail: (
-    creds: AuthCredentials
+    creds: AuthCredentials,
   ) => Promise<ResultAsync<Session, Error>>;
   signOut: () => Promise<ResultAsync<void, Error>>;
   isLoading: boolean;

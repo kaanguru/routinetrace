@@ -1,12 +1,7 @@
 import { Button, Card, Divider } from "@rneui/themed";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
-import {
-  Text,
-  Pressable,
-  View,
-  SafeAreaView,
-} from "react-native";
+import { Text, Pressable, View, SafeAreaView } from "react-native";
 
 import Header from "@/components/Header";
 import TuneUp from "@/components/lotties/TuneUp";
@@ -15,7 +10,7 @@ import { Tables } from "@/database.types";
 import useTasksQuery from "@/hooks/useTasksQueries";
 import { Task } from "@/types";
 import wasTaskDueYesterday from "@/utils/tasks/wasTaskDueYesterday";
-import { FlashList ,ListRenderItem} from "@shopify/flash-list";
+import { FlashList, ListRenderItem } from "@shopify/flash-list";
 
 const ESTIMATED_ITEM_HEIGHT = 80;
 
@@ -67,7 +62,6 @@ export default function TasksOfYesterday() {
           renderItem={taskOfYesterday}
           keyExtractor={(item) => item.id.toString()}
           estimatedItemSize={ESTIMATED_ITEM_HEIGHT}
-
         />
       </View>
     </SafeAreaView>

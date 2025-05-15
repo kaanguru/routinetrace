@@ -1,12 +1,12 @@
-import { supabase } from '../supabase';
+import { supabase } from "../supabase";
 
-import { Task } from '~/types';
+import { Task } from "~/types";
 
-export default async function deleteTask(taskID: Task['id']) {
-  const { error } = await supabase.from('tasks').delete().eq('id', taskID);
+export default async function deleteTask(taskID: Task["id"]) {
+  const { error } = await supabase.from("tasks").delete().eq("id", taskID);
 
   if (error) {
-    console.error('Error deleting task:', error);
+    console.error("Error deleting task:", error);
     return null; // Return null on error instead of throwing
   }
 

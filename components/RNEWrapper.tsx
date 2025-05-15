@@ -22,7 +22,7 @@ import { isFirstLaunchToday } from "~/utils/isFirstLaunchToday";
 import { isFirstVisit } from "~/utils/isFirstVisit";
 import { supabase } from "~/utils/supabase";
 import { Result, ok } from "neverthrow";
-import reportError from "@/utils/reportError";
+import { reportError } from "@/utils/reportError";
 
 const InitializationContext = createContext<
   Readonly<{

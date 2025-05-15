@@ -1,19 +1,19 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery } from "@tanstack/react-query";
 
-import { Database } from '~/database.types';
-import { supabase } from '~/utils/supabase';
+import { Database } from "~/database.types";
+import { supabase } from "~/utils/supabase";
 
-type ChecklistItem = Database['public']['Tables']['checklistitems']['Row'];
+type ChecklistItem = Database["public"]["Tables"]["checklistitems"]["Row"];
 
 export default function useChecklistItems(taskID: number | string) {
   const checklistItemsQuery = useQuery<ChecklistItem[], Error>({
-    queryKey: ['checklistItems', taskID],
+    queryKey: ["checklistItems", taskID],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('checklistitems')
-        .select('*')
-        .eq('task_id', +taskID)
-        .order('position', { ascending: true });
+        .from("checklistitems")
+        .select("*")
+        .eq("task_id", +taskID)
+        .order("position", { ascending: true });
 
       if (error) {
         throw new Error(error.message);

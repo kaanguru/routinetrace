@@ -1,12 +1,12 @@
-import { Audio } from 'expo-av';
-import { useEffect, useCallback, useState } from 'react';
-import { ResultAsync, okAsync, errAsync } from 'neverthrow';
-import { useSoundSettings } from './useSoundSettings';
+import { Audio } from "expo-av";
+import { useEffect, useCallback, useState } from "react";
+import { ResultAsync, okAsync, errAsync } from "neverthrow";
+import { useSoundSettings } from "./useSoundSettings";
 
 const soundSources = [
-  require('../assets/sound/confetti/sfx.mp3'),
-  require('../assets/sound/confetti/soft.mp3'),
-  require('../assets/sound/confetti/wind.mp3'),
+  require("../assets/sound/confetti/sfx.mp3"),
+  require("../assets/sound/confetti/soft.mp3"),
+  require("../assets/sound/confetti/wind.mp3"),
 ];
 
 export default function useTaskCompleteSound() {
@@ -18,13 +18,15 @@ export default function useTaskCompleteSound() {
 
     try {
       const randomIndex = Math.floor(Math.random() * soundSources.length);
-      const { sound: newSound } = await Audio.Sound.createAsync(soundSources[randomIndex]);
+      const { sound: newSound } = await Audio.Sound.createAsync(
+        soundSources[randomIndex],
+      );
 
       setSound(newSound);
       await newSound.playAsync();
       return okAsync(undefined);
     } catch (error) {
-      return errAsync(new Error('Error playing sound: ' + error));
+      return errAsync(new Error("Error playing sound: " + error));
     }
   }, [isSoundEnabled]);
 

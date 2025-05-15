@@ -11,7 +11,7 @@ import handleErrorBoundaryError from "@/utils/errorHandler";
 const queryClient = new QueryClient();
 
 if (__DEV__) {
-  require("@/ReactotronConfig");
+  import("@/ReactotronConfig");
 }
 
 export default function RootLayout() {

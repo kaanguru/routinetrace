@@ -62,7 +62,7 @@ export default function TaskDetailsForm({
         setCustomStartDate(selectedDate);
       }
     },
-    [setShowDatePicker, setCustomStartDate]
+    [setShowDatePicker, setCustomStartDate],
   );
 
   return (

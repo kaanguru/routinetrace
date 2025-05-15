@@ -4,9 +4,16 @@ import {
   Ionicons,
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
-import { StyleSheet } from "react-native";
-import { useTheme } from "@rneui/themed";
 import {
+  StyleSheet,
+  ActivityIndicator,
+  ScrollView,
+  Text,
+  View,
+  Pressable,
+} from "react-native";
+import {
+  useTheme,
   Badge,
   Dialog,
   useThemeMode,
@@ -16,13 +23,6 @@ import {
 } from "@rneui/themed";
 import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import React, { useCallback, useState } from "react";
-import {
-  ActivityIndicator,
-  ScrollView,
-  Text,
-  View,
-  Pressable,
-} from "react-native";
 
 import Header from "@/components/Header";
 import useChecklistItemMutations from "@/hooks/useCheckListMutations";
@@ -140,7 +140,7 @@ export default function TaskDetailPage() {
   useFocusEffect(
     useCallback(() => {
       refetch();
-    }, [refetch])
+    }, [refetch]),
   );
 
   const handleToggleComplete = () => {

@@ -21,7 +21,7 @@ export const useAuth = () => {
 
   const signInWithEmail = async (
     email: string,
-    password: string
+    password: string,
   ): Promise<Result<null, AuthError>> => {
     setLoading(true);
     setError(null); // Clear any previous errors
@@ -53,7 +53,7 @@ export const useAuth = () => {
 
   const signUpWithEmail = async (
     email: string,
-    password: string
+    password: string,
   ): Promise<Result<null, AuthError>> => {
     setLoading(true);
     setError(null); // Clear any previous errors

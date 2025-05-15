@@ -43,23 +43,34 @@ const StatsCard = ({
 }) => (
   <Card containerStyle={styles.card}>
     <Animation height={100} width={120} />
-    <Text>{title}</Text>
+    <Text style={styles.cardTitle}>{title}</Text>
     <Card.Divider orientation="horizontal" />
-    <Text>{value}</Text>
+    <Text style={styles.cardValue}>{value}</Text>
   </Card>
 );
 
-const StatsLevelIndicator = ({ level, untilNext }: { level: number; untilNext: number }) => (
-  <>
-    <Text>Level {level}</Text>
-    <View>
+const StatsLevelIndicator = ({
+  level,
+  untilNext,
+}: {
+  level: number;
+  untilNext: number;
+}) => (
+  <View style={{ alignItems: "center" }}>
+    <Text style={styles.levelHeader}>Your Level</Text>
+    <Text style={styles.levelText}>{level}</Text>
+    <View style={{ width: "80%" }}>
       <LinearProgress value={Number(untilNext.toFixed(2))} />
     </View>
-  </>
+  </View>
 );
 
 export default function Stats() {
-  const { data: tasks = [], isLoading: isLoadingTasks, error: tasksError } = useTasksQuery("completed");
+  const {
+    data: tasks = [],
+    isLoading: isLoadingTasks,
+    error: tasksError,
+  } = useTasksQuery("completed");
   const { data: user } = useUser();
   const {
     data: healthAndHappiness,
@@ -76,13 +87,15 @@ export default function Stats() {
     };
   }, [healthAndHappiness]);
 
-  if (isLoadingTasks || isLoadingHealthAndHappiness) return renderLoadingState();
-  if (tasksError || healthError) return renderErrorState(tasksError || healthError || undefined);
-  
+  if (isLoadingTasks || isLoadingHealthAndHappiness)
+    return renderLoadingState();
+  if (tasksError || healthError)
+    return renderErrorState(tasksError || healthError || undefined);
+
   return (
     <View style={styles.container}>
       <StatsLevelIndicator level={level} untilNext={untilNext} />
-      
+
       <View style={styles.cardsContainer}>
         <StatsCard
           animation={Healthy}
@@ -125,15 +138,41 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     marginVertical: 10,
   },
-  card: {
-    flex: 1,
-    marginHorizontal: 5,
-  },
   listContainer: {
     flex: 1,
   },
   listContent: {
     padding: 8,
     paddingBottom: 16,
+  },
+  levelHeader: {
+    fontSize: 16,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginTop: 10,
+  },
+  levelText: {
+    fontSize: 24,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginBottom: 10,
+  },
+  cardTitle: {
+    fontSize: 14,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  cardValue: {
+    fontSize: 20,
+    fontWeight: "bold",
+    textAlign: "center",
+    color: "#4F10A8", // Using a project color (violet-900)
+  },
+  card: {
+    flex: 1,
+    marginHorizontal: 5,
+    backgroundColor: "#FFEFC2", // Using a project color (amber-100)
+    borderRadius: 10, // Add some rounded corners
+    padding: 15, // Add some internal padding
   },
 });

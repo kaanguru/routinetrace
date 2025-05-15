@@ -1,10 +1,10 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery } from "@tanstack/react-query";
 
-import { getUser } from '~/utils/auth/getUser';
+import { getUser } from "~/utils/auth/getUser";
 
 export default function useUser() {
   return useQuery({
-    queryKey: ['user'],
+    queryKey: ["user"],
     queryFn: getUser,
   });
 }

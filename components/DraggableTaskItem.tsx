@@ -117,7 +117,7 @@ const DraggableTaskItem = memo(function TaskItem({
   const { mode } = useThemeMode();
   const { theme } = useTheme();
   const { checkListItemsLength, isCheckListItemsLoading } = useChecklistItems(
-    task.id
+    task.id,
   );
   const taskHasChecklistItems = checkListItemsLength > 0;
 
@@ -200,7 +200,6 @@ const DraggableTaskItem = memo(function TaskItem({
       </LinearGradient>
     </View>
   );
-},
-areEqual);
+}, areEqual);
 
 export default DraggableTaskItem;

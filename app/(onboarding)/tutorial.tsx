@@ -111,7 +111,7 @@ export default function TutorialScreen() {
           showsHorizontalScrollIndicator={false}
           onMomentumScrollEnd={(event) => {
             const newIndex = Math.round(
-              event.nativeEvent.contentOffset.x / SCREEN_WIDTH
+              event.nativeEvent.contentOffset.x / SCREEN_WIDTH,
             );
             setCurrentIndex(newIndex);
           }}

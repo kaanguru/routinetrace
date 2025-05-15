@@ -3,43 +3,46 @@ import {
   differenceInWeeks,
   differenceInMonths,
   differenceInYears,
-} from 'date-fns';
+} from "date-fns";
 
-import { Tables } from '~/database.types';
+import { Tables } from "~/database.types";
 
 function calculateSuccessPercentage(
-  task: Readonly<Tables<'tasks'>>,
-  completionHistory: Tables<'task_completion_history'>[],
+  task: Readonly<Tables<"tasks">>,
+  completionHistory: Tables<"task_completion_history">[],
 ) {
   const createdAtDate = new Date(task.created_at);
   const daysSinceCreation = differenceInDays(Date.now(), createdAtDate);
 
   switch (task.repeat_period) {
-    case 'Daily':
+    case "Daily":
       if (daysSinceCreation === 0) {
         return 0; // or handle as needed
       }
       return (completionHistory.length / daysSinceCreation) * 100;
 
-    case 'Weekly':
+    case "Weekly":
       const weeksSinceCreation = differenceInWeeks(Date.now(), createdAtDate);
-      const expectedCompletionsWeekly = weeksSinceCreation / (task.repeat_frequency ?? 1);
+      const expectedCompletionsWeekly =
+        weeksSinceCreation / (task.repeat_frequency ?? 1);
       if (expectedCompletionsWeekly === 0) {
         return 0; // or handle as needed
       }
       return (completionHistory.length / expectedCompletionsWeekly) * 100;
 
-    case 'Monthly':
+    case "Monthly":
       const monthsSinceCreation = differenceInMonths(Date.now(), createdAtDate);
-      const expectedCompletionsMonthly = monthsSinceCreation / (task.repeat_frequency ?? 1);
+      const expectedCompletionsMonthly =
+        monthsSinceCreation / (task.repeat_frequency ?? 1);
       if (expectedCompletionsMonthly === 0) {
         return 0; // or handle as needed
       }
       return (completionHistory.length / expectedCompletionsMonthly) * 100;
 
-    case 'Yearly':
+    case "Yearly":
       const yearsSinceCreation = differenceInYears(Date.now(), createdAtDate);
-      const expectedCompletionsYearly = yearsSinceCreation / (task.repeat_frequency ?? 1);
+      const expectedCompletionsYearly =
+        yearsSinceCreation / (task.repeat_frequency ?? 1);
       if (expectedCompletionsYearly === 0) {
         return 0; // or handle as needed
       }

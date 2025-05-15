@@ -14,7 +14,7 @@ function TaskSuccessPercentage({ task }: Readonly<{ task: Tables<"tasks"> }>) {
   });
   const successPercentage = calculateSuccessPercentage(
     task,
-    completionHistory || []
+    completionHistory || [],
   );
   function onPress(): void {
     router.push(`/(tasks)/${task.id}`);

@@ -50,10 +50,10 @@ export default function Register() {
         },
         (transformedError) => {
           Alert.alert("Register Failed", transformedError.message);
-        }
+        },
       );
     },
-    [form, signUpWithEmail]
+    [form, signUpWithEmail],
   );
 
   const styles = StyleSheet.create({

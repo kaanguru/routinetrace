@@ -1,9 +1,10 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
-
+import BiriBirseyDesin from "./lotties/BiriBirseyDesin";
 const EmptyTasksView = () => {
   return (
     <View style={styles.container}>
+      <BiriBirseyDesin />
       <Text style={styles.text}>
         No tasks found! Add your first task to get started.
       </Text>

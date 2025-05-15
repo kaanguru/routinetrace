@@ -6,10 +6,10 @@ import { TaskFormData } from "@/types";
 export default function updateChecklistItemContentAtIndex(
   currentState: Readonly<TaskFormData>,
   index: number,
-  content: string
+  content: string,
 ): TaskFormData {
   const updatedItems = currentState.checklistItems.map((item, i) =>
-    i === index ? { ...item, content } : item
+    i === index ? { ...item, content } : item,
   );
   return {
     ...currentState,

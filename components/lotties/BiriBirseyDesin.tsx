@@ -1,4 +1,4 @@
-import LottieView from 'lottie-react-native';
+import LottieView from "lottie-react-native";
 
 export default function BiriBirseyDesin() {
   return (
@@ -7,9 +7,9 @@ export default function BiriBirseyDesin() {
       style={{
         width: 480,
         height: 480,
-        alignSelf: 'center',
+        alignSelf: "center",
       }}
-      source={require('~/assets/lottie/biri-birsey-desin.json')}
+      source={require("~/assets/lottie/biri-birsey-desin.json")}
       resizeMode="cover"
     />
   );

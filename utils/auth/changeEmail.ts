@@ -7,7 +7,7 @@ import { User } from "@supabase/supabase-js";
 const emailSchema = z.string().email();
 
 export default async function changeEmail(
-  email: string
+  email: string,
 ): Promise<ResultAsync<{ user: User | null }, Error>> {
   const parseResult = emailSchema.safeParse(email);
   if (!parseResult.success) {

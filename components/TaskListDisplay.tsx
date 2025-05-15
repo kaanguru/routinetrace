@@ -14,9 +14,25 @@ interface TaskListDisplayProps {
   onReorder: (from: number, to: number) => void;
 }
 
-export default function TaskListDisplay({ isFiltered, reorderedTasks, renderTaskItem, keyExtractor, isRefetching, refetch, onReorder }: TaskListDisplayProps) {
+export default function TaskListDisplay({
+  isFiltered,
+  reorderedTasks,
+  renderTaskItem,
+  keyExtractor,
+  isRefetching,
+  refetch,
+  onReorder,
+}: TaskListDisplayProps) {
   // Handle drag end and call the parent's reorder function
-  const handleDragEnd = ({ from, to, data }: { from: number; to: number; data: Task[] }) => {
+  const handleDragEnd = ({
+    from,
+    to,
+    data,
+  }: {
+    from: number;
+    to: number;
+    data: Task[];
+  }) => {
     onReorder(from, to);
   };
 
@@ -36,7 +52,15 @@ export default function TaskListDisplay({ isFiltered, reorderedTasks, renderTask
 
   return (
     <View style={{ flex: 1 }}>
-      <DraggableFlatListComponent tasks={reorderedTasks} renderItem={renderItemForDraggable} keyExtractor={keyExtractor} onDragEnd={handleDragEnd} ListEmptyComponent={emptyComponent()} onRefresh={refetch} refreshing={isRefetching} />
+      <DraggableFlatListComponent
+        tasks={reorderedTasks}
+        renderItem={renderItemForDraggable}
+        keyExtractor={keyExtractor}
+        onDragEnd={handleDragEnd}
+        ListEmptyComponent={emptyComponent()}
+        onRefresh={refetch}
+        refreshing={isRefetching}
+      />
     </View>
   );
 }

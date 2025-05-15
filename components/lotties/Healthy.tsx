@@ -1,6 +1,6 @@
-import LottieView from 'lottie-react-native';
-import React from 'react';
-import { StyleProp, ViewStyle } from 'react-native';
+import LottieView from "lottie-react-native";
+import React from "react";
+import { StyleProp, ViewStyle } from "react-native";
 
 interface HealthyProps {
   height?: number;
@@ -8,7 +8,11 @@ interface HealthyProps {
   style?: StyleProp<ViewStyle>;
 }
 
-export default function Healthy({ height = 530, width = 199, style }: Readonly<HealthyProps>) {
+export default function Healthy({
+  height = 530,
+  width = 199,
+  style,
+}: Readonly<HealthyProps>) {
   return (
     <LottieView
       autoPlay
@@ -18,12 +22,12 @@ export default function Healthy({ height = 530, width = 199, style }: Readonly<H
         {
           width: width,
           height: height,
-          alignSelf: 'center',
+          alignSelf: "center",
           zIndex: 10,
         },
         style,
       ]}
-      source={require('~/assets/lottie/healthy.json')}
+      source={require("~/assets/lottie/healthy.json")}
       resizeMode="cover"
     />
   );

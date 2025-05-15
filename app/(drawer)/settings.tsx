@@ -2,12 +2,12 @@ import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import {
-  useThemeMode,
-  Dialog,
   Button,
-  Text,
-  Switch,
+  Dialog,
   Input,
+  Switch,
+  Text,
+  useThemeMode,
 } from "@rneui/themed";
 import { router } from "expo-router";
 import { useState } from "react";
@@ -48,39 +48,72 @@ export default function SettingsScreen() {
       (error) => {
         console.log("🚀 ~ handleSubmit ~ error:", error);
         alert(`Failed to update email: ${error.message}`);
-      }
+      },
     );
   };
   return (
-    <View>
+    <View style={{ padding: 16 }}>
       <View
         id="theme-toggle"
-        style={{ position: "absolute", top: -40, right: 1, zIndex: 1 }}
+        style={{ position: "absolute", top: 10, right: 10, zIndex: 1 }}
       >
         <Button
           onPress={(event) => setMode(mode === "light" ? "dark" : "light")}
+          buttonStyle={{
+            backgroundColor: "#FF006E",
+            width: 40,
+            height: 40,
+          }}
         >
           {mode === "light" ? (
             <FontAwesome6 name="moon" size={16} color="#FFFAEB" />
           ) : (
-            <FontAwesome6 name="sun" size={16} color="#051824" />
+            <FontAwesome6 name="sun" size={16} color="#FFFAEB" />
           )}
         </Button>
       </View>
       <LogoPortrait scale={0.33} />
-      <View>
-        <Button onPress={() => router.push("/(tasks)/completed-tasks")}>
-          <Ionicons name="checkmark-done-sharp" size={24} color="black" />
+      <View style={{ width: "100%", marginTop: 10 }}>
+        <Button
+          containerStyle={{ marginBottom: 10 }}
+          buttonStyle={{
+            borderRadius: 10,
+            backgroundColor: "#FFEFC2",
+            height: 50,
+            paddingHorizontal: 15,
+          }}
+          onPress={() => router.push("/(tasks)/completed-tasks")}
+        >
+          <Ionicons name="checkmark-done-sharp" size={24} color="#00173D" />
         </Button>
         <Button
+          containerStyle={{ marginBottom: 10 }}
+          buttonStyle={{
+            borderRadius: 10,
+            backgroundColor: "#FFEFC2",
+            height: 50,
+            paddingHorizontal: 15,
+          }}
           onPress={() => router.push("/(tasks)/tasks-of-yesterday")}
           title="Yesterday's"
-          icon={<FontAwesome5 name="history" size={24} color="black" />}
+          titleStyle={{ color: "#00173D", marginLeft: 10, fontSize: 16 }}
+          icon={<FontAwesome5 name="history" size={24} color="#4F10A8" />}
         />
-        <View>
-          <Text> {userEmail}</Text>
-          <Button onPress={() => setShowModal(true)}>
-            <FontAwesome6 name="user-pen" size={16} color="black" />
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            padding: 15,
+            marginBottom: 10,
+          }}
+        >
+          <Text style={{ fontSize: 16, color: "#00173D" }}>{userEmail}</Text>
+          <Button
+            buttonStyle={{ backgroundColor: "transparent", padding: 0 }}
+            onPress={() => setShowModal(true)}
+          >
+            <FontAwesome6 name="user-pen" size={16} color="#4F10A8" />
           </Button>
         </View>
         <Dialog
@@ -120,10 +153,17 @@ export default function SettingsScreen() {
           </Dialog.Actions>
         </Dialog>
         <Button
+          containerStyle={{ marginBottom: 10 }}
+          buttonStyle={{
+            backgroundColor: "#FF006E",
+            height: 50,
+            paddingHorizontal: 15,
+          }}
           onPress={() => setIsDialogOpen(true)}
           disabled={isPending}
           title="Reset Statistics"
-          icon={<Ionicons name="trash-bin" size={16} color="white" />}
+          titleStyle={{ color: "#FFFAEB", marginLeft: 10, fontSize: 16 }}
+          icon={<Ionicons name="trash-bin" size={16} color="#FFFAEB" />}
         />
       </View>
 
@@ -161,23 +201,28 @@ export default function SettingsScreen() {
           />
         </Dialog.Actions>
       </Dialog>
-      <View>
-        <View>
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginTop: 15,
+          padding: 15,
+          borderWidth: 0,
+          backgroundColor: "#FFEFC2",
+          borderRadius: 10,
+        }}
+      >
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
           {isSoundEnabled ? (
-            <FontAwesome6
-              name="volume-high"
-              size={24}
-              color={mode === "light" ? "#8AC926" : "#ff006e"}
-            />
+            <FontAwesome6 name="volume-high" size={24} color="#4F10A8" />
           ) : (
-            <FontAwesome6
-              name="volume-xmark"
-              size={24}
-              color={mode === "light" ? "#8AC926" : "#ff006e"}
-            />
+            <FontAwesome6 name="volume-xmark" size={24} color="#4F10A8" />
           )}
 
-          <Text>{isSoundEnabled ? "Enabled" : "Disabled"}</Text>
+          <Text style={{ fontSize: 16, color: "#00173D" }}>
+            {isSoundEnabled ? "Enabled" : "Disabled"}
+          </Text>
         </View>
         <Switch
           value={isSoundEnabled}

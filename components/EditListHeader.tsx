@@ -193,6 +193,6 @@ export default function EditListHeader(formData) {
       isCheckListItemsLoading,
       isCheckListItemsError,
       handleAddChecklistItem,
-    ]
+    ],
   );
 }

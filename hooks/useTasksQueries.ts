@@ -1,55 +1,59 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery } from "@tanstack/react-query";
 
-import { Tables } from '~/database.types';
-import { TaskFilter, Task } from '~/types';
-import { supabase } from '~/utils/supabase';
+import { Tables } from "~/database.types";
+import { TaskFilter, Task } from "~/types";
+import { supabase } from "~/utils/supabase";
 
-export default function useTasksQuery(filter: TaskFilter = 'not-completed') {
+export default function useTasksQuery(filter: TaskFilter = "not-completed") {
   return useQuery({
-    queryKey: ['tasks', filter],
+    queryKey: ["tasks", filter],
     queryFn: () => {
-      if (filter === 'completed') return fetchCompletedTasks();
-      if (filter === 'not-completed') return fetchNotCompletedTasks();
+      if (filter === "completed") return fetchCompletedTasks();
+      if (filter === "not-completed") return fetchNotCompletedTasks();
       return fetchAllTasks();
     },
   });
 }
-async function fetchNotCompletedTasks(): Promise<Tables<'tasks'>[]> {
+async function fetchNotCompletedTasks(): Promise<Tables<"tasks">[]> {
   const { data, error } = await supabase
-    .from('tasks')
-    .select('*')
-    .eq('is_complete', false)
-    .order('position', { ascending: true, nullsFirst: true });
+    .from("tasks")
+    .select("*")
+    .eq("is_complete", false)
+    .order("position", { ascending: true, nullsFirst: true });
 
   if (error) throw new Error(error.message);
   return data;
 }
 
-async function fetchCompletedTasks(): Promise<Tables<'tasks'>[]> {
+async function fetchCompletedTasks(): Promise<Tables<"tasks">[]> {
   const { data, error } = await supabase
-    .from('tasks')
-    .select('*')
-    .eq('is_complete', true)
-    .order('position', { ascending: true, nullsFirst: true })
-    .order('updated_at', { ascending: false });
+    .from("tasks")
+    .select("*")
+    .eq("is_complete", true)
+    .order("position", { ascending: true, nullsFirst: true })
+    .order("updated_at", { ascending: false });
 
   if (error) throw new Error(error.message);
   return data;
 }
-async function fetchAllTasks(): Promise<Tables<'tasks'>[]> {
+async function fetchAllTasks(): Promise<Tables<"tasks">[]> {
   const { data, error } = await supabase
-    .from('tasks')
-    .select('*')
-    .order('position', { ascending: true, nullsFirst: true });
+    .from("tasks")
+    .select("*")
+    .order("position", { ascending: true, nullsFirst: true });
 
   if (error) throw new Error(error.message);
   return data;
 }
 export function useTaskById(taskID: string | number) {
   return useQuery<Task, Error>({
-    queryKey: ['task', taskID],
+    queryKey: ["task", taskID],
     queryFn: async () => {
-      const { data, error } = await supabase.from('tasks').select('*').eq('id', +taskID).single();
+      const { data, error } = await supabase
+        .from("tasks")
+        .select("*")
+        .eq("id", +taskID)
+        .single();
 
       if (error) {
         throw new Error(error.message);
