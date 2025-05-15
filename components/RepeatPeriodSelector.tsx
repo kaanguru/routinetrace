@@ -17,11 +17,11 @@ export default function RepeatPeriodSelector({
   const [isVisible, setIsVisible] = useState(false);
 
   const repeatOptions: { label: string; value: RepeatPeriod | "" | null }[] = [
-    { label: "No Repeat", value: "" },
-    { label: "Daily", value: "Daily" },
-    { label: "Weekly", value: "Weekly" },
-    { label: "Monthly", value: "Monthly" },
-    { label: "Yearly", value: "Yearly" },
+    { label: "Do not Repeat", value: "" },
+    { label: "Repeat Daily", value: "Daily" },
+    { label: "Repeat Weekly", value: "Weekly" },
+    { label: "Repeat Monthly", value: "Monthly" },
+    { label: "Repeat Every Year", value: "Yearly" },
   ];
 
   const selectedLabel =
