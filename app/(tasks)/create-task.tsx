@@ -219,6 +219,9 @@ export default function CreateTask() {
         testID="create-task-button"
         disabled={isCreatingTask}
         title={isCreatingTask ? "Creating..." : "Create"}
+        style={{
+          marginBottom: 10,
+        }}
       />
     </Background>
   );
