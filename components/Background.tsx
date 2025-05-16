@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
   container: {
     flex: 1,
     backgroundColor: theme.colors.background,
-    paddingHorizontal: 0,
+    paddingHorizontal: 30,
   },
 }));
 export default Background;

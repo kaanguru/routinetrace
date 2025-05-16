@@ -1,8 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
-import { Card, Button, useThemeMode } from "@rneui/themed";
+import { Text, Card, Button, useTheme } from "@rneui/themed";
 import { router } from "expo-router";
 import { useCallback } from "react";
-import { Text, Pressable, View, StyleSheet } from "react-native";
+import { Pressable, View, StyleSheet } from "react-native";
 
 import Header from "~/components/Header";
 import { Tables } from "@/database.types";
@@ -12,19 +12,19 @@ import { FlashList } from "@shopify/flash-list";
 const ESTIMATED_ITEM_HEIGHT = 139;
 
 export default function CompletedTasks() {
-  const { mode } = useThemeMode();
+  const { theme } = useTheme();
 
   const { data: tasks, isLoading, refetch } = useTasksQueries("completed");
   const { mutate: toggleComplete } = useToggleComplete();
 
   const handleMarkIncomplete = useCallback(
     (taskID: number) => toggleComplete({ taskID, isComplete: false }),
-    [],
+    [toggleComplete],
   );
 
   function renderItem({ item }: Readonly<{ item: Tables<"tasks"> }>) {
     return (
-      <Card>
+      <Card containerStyle={styles.card}>
         <Pressable
           onPress={() => {
             router.push({
@@ -32,28 +32,57 @@ export default function CompletedTasks() {
               params: { id: item.id },
             });
           }}
+          style={styles.cardPressable}
         >
-          <View>
-            <View>
-              <Text>{item.title}</Text>
-              {item.notes && <Text>{item.notes}</Text>}
-              {item.repeat_period && (
-                <Text>
-                  Repeats: {item.repeat_frequency} times{" "}
-                  {item.repeat_period.toLowerCase()}
-                </Text>
-              )}
-              {item.updated_at && (
-                <Text>
-                  Completed on: {new Date(item.updated_at).toLocaleDateString()}
-                </Text>
-              )}
+          <View style={styles.cardContent}>
+            <View style={styles.textContainer}>
+              <Card.Title>{item.title}</Card.Title>
+              <Card.Divider />
+              <View style={{ position: "relative", alignItems: "center" }}>
+                {item.notes && (
+                  <View style={{ paddingVertical: 4 }}>
+                    <Text style={{ color: theme.colors.black }}>
+                      {item.notes}
+                    </Text>
+                  </View>
+                )}
+                {item.repeat_period && (
+                  <>
+                    <Text>Repeats:</Text>
+                    <Text>
+                      {item.repeat_frequency} times{" "}
+                      {item.repeat_period.toLowerCase()}
+                    </Text>
+                  </>
+                )}
+                {item.updated_at && (
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "baseline",
+                      justifyContent: "center",
+                      alignContent: "space-between",
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontWeight: "700",
+                        marginEnd: 5,
+                      }}
+                    >
+                      Completed on:
+                    </Text>
+                    <Text>
+                      {new Date(item.updated_at).toLocaleDateString()}
+                    </Text>
+                  </View>
+                )}
+              </View>
             </View>
-            <Button onPress={() => handleMarkIncomplete(item.id)} />
-            <Ionicons
-              name="arrow-undo"
-              size={20}
-              color={mode === "light" ? "#FFFAEB" : "#051824"}
+            <Button
+              type="clear"
+              onPress={() => handleMarkIncomplete(item.id)}
+              icon={<Ionicons name="arrow-undo" size={20} />}
             />
           </View>
         </Pressable>
@@ -68,7 +97,9 @@ export default function CompletedTasks() {
         data={tasks}
         renderItem={renderItem}
         keyExtractor={(item) => item.id.toString()}
-        ListEmptyComponent={<Text>No completed tasks found</Text>}
+        ListEmptyComponent={
+          <Text style={styles.emptyText}>No completed tasks found</Text>
+        }
         onRefresh={refetch}
         refreshing={isLoading}
         contentContainerStyle={{ paddingBottom: 20 }}

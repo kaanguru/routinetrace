@@ -1,5 +1,5 @@
 import { FontAwesome6 } from "@expo/vector-icons";
-import { Button, Text, useThemeMode } from "@rneui/themed";
+import { Text, useThemeMode } from "@rneui/themed";
 import { router } from "expo-router";
 import React from "react";
 import { Pressable, View } from "react-native";
@@ -14,9 +14,9 @@ const Header: React.FC<HeaderProps> = ({ headerTitle }) => {
       id="header"
       style={{
         flexDirection: "row",
-        alignItems: "center",
+        justifyContent: "center",
         marginBottom: 5,
-        marginTop: 5,
+        marginTop: 24,
       }}
     >
       <View

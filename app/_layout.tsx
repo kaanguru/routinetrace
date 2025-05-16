@@ -10,9 +10,9 @@ import handleErrorBoundaryError from "@/utils/errorHandler";
 
 const queryClient = new QueryClient();
 
-if (__DEV__) {
-  import("@/ReactotronConfig");
-}
+// if (__DEV__) {
+//   import("@/ReactotronConfig");
+// }
 
 export default function RootLayout() {
   const theme = createTheme(themeStyles);

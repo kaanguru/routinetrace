@@ -1,5 +1,5 @@
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
-import { useThemeMode, FAB } from "@rneui/themed";
+import { useThemeMode, FAB, useTheme } from "@rneui/themed";
 import { Stack, useRouter } from "expo-router";
 import * as R from "ramda";
 import React, { useCallback, useState, useEffect } from "react";
@@ -64,6 +64,7 @@ export default function Index() {
   // Hooks
   const { isSoundEnabled } = useSoundContext();
   const { mode } = useThemeMode();
+  const { theme } = useTheme();
   const router = useRouter();
 
   // Data fetching
@@ -198,11 +199,11 @@ export default function Index() {
         options={{
           title: "Due Tasks",
           headerStyle: {
-            backgroundColor: mode === "dark" ? "#051824" : "#FFFAEB",
+            backgroundColor: theme.colors.background,
           },
-          headerTintColor: mode === "dark" ? "#FFFAEB" : "#051824",
+          headerTintColor: theme.colors.greyOutline,
           headerTitleStyle: {
-            color: mode === "dark" ? "#FFFAEB" : "#051824",
+            color: theme.colors.black,
             fontFamily: "DelaGothicOne_400Regular",
             fontSize: 14,
             fontWeight: "400",

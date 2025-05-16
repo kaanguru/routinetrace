@@ -43,7 +43,7 @@ export default function DrawerMenuAndScreens() {
           headerTitleStyle: {
             color: "#FFEFC2",
             fontFamily: "DelaGothicOne_400Regular",
-            fontSize: 14,
+            fontSize: 60,
             fontWeight: "400",
           },
           drawerLabel: "Due Tasks",

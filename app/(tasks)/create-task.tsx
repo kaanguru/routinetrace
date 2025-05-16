@@ -186,12 +186,9 @@ export default function CreateTask() {
     <Background>
       <Header headerTitle="➕" />
       <KeyboardAvoidingView
-        behavior="height"
+        behavior="padding"
         style={{
-          marginVertical: 3,
-          paddingHorizontal: 12,
           flex: 1,
-          justifyContent: "space-between",
         }}
       >
         <ScrollView keyboardShouldPersistTaps="handled" style={{ flex: 1 }}>
@@ -213,16 +210,13 @@ export default function CreateTask() {
             repeatPeriod={formData.repeatPeriod}
           />
         </ScrollView>
+        <Button
+          onPress={handleCreate}
+          testID="create-task-button"
+          disabled={isCreatingTask}
+          title={isCreatingTask ? "Creating..." : "Create"}
+        />
       </KeyboardAvoidingView>
-      <Button
-        onPress={handleCreate}
-        testID="create-task-button"
-        disabled={isCreatingTask}
-        title={isCreatingTask ? "Creating..." : "Create"}
-        style={{
-          marginBottom: 10,
-        }}
-      />
     </Background>
   );
 }

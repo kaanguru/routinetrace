@@ -85,6 +85,7 @@ export default function SettingsScreen() {
           onPress={() => router.push("/(tasks)/completed-tasks")}
         >
           <Ionicons name="checkmark-done-sharp" size={24} color="#00173D" />
+          <Text>Completed Tasks </Text>
         </Button>
         <Button
           containerStyle={{ marginBottom: 10 }}
@@ -109,10 +110,7 @@ export default function SettingsScreen() {
           }}
         >
           <Text style={{ fontSize: 16, color: "#00173D" }}>{userEmail}</Text>
-          <Button
-            buttonStyle={{ backgroundColor: "transparent", padding: 0 }}
-            onPress={() => setShowModal(true)}
-          >
+          <Button type="clear" size="sm" onPress={() => setShowModal(true)}>
             <FontAwesome6 name="user-pen" size={16} color="#4F10A8" />
           </Button>
         </View>

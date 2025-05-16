@@ -84,6 +84,17 @@ const themeStyles = {
         fontSize: 18,
       },
     },
+    CardFeaturedSubtitle: {
+      style: {
+        fontFamily: "Ubuntu_500Medium",
+      },
+    },
+    CardTitle: {
+      style: {
+        fontFamily: "DelaGothicOne_400Regular",
+        fontSize: 24,
+      },
+    },
   },
 };
 export default themeStyles;
