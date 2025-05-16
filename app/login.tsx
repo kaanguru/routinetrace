@@ -143,9 +143,9 @@ export default function Login() {
           />
         </View>
       </View>
-      <View style={{ position: "absolute", bottom: 10, right: 10 }}>
+      {/* <View style={{ position: "absolute", bottom: 10, right: 10 }}>
         <NativeButton color="#F04F05" onPress={resetFirstVisit} title="R-F-W" />
-      </View>
+      </View> */}
     </Background>
   );
 }
