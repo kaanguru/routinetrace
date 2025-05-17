@@ -2,19 +2,14 @@
 import { Button, Input, Text } from "@rneui/themed";
 import { useRouter } from "expo-router";
 import { useCallback, useState } from "react";
-import {
-  View,
-  ActivityIndicator,
-  Button as NativeButton,
-  Alert,
-} from "react-native";
+import { View, ActivityIndicator, Alert } from "react-native";
 import { useForm } from "@tanstack/react-form";
 import userSchema from "@/schemas/userSchema";
 import FormFieldInfo from "@/components/FormFieldInfo";
 
 import LogoPortrait from "@/components/lotties/LogoPortrait";
 import { useAuth, AuthCredentials } from "@/context/AuthenticationProvider";
-import { resetFirstVisit } from "@/utils/isFirstVisit";
+// import { resetFirstVisit } from "@/utils/isFirstVisit";
 import Background from "@/components/Background";
 
 export default function Login() {
@@ -130,7 +125,7 @@ export default function Login() {
               textAlignVertical: "center",
             }}
           >
-            Don't have an account?
+            Don&apos;t have an account?
           </Text>
           <Button
             type="clear"
@@ -142,9 +137,36 @@ export default function Login() {
             }}
           />
         </View>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "center",
+            marginTop: 10,
+          }}
+        >
+          <Text
+            h4
+            style={{
+              textAlign: "center",
+              textAlignVertical: "center",
+            }}
+          >
+            Forgot Password?
+          </Text>
+          <Button
+            type="clear"
+            size="sm"
+            onPress={() => router.push("/register")}
+            title="Register"
+            titleStyle={{
+              fontSize: 14,
+              fontFamily: "Ubuntu_700Bold",
+            }}
+          />
+        </View>
       </View>
       {/* <View style={{ position: "absolute", bottom: 10, right: 10 }}>
-        <NativeButton color="#F04F05" onPress={resetFirstVisit} title="R-F-W" />
+        <Button type="clear" size="sm" color="#F04F05" onPress={resetFirstVisit} title="R-F-W" />
       </View> */}
     </Background>
   );
