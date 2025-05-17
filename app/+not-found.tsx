@@ -11,7 +11,7 @@ export default function NotFoundScreen() {
       <Stack.Screen options={{ title: "Oops!" }} />
       <Container>
         <View>
-          <Text className={styles.title}>This screen doesn't exist.</Text>
+          <Text className={styles.title}>This screen doesn&apos;t exist.</Text>
           <Text className={styles.debugText}>
             Attempted Path: {segments.join("/") || "/"}
           </Text>

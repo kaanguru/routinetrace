@@ -2,17 +2,12 @@ import { MaterialIcons, FontAwesome5 } from "@expo/vector-icons";
 import { Text, useTheme, useThemeMode } from "@rneui/themed";
 import { memo } from "react";
 import { ActivityIndicator, Pressable, View, StyleSheet } from "react-native";
-import Animated from "react-native-reanimated";
 import { LinearGradient } from "expo-linear-gradient";
 
 import useChecklistItems from "~/hooks/useCheckListQueries";
 import { TaskItemProps } from "~/types";
 import shortenText from "~/utils/shortenText";
 import AnimatedCheckBox from "./lotties/AnimatedCheckBox";
-import themeStyles from "@/theme/themeStyles";
-
-// Constants
-const ITEM_HEIGHT = 99;
 
 // Styles
 const styles = StyleSheet.create({
@@ -107,12 +102,10 @@ const areEqual = (prevProps: TaskItemProps, nextProps: TaskItemProps) =>
 // Component
 const DraggableTaskItem = memo(function TaskItem({
   task,
-  index,
   onToggleComplete,
   onPress,
   isFiltered,
   dragActivator,
-  isActive,
 }: TaskItemProps & { dragActivator?: () => void; isActive?: boolean }) {
   const { mode } = useThemeMode();
   const { theme } = useTheme();

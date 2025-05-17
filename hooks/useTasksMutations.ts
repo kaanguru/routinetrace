@@ -1,8 +1,11 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { ResultAsync, okAsync, Result } from "neverthrow";
 
 import { Tables } from "~/database.types";
 import { TaskFormData } from "~/types";
 import { supabase } from "~/utils/supabase";
+import { reportError } from "~/utils/reportError";
+
 function useCreateTask() {
   const queryClient = useQueryClient();
   return useMutation({
@@ -159,10 +162,23 @@ function useDeleteTask() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (taskID: number | string) => {
-      if (!taskID) return;
+    mutationFn: async (
+      taskID: number | string,
+    ): Promise<Result<void, Error>> => {
+      if (!taskID) return okAsync(undefined);
 
-      const { error } = await supabase.from("tasks").delete().eq("id", +taskID);
+      const result = await ResultAsync.fromPromise(
+        supabase.from("tasks").delete().eq("id", +taskID),
+        (error: unknown) => {
+          // Transform the unknown error to an Error
+          return new Error(`Failed to delete task: ${String(error)}`);
+        },
+      ).map(() => undefined);
+
+      // Report the error after the ResultAsync chain
+      reportError(result);
+
+      return result;
     },
     onMutate: async (params) => {
       // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
@@ -173,7 +189,8 @@ function useDeleteTask() {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
     onError: (error, variables, context) => {
-      console.error("Error toggling task completion:", error);
+      console.error("Error deleting task:", error);
+      // Error is already reported after the mutationFn
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });

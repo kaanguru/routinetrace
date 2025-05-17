@@ -1,4 +1,4 @@
-import { Result, ok, err, ResultAsync, okAsync } from "neverthrow";
+import { ok, err, ResultAsync } from "neverthrow";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { supabase } from "~/utils/supabase";
