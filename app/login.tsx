@@ -156,8 +156,8 @@ export default function Login() {
           <Button
             type="clear"
             size="sm"
-            onPress={() => router.push("/register")}
-            title="Register"
+            onPress={() => router.push("/forgot-password")}
+            title="Send Reset Email"
             titleStyle={{
               fontSize: 14,
               fontFamily: "Ubuntu_700Bold",

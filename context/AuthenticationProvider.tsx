@@ -34,6 +34,14 @@ const authAPI = {
     if (error) return err(error);
     return ok(undefined);
   },
+
+  async resetPasswordForEmail(
+    email: string,
+  ): Promise<ResultAsync<void, Error>> {
+    const { error } = await supabase.auth.resetPasswordForEmail(email);
+    if (error) return err(error);
+    return ok(undefined);
+  },
 };
 
 type AuthContextType = {
@@ -45,6 +53,7 @@ type AuthContextType = {
     creds: AuthCredentials,
   ) => Promise<ResultAsync<Session, Error>>;
   signOut: () => Promise<ResultAsync<void, Error>>;
+  resetPasswordForEmail: (email: string) => Promise<ResultAsync<void, Error>>;
   isLoading: boolean;
 };
 
@@ -118,6 +127,7 @@ export default function AuthProvider({
     signInWithEmail: (creds) => signInMutation.mutateAsync(creds),
     signUpWithEmail: (creds) => signUpMutation.mutateAsync(creds),
     signOut: () => signOutMutation.mutateAsync(),
+    resetPasswordForEmail: (email) => authAPI.resetPasswordForEmail(email),
   };
   return (
     <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
