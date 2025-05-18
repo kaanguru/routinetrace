@@ -1,4 +1,4 @@
-import { Button, createTheme, ThemeProvider } from "@rneui/themed";
+import { createTheme, ThemeProvider } from "@rneui/themed";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import RNEWrapper from "@/components/RNEWrapper";
 import AuthProvider from "@/context/AuthenticationProvider";
@@ -38,12 +38,12 @@ export default Sentry.wrap(function RootLayout() {
       >
         <ThemeProvider theme={theme}>
           <AuthProvider>
-            <Button
+            {/* <Button
               title="Try!"
               onPress={() => {
                 Sentry.captureException(new Error("First error 12"));
               }}
-            />
+            /> */}
             <RNEWrapper />
           </AuthProvider>
         </ThemeProvider>
