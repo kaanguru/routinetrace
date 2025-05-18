@@ -1,9 +1,7 @@
-// metro.config.js
-
-const { getDefaultConfig } = require("expo/metro-config");
+const { getSentryExpoConfig } = require("@sentry/react-native/metro");
 
 module.exports = (() => {
-  const config = getDefaultConfig(__dirname);
+  const config = getSentryExpoConfig(__dirname);
 
   // Temporary fix for Node.js module resolution issue
   config.resolver.unstable_enablePackageExports = false;

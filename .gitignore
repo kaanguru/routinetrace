@@ -49,3 +49,5 @@ dist/*
 .yarn/**
 preview-app.apk
 .vscode/**
+
+.env.local
