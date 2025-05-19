@@ -1,5 +1,4 @@
 import { Button, Input, Text } from "@rneui/themed";
-import { useState } from "react";
 import { View, Alert } from "react-native";
 import { useForm } from "@tanstack/react-form";
 import userSchema from "@/schemas/userSchema";
@@ -8,8 +7,7 @@ import Background from "@/components/Background";
 import { useAuth } from "@/context/AuthenticationProvider";
 
 export default function ForgotPassword() {
-  const [loading, setLoading] = useState(false);
-  const { resetPasswordForEmail } = useAuth();
+  const { resetPasswordMutation } = useAuth();
 
   const form = useForm({
     defaultValues: {
@@ -19,26 +17,19 @@ export default function ForgotPassword() {
       onChange: userSchema.pick({ email: true }),
     },
     onSubmit: async ({ value }) => {
-      handlePasswordReset(value.email);
+      const redirectToUrl = "com.cemkaan.rt://reset-password"; // Determined deep linking URL
+      await resetPasswordMutation.mutateAsync({
+        email: value.email,
+        redirectTo: redirectToUrl,
+      });
+
+      // Display generic message regardless of success or failure for security
+      Alert.alert(
+        "Password Reset Process Initiated",
+        "If an account with that email exists, you will receive a password reset link.",
+      );
     },
   });
-
-  const handlePasswordReset = async (email: string) => {
-    setLoading(true);
-    const resetResult = await resetPasswordForEmail(email);
-    resetResult.match(
-      () => {
-        Alert.alert(
-          "Password Reset Email Sent",
-          "Check your email for the password reset link.",
-        );
-      },
-      (transformedError: Error) => {
-        Alert.alert("Error", transformedError.message);
-      },
-    );
-    setLoading(false);
-  };
 
   return (
     <Background>
@@ -73,7 +64,7 @@ export default function ForgotPassword() {
         </form.Field>
       </View>
       <Button
-        disabled={loading}
+        disabled={resetPasswordMutation.isPending}
         onPress={() => form.handleSubmit()}
         title="Send Reset Email"
         containerStyle={{ width: "80%", marginTop: 20 }}
