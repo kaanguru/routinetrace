@@ -4,16 +4,18 @@ import { useRouter, useLocalSearchParams } from "expo-router"; // Add useLocalSe
 import { Button, Input } from "@rneui/themed";
 import { useForm, Field } from "@tanstack/react-form";
 import { useResetPasswordMutation } from "@/hooks/useResetPasswordMutation";
-import * as Linking from "expo-linking"; // Import Linking
-import { supabase } from "@/utils/supabase"; // Import supabase
+import * as Linking from "expo-linking";
+import { supabase } from "@/utils/supabase";
+import { ok, ResultAsync } from "neverthrow";
+import { reportError } from "@/utils/reportError";
 
 export default function ResetPasswordScreen() {
   const router = useRouter();
-  const localSearchParams = useLocalSearchParams(); // Add this line
+  const localSearchParams = useLocalSearchParams();
 
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<Error | null>(null); // Changed type to Error | null
 
   const resetPasswordMutation = useResetPasswordMutation();
 
@@ -23,7 +25,6 @@ export default function ResetPasswordScreen() {
       confirmPassword: "",
     },
     onSubmit: async ({ value }) => {
-      console.log("🚀 ~ onSubmit: ~ value:", value);
       await resetPasswordMutation.mutateAsync(value);
     },
     validators: {
@@ -37,12 +38,6 @@ export default function ResetPasswordScreen() {
   });
 
   useEffect(() => {
-    console.log(
-      "🚀 ~ ResetPasswordScreen ~ localSearchParams:",
-      localSearchParams,
-    ); // Add this log
-
-    // Extract parameters from localSearchParams
     const tokenFromRouter = localSearchParams.access_token as
       | string
       | undefined;
@@ -51,78 +46,88 @@ export default function ResetPasswordScreen() {
       | undefined;
     const typeFromRouter = localSearchParams.type as string | undefined;
 
-    const handleDeepLink = async (url: string | null) => {
-      let tokenFromUrl: string | undefined;
-      let refreshTokenFromUrl: string | undefined;
-      let typeFromUrl: string | undefined;
+    const handleDeepLink = async (url: string | null): Promise<void> => {
+      const processLinkResult = await ResultAsync.fromPromise(
+        (async () => {
+          let tokenFromUrl: string | undefined;
+          let refreshTokenFromUrl: string | undefined;
+          let typeFromUrl: string | undefined;
 
-      if (url) {
-        try {
-          const parsedUrl = new URL(url);
-          // Supabase often puts tokens in the fragment for password reset
-          if (parsedUrl.hash) {
-            const fragmentParams = new URLSearchParams(
-              parsedUrl.hash.substring(1),
-            ); // Remove '#'
-            tokenFromUrl = fragmentParams.get("access_token") || undefined;
-            refreshTokenFromUrl =
-              fragmentParams.get("refresh_token") || undefined;
-            typeFromUrl = fragmentParams.get("type") || undefined;
+          if (url) {
+            try {
+              const parsedUrl = new URL(url);
+              if (parsedUrl.hash) {
+                const fragmentParams = new URLSearchParams(
+                  parsedUrl.hash.substring(1),
+                );
+                tokenFromUrl = fragmentParams.get("access_token") || undefined;
+                refreshTokenFromUrl =
+                  fragmentParams.get("refresh_token") || undefined;
+                typeFromUrl = fragmentParams.get("type") || undefined;
+              }
+            } catch (e) {
+              console.error("Error parsing deep link URL:", e);
+              throw new Error("Error parsing deep link URL.");
+            }
           }
-        } catch (e) {
-          console.error("Error parsing deep link URL:", e);
-        }
-      }
 
-      // Prioritize parameters from expo-router if available
-      const finalToken = tokenFromRouter || tokenFromUrl;
-      const finalRefreshToken = refreshTokenFromRouter || refreshTokenFromUrl;
-      const finalType = typeFromRouter || typeFromUrl;
+          const finalToken = tokenFromRouter || tokenFromUrl;
+          const finalRefreshToken =
+            refreshTokenFromRouter || refreshTokenFromUrl;
+          const finalType = typeFromRouter || typeFromUrl;
 
-      if (finalToken && finalRefreshToken && finalType === "recovery") {
-        console.log("🚀 ~ handleDeepLink ~ type:", finalType);
-        console.log("🚀 ~ handleDeepLink ~ refresh_token:", finalRefreshToken);
-        console.log("🚀 ~ handleDeepLink ~ access_token:", finalToken);
+          if (finalToken && finalRefreshToken && finalType === "recovery") {
+            const { error: setSessionError } = await supabase.auth.setSession({
+              access_token: finalToken,
+              refresh_token: finalRefreshToken,
+            });
 
-        // Set the Supabase session
-        const { error: setSessionError } = await supabase.auth.setSession({
-          access_token: finalToken,
-          refresh_token: finalRefreshToken,
-        });
+            if (setSessionError) {
+              console.error("Error setting Supabase session:", setSessionError);
+              throw new Error(
+                `Failed to set session: ${setSessionError.message}`,
+              );
+            } else {
+              return ok(undefined); // Indicate success
+            }
+          } else {
+            throw new Error("Invalid password reset link.");
+          }
+        })(),
+        (e) => e as Error, // Error mapper: ensures the error is an Error object
+      );
 
-        if (setSessionError) {
-          console.error("Error setting Supabase session:", setSessionError);
-          setLoading(false);
-          setError("Failed to set session. Please try again.");
-          setMessage("There was an issue with your session. Please try again.");
-          setTimeout(() => router.replace("/login"), 5000);
-        } else {
-          setLoading(false);
-          setMessage("Please enter your new password.");
-        }
+      setLoading(false); // Always set loading to false after processing
+
+      if (processLinkResult.isOk()) {
+        setMessage("Please enter your new password.");
       } else {
-        setLoading(false);
-        setError("Invalid password reset link.");
-        setMessage("The password reset link is invalid or has expired.");
+        setError(processLinkResult.error);
+        setMessage(
+          processLinkResult.error.message.includes(
+            "Invalid password reset link",
+          )
+            ? "The password reset link is invalid or has expired."
+            : "There was an issue with your session. Please try again.",
+        );
         setTimeout(() => router.replace("/login"), 5000);
       }
+
+      reportError(processLinkResult);
     };
 
-    // Handle initial deep link when the app is launched
     Linking.getInitialURL().then((url) => {
       handleDeepLink(url);
     });
 
-    // Handle deep links when the app is already running
     const subscription = Linking.addEventListener("url", ({ url }) => {
       handleDeepLink(url);
     });
 
-    // Clean up the event listener
     return () => {
       subscription.remove();
     };
-  }, [router, localSearchParams]); // Depend on router and localSearchParams
+  }, [router, localSearchParams]);
 
   if (loading) {
     return (
@@ -136,7 +141,8 @@ export default function ResetPasswordScreen() {
   if (error) {
     return (
       <View style={styles.container}>
-        <Text style={styles.errorText}>Error: {error}</Text>
+        <Text style={styles.errorText}>Error: {error.message}</Text>{" "}
+        {/* Display error.message */}
         <Text style={styles.messageText}>{message}</Text>
       </View>
     );
@@ -147,7 +153,6 @@ export default function ResetPasswordScreen() {
       <Text style={styles.title}>Reset Password</Text>
       <Text style={styles.messageText}>{message}</Text>
 
-      {/* Password Reset Form */}
       <View style={styles.formContainer}>
         <Field
           name="password"
@@ -217,7 +222,6 @@ export default function ResetPasswordScreen() {
         />
       </View>
 
-      {/* Display mutation error messages */}
       {resetPasswordMutation.isError && (
         <Text style={styles.errorText}>
           Failed to reset password: {resetPasswordMutation.error.message}
