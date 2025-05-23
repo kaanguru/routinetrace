@@ -5,6 +5,7 @@ import { Button, Input } from "@rneui/themed";
 import { useForm, Field } from "@tanstack/react-form";
 import { useResetPasswordMutation } from "@/hooks/useResetPasswordMutation";
 import * as Linking from "expo-linking"; // Import Linking
+import { supabase } from "@/utils/supabase"; // Import supabase
 
 export default function ResetPasswordScreen() {
   const router = useRouter();
@@ -22,7 +23,16 @@ export default function ResetPasswordScreen() {
       confirmPassword: "",
     },
     onSubmit: async ({ value }) => {
+      console.log("🚀 ~ onSubmit: ~ value:", value);
       await resetPasswordMutation.mutateAsync(value);
+    },
+    validators: {
+      onChange: ({ value }) => {
+        if (value.password !== value.confirmPassword) {
+          return "Passwords do not match";
+        }
+        return undefined;
+      },
     },
   });
 
@@ -41,9 +51,7 @@ export default function ResetPasswordScreen() {
       | undefined;
     const typeFromRouter = localSearchParams.type as string | undefined;
 
-    const handleDeepLink = (url: string | null) => {
-      console.log("🚀 ~ handleDeepLink ~ url:", url); // Keep this for comparison
-
+    const handleDeepLink = async (url: string | null) => {
       let tokenFromUrl: string | undefined;
       let refreshTokenFromUrl: string | undefined;
       let typeFromUrl: string | undefined;
@@ -75,8 +83,23 @@ export default function ResetPasswordScreen() {
         console.log("🚀 ~ handleDeepLink ~ type:", finalType);
         console.log("🚀 ~ handleDeepLink ~ refresh_token:", finalRefreshToken);
         console.log("🚀 ~ handleDeepLink ~ access_token:", finalToken);
-        setLoading(false);
-        setMessage("Please enter your new password.");
+
+        // Set the Supabase session
+        const { error: setSessionError } = await supabase.auth.setSession({
+          access_token: finalToken,
+          refresh_token: finalRefreshToken,
+        });
+
+        if (setSessionError) {
+          console.error("Error setting Supabase session:", setSessionError);
+          setLoading(false);
+          setError("Failed to set session. Please try again.");
+          setMessage("There was an issue with your session. Please try again.");
+          setTimeout(() => router.replace("/login"), 5000);
+        } else {
+          setLoading(false);
+          setMessage("Please enter your new password.");
+        }
       } else {
         setLoading(false);
         setError("Invalid password reset link.");
@@ -126,7 +149,21 @@ export default function ResetPasswordScreen() {
 
       {/* Password Reset Form */}
       <View style={styles.formContainer}>
-        <Field name="password" form={form}>
+        <Field
+          name="password"
+          form={form}
+          validators={{
+            onChange: ({ value }) => {
+              if (!value) {
+                return "Password is required";
+              }
+              if (value.length < 6) {
+                return "Password must be at least 6 characters";
+              }
+              return undefined;
+            },
+          }}
+        >
           {(field) => (
             <Input
               placeholder="New Password"
@@ -135,14 +172,28 @@ export default function ResetPasswordScreen() {
               onChangeText={(text) => field.handleChange(text)}
               onBlur={field.handleBlur}
               errorMessage={
-                field.state.meta.errors
-                  ? JSON.stringify(field.state.meta.errors)
+                field.state.meta.errors.length > 0
+                  ? field.state.meta.errors.join(", ")
                   : ""
               }
             />
           )}
         </Field>
-        <Field name="confirmPassword" form={form}>
+        <Field
+          name="confirmPassword"
+          form={form}
+          validators={{
+            onChange: ({ value, fieldApi }) => {
+              if (!value) {
+                return "Confirm Password is required";
+              }
+              if (value !== fieldApi.form.getFieldValue("password")) {
+                return "Passwords do not match";
+              }
+              return undefined;
+            },
+          }}
+        >
           {(field) => (
             <Input
               placeholder="Confirm New Password"
@@ -151,8 +202,8 @@ export default function ResetPasswordScreen() {
               onChangeText={(text) => field.handleChange(text)}
               onBlur={field.handleBlur}
               errorMessage={
-                field.state.meta.errors
-                  ? JSON.stringify(field.state.meta.errors)
+                field.state.meta.errors.length > 0
+                  ? field.state.meta.errors.join(", ")
                   : ""
               }
             />
@@ -162,6 +213,7 @@ export default function ResetPasswordScreen() {
           title="Reset Password"
           onPress={() => form.handleSubmit()}
           loading={resetPasswordMutation.isPending}
+          disabled={!form.state.isValid}
         />
       </View>
 
