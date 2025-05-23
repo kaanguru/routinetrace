@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { Button, Input } from "@rneui/themed";
 import { useForm, Field } from "@tanstack/react-form";
 import { useResetPasswordMutation } from "@/hooks/useResetPasswordMutation";
 import * as Linking from "expo-linking"; // Import Linking
 
 export default function ResetPasswordScreen() {
-  const { access_token, refresh_token, type } = useLocalSearchParams();
   const router = useRouter();
 
   const [loading, setLoading] = useState(true);
@@ -15,7 +14,6 @@ export default function ResetPasswordScreen() {
   const [error, setError] = useState<string | null>(null);
 
   const resetPasswordMutation = useResetPasswordMutation();
-  const currentUrl = Linking.useURL(); // Get the full URL
 
   const form = useForm({
     defaultValues: {
@@ -28,26 +26,64 @@ export default function ResetPasswordScreen() {
   });
 
   useEffect(() => {
-    console.log("🚀 ~ currentUrl:", currentUrl);
-    console.log("🚀 ~ useLocalSearchParams:", {
-      access_token,
-      refresh_token,
-      type,
+    const handleDeepLink = (url: string | null) => {
+      console.log("🚀 ~ handleDeepLink ~ url:", url);
+
+      let tokenFromUrl: string | undefined;
+      let refreshTokenFromUrl: string | undefined;
+      let typeFromUrl: string | undefined;
+
+      if (url) {
+        try {
+          const parsedUrl = new URL(url);
+          // Supabase often puts tokens in the fragment for password reset
+          if (parsedUrl.hash) {
+            const fragmentParams = new URLSearchParams(
+              parsedUrl.hash.substring(1),
+            ); // Remove '#'
+            tokenFromUrl = fragmentParams.get("access_token") || undefined;
+            refreshTokenFromUrl =
+              fragmentParams.get("refresh_token") || undefined;
+            typeFromUrl = fragmentParams.get("type") || undefined;
+          }
+        } catch (e) {
+          console.error("Error parsing deep link URL:", e);
+        }
+      }
+
+      if (tokenFromUrl && refreshTokenFromUrl && typeFromUrl === "recovery") {
+        console.log("🚀 ~ handleDeepLink ~ type:", typeFromUrl);
+        console.log(
+          "🚀 ~ handleDeepLink ~ refresh_token:",
+          refreshTokenFromUrl,
+        );
+        console.log("🚀 ~ handleDeepLink ~ access_token:", tokenFromUrl);
+        setLoading(false);
+        setMessage("Please enter your new password.");
+      } else {
+        setLoading(false);
+        setError("Invalid password reset link.");
+        setMessage("The password reset link is invalid or has expired.");
+        setTimeout(() => router.replace("/login"), 5000);
+      }
+    };
+
+    // Handle initial deep link when the app is launched
+    Linking.getInitialURL().then((url) => {
+      handleDeepLink(url);
     });
 
-    if (access_token && refresh_token && type === "recovery") {
-      console.log("🚀 ~ useEffect ~ type:", type);
-      console.log("🚀 ~ useEffect ~ refresh_token:", refresh_token);
-      console.log("🚀 ~ useEffect ~ access_token:", access_token);
-      setLoading(false);
-      setMessage("Please enter your new password.");
-    } else {
-      setLoading(false);
-      setError("Invalid password reset link.");
-      setMessage("The password reset link is invalid or has expired.");
-      setTimeout(() => router.replace("/login"), 5000);
-    }
-  }, [access_token, refresh_token, type, router, currentUrl]);
+    // Handle deep links when the app is already running
+    const subscription = Linking.addEventListener("url", ({ url }) => {
+      handleDeepLink(url);
+    });
+
+    // Clean up the event listener
+    return () => {
+      subscription.remove();
+    };
+  }, [router]); // Depend only on router
+
   if (loading) {
     return (
       <View style={styles.container}>

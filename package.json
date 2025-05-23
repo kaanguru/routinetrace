@@ -5,7 +5,7 @@
   "main": "expo-router/entry",
   "scripts": {
     "android": "expo run:android",
-    "android:build": "EAS_NO_VCS=1 npx eas build -p android --profile preview --local --info --output dist/android/local/pre-app.apk",
+    "android:build": "npx eas build -p android --profile preview --local --info --output dist/android/local/pre-$(date +'%d%b').apk",
     "android:build:timed": "time -f 'Elapsed: %E, CPU: %P' npx eas build -p android --profile preview --local --output dist/android/local/pre-$(date +'%d%b').apk",
     "prebuild": "expo prebuild -p android",
     "build": "eas build:run -p android",
@@ -20,7 +20,7 @@
     "test": "jest --watchAll",
     "update:sdk": "expo install expo@latest && expo install --fix",
     "web": "expo start --web",
-    "resetpass": "npx uri-scheme open routinetrace://resetpassword  --android"
+    "resetpass": "npx uri-scheme open --android routinetrace://resetpassword?token=34c964676bbd0054c317bc18a4031186eaf860cf63c069469217bc5d&type=recovery "
   },
   "jest": {
     "preset": "jest-expo"

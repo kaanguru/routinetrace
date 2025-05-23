@@ -131,7 +131,9 @@ sleep 1
 
 # Build again
 echo "🔨 Starting Android build..."
-pnpm android:build:timed
+export EAS_NO_VCS=1
+
+pnpm android:build
 
 # Calculate and display build time
 END_TIME=$(date +%s)
@@ -139,7 +141,7 @@ DURATION=$((END_TIME - START_TIME))
 MINUTES=$((DURATION / 60))
 SECONDS=$((DURATION % 60))
 
-echo ""
+echo "------------"
 echo "🎉 Clean build process completed!"
-echo "⏱️  Total time: ${MINUTES}m ${SECONDS}s"
-echo "📅 Finished at: $(date)"
+echo "⏱️  Total time: ${MINUTES} min ${SECONDS} sec"
+echo "------------"
