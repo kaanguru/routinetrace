@@ -5,7 +5,7 @@
   "main": "expo-router/entry",
   "scripts": {
     "android": "expo run:android",
-    "android:build": "npx eas build -p android --profile preview --local --info --output dist/android/local/pre-$(date +'%d%b').apk",
+    "android:build": "npx eas build -p android --profile preview --local --output dist/android/local/pre-$(date +'%d%b').apk",
     "android:build:timed": "time -f 'Elapsed: %E, CPU: %P' npx eas build -p android --profile preview --local --output dist/android/local/pre-$(date +'%d%b').apk",
     "prebuild": "expo prebuild -p android",
     "build": "eas build:run -p android",
