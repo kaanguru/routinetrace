@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icons/adaptive-icon.png",
-    "scheme": "com.cemkaan.rt",
+    "scheme": "routinetrace",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {

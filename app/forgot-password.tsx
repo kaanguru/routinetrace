@@ -17,7 +17,7 @@ export default function ForgotPassword() {
       onChange: userSchema.pick({ email: true }),
     },
     onSubmit: async ({ value }) => {
-      const redirectToUrl = "com.cemkaan.rt://resetpassword"; // Determined deep linking URL
+      const redirectToUrl = "routinetrace://resetpassword"; // Determined deep linking URL
       await resetPasswordMutation.mutateAsync({
         email: value.email,
         redirectTo: redirectToUrl,

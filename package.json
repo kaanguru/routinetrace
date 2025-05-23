@@ -5,7 +5,7 @@
   "main": "expo-router/entry",
   "scripts": {
     "android": "expo run:android",
-    "android:build": "EAS_NO_VCS=1 npx eas build -p android --profile preview --local --output dist/android/local/pre-app.apk",
+    "android:build": "EAS_NO_VCS=1 npx eas build -p android --profile preview --local --info --output dist/android/local/pre-app.apk",
     "android:build:timed": "time -f 'Elapsed: %E, CPU: %P' npx eas build -p android --profile preview --local --output dist/android/local/pre-$(date +'%d%b').apk",
     "prebuild": "expo prebuild -p android",
     "build": "eas build:run -p android",
@@ -19,7 +19,8 @@
     "start": "expo start --android -c",
     "test": "jest --watchAll",
     "update:sdk": "expo install expo@latest && expo install --fix",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "resetpass": "npx uri-scheme open routinetrace://resetpassword  --android"
   },
   "jest": {
     "preset": "jest-expo"
@@ -35,12 +36,13 @@
     "@react-native-community/datetimepicker": "8.3.0",
     "@react-native-community/slider": "4.5.6",
     "@react-native-picker/picker": "2.11.0",
-    "@react-navigation/bottom-tabs": "^7.3.13",
-    "@react-navigation/drawer": "^7.3.12",
-    "@react-navigation/native": "^7.1.9",
+    "@react-navigation/bottom-tabs": "^7.3.10",
+    "@react-navigation/drawer": "^7.3.9",
+    "@react-navigation/native": "^7.1.6",
     "@rneui/base": "4.0.0-rc.7",
     "@rneui/themed": "4.0.0-rc.8",
-    "@sentry/react-native": "^6.14.0",
+    "@sentry/cli": "^2.45.0",
+    "@sentry/react-native": "^6.10.0",
     "@shopify/flash-list": "1.7.6",
     "@supabase/supabase-js": "2.49.5-next.5",
     "@tanstack/react-form": "^1.11.2",

@@ -1,52 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
-import { router, useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { Button, Input } from "@rneui/themed";
-import { ResultAsync, err, ok } from "neverthrow";
-import reportError from "~/utils/errorHandler";
-import { useMutation } from "@tanstack/react-query";
 import { useForm, Field } from "@tanstack/react-form";
-import { supabase } from "~/utils/supabase";
-
-// Define the shape of the form data
-type ResetPasswordFormData = {
-  password: string;
-  confirmPassword: string;
-};
-
-// Placeholder for the password reset mutation logic
-const useResetPasswordMutation = () => {
-  return useMutation<ResultAsync<void, Error>, Error, ResetPasswordFormData>({
-    mutationFn: async (
-      data: ResetPasswordFormData,
-    ): Promise<ResultAsync<void, Error>> => {
-      if (data.password !== data.confirmPassword) {
-        return err(new Error("Passwords do not match."));
-      }
-      const { error } = await supabase.auth.updateUser({
-        password: data.password,
-      });
-
-      if (error) {
-        return err(error);
-      }
-
-      return ok(undefined);
-    },
-    onSuccess: async (result) => {
-      if ((await result).isOk()) {
-        console.log(
-          "Password reset successful (placeholder). Navigating to login.",
-        );
-        router.replace("/login");
-      }
-    },
-    onError: (error) => {
-      reportError(error);
-      console.error("Password reset error:", error);
-    },
-  });
-};
+import { useResetPasswordMutation } from "@/hooks/useResetPasswordMutation";
+import * as Linking from "expo-linking"; // Import Linking
 
 export default function ResetPasswordScreen() {
   const { access_token, refresh_token, type } = useLocalSearchParams();
@@ -56,10 +14,9 @@ export default function ResetPasswordScreen() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState<string | null>(null);
 
-  // Initialize the mutation hook
   const resetPasswordMutation = useResetPasswordMutation();
+  const currentUrl = Linking.useURL(); // Get the full URL
 
-  // Initialize the form using TanStack Form
   const form = useForm({
     defaultValues: {
       password: "",
@@ -71,24 +28,26 @@ export default function ResetPasswordScreen() {
   });
 
   useEffect(() => {
-    // Supabase typically handles setting the session from the URL automatically
-    // when the app loads with the redirect URL. We can check if a session is
-    // available or if the tokens are present in the URL.
+    console.log("🚀 ~ currentUrl:", currentUrl);
+    console.log("🚀 ~ useLocalSearchParams:", {
+      access_token,
+      refresh_token,
+      type,
+    });
+
     if (access_token && refresh_token && type === "recovery") {
-      // Tokens are present, Supabase should handle the session.
-      // We can proceed to show the password reset form.
+      console.log("🚀 ~ useEffect ~ type:", type);
+      console.log("🚀 ~ useEffect ~ refresh_token:", refresh_token);
+      console.log("🚀 ~ useEffect ~ access_token:", access_token);
       setLoading(false);
       setMessage("Please enter your new password.");
     } else {
-      // Invalid or missing tokens/type in URL.
       setLoading(false);
       setError("Invalid password reset link.");
       setMessage("The password reset link is invalid or has expired.");
-      // Optionally redirect after a delay
-      // setTimeout(() => router.replace('/login'), 5000);
+      setTimeout(() => router.replace("/login"), 5000);
     }
-  }, [access_token, refresh_token, type, router]);
-
+  }, [access_token, refresh_token, type, router, currentUrl]);
   if (loading) {
     return (
       <View style={styles.container}>

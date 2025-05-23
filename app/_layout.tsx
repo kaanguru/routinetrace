@@ -10,7 +10,8 @@ import handleErrorBoundaryError from "@/utils/errorHandler";
 import * as Sentry from "@sentry/react-native";
 
 Sentry.init({
-  dsn: "https://cfa66f36a318ec740ef2906e8a0d7728@o4508883408846848.ingest.de.sentry.io/4509302901178448",
+  dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
+  // dsn: "https://cfa66f36a318ec740ef2906e8a0d7728@o4508883408846848.ingest.de.sentry.io/4509302901178448",
 
   // Adds more context data to events (IP address, cookies, user, etc.)
   // For more information, visit: https://docs.sentry.io/platforms/react-native/data-management/data-collected/
