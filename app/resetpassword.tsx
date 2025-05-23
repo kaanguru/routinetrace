@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
-import { useRouter } from "expo-router";
+import { useRouter, useLocalSearchParams } from "expo-router"; // Add useLocalSearchParams
 import { Button, Input } from "@rneui/themed";
 import { useForm, Field } from "@tanstack/react-form";
 import { useResetPasswordMutation } from "@/hooks/useResetPasswordMutation";
@@ -8,6 +8,7 @@ import * as Linking from "expo-linking"; // Import Linking
 
 export default function ResetPasswordScreen() {
   const router = useRouter();
+  const localSearchParams = useLocalSearchParams(); // Add this line
 
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
@@ -26,8 +27,22 @@ export default function ResetPasswordScreen() {
   });
 
   useEffect(() => {
+    console.log(
+      "🚀 ~ ResetPasswordScreen ~ localSearchParams:",
+      localSearchParams,
+    ); // Add this log
+
+    // Extract parameters from localSearchParams
+    const tokenFromRouter = localSearchParams.access_token as
+      | string
+      | undefined;
+    const refreshTokenFromRouter = localSearchParams.refresh_token as
+      | string
+      | undefined;
+    const typeFromRouter = localSearchParams.type as string | undefined;
+
     const handleDeepLink = (url: string | null) => {
-      console.log("🚀 ~ handleDeepLink ~ url:", url);
+      console.log("🚀 ~ handleDeepLink ~ url:", url); // Keep this for comparison
 
       let tokenFromUrl: string | undefined;
       let refreshTokenFromUrl: string | undefined;
@@ -51,13 +66,15 @@ export default function ResetPasswordScreen() {
         }
       }
 
-      if (tokenFromUrl && refreshTokenFromUrl && typeFromUrl === "recovery") {
-        console.log("🚀 ~ handleDeepLink ~ type:", typeFromUrl);
-        console.log(
-          "🚀 ~ handleDeepLink ~ refresh_token:",
-          refreshTokenFromUrl,
-        );
-        console.log("🚀 ~ handleDeepLink ~ access_token:", tokenFromUrl);
+      // Prioritize parameters from expo-router if available
+      const finalToken = tokenFromRouter || tokenFromUrl;
+      const finalRefreshToken = refreshTokenFromRouter || refreshTokenFromUrl;
+      const finalType = typeFromRouter || typeFromUrl;
+
+      if (finalToken && finalRefreshToken && finalType === "recovery") {
+        console.log("🚀 ~ handleDeepLink ~ type:", finalType);
+        console.log("🚀 ~ handleDeepLink ~ refresh_token:", finalRefreshToken);
+        console.log("🚀 ~ handleDeepLink ~ access_token:", finalToken);
         setLoading(false);
         setMessage("Please enter your new password.");
       } else {
@@ -82,7 +99,7 @@ export default function ResetPasswordScreen() {
     return () => {
       subscription.remove();
     };
-  }, [router]); // Depend only on router
+  }, [router, localSearchParams]); // Depend on router and localSearchParams
 
   if (loading) {
     return (
