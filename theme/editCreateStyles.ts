@@ -2,10 +2,6 @@ import { StyleSheet } from "react-native";
 // --- Styles ---
 // Using StyleSheet.create for performance and organization
 const editStyles = StyleSheet.create({
-  scrollViewContent: {
-    paddingBottom: 90, // Space for floating action buttons
-    marginBottom: 100, // Space for floating action buttons
-  },
   centered: {
     flex: 1,
     alignItems: "center",

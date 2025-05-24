@@ -45,7 +45,7 @@ const DraggableFlatListComponent = ({
   // Enhanced renderItem that wraps the original renderItem with ScaleDecorator
   const renderItemWithDecorator = useCallback(
     (params: RenderItemParams<Task>) => {
-      const { item, drag, isActive } = params;
+      const { isActive } = params;
 
       return (
         <ScaleDecorator>

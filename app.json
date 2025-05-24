@@ -43,8 +43,15 @@
         }
       ],
       "expo-font",
-
-      "expo-asset"
+      "expo-asset",
+      [
+        "@sentry/react-native/expo",
+        {
+          "url": "https://sentry.io/",
+          "project": "routinetrace",
+          "organization": "cemkaanguru"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

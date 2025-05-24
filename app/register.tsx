@@ -1,7 +1,7 @@
 // app/register.tsx
 import { Button, Text, Input } from "@rneui/themed";
 import { useRouter } from "expo-router";
-import React, { useState, useCallback } from "react";
+import React, { useCallback } from "react";
 import { View, Alert, ActivityIndicator, StyleSheet } from "react-native";
 import { StandardSchemaV1Issue, useForm } from "@tanstack/react-form";
 import userSchema from "@/schemas/userSchema";
@@ -53,7 +53,7 @@ export default function Register() {
         },
       );
     },
-    [form, signUpWithEmail],
+    [signUpWithEmail],
   );
 
   const styles = StyleSheet.create({

@@ -394,10 +394,7 @@ export default function EditTask() {
         behavior="height"
         style={{ flex: 1, justifyContent: "center" }}
       >
-        <ScrollView
-          contentContainerStyle={editStyles.scrollViewContent}
-          keyboardShouldPersistTaps="handled"
-        >
+        <ScrollView keyboardShouldPersistTaps="handled">
           {/* Render Task Details Form */}
           <TaskDetailsForm
             formData={formData}

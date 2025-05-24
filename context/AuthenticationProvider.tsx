@@ -1,4 +1,4 @@
-import { Result, ok, err, ResultAsync, okAsync } from "neverthrow";
+import { ok, err, ResultAsync } from "neverthrow";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { supabase } from "~/utils/supabase";
@@ -34,6 +34,17 @@ const authAPI = {
     if (error) return err(error);
     return ok(undefined);
   },
+
+  async resetPasswordForEmail(
+    email: string,
+    redirectTo?: string,
+  ): Promise<ResultAsync<void, Error>> {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo,
+    });
+    if (error) return err(error);
+    return ok(undefined);
+  },
 };
 
 type AuthContextType = {
@@ -45,6 +56,13 @@ type AuthContextType = {
     creds: AuthCredentials,
   ) => Promise<ResultAsync<Session, Error>>;
   signOut: () => Promise<ResultAsync<void, Error>>;
+  resetPasswordMutation: ReturnType<
+    typeof useMutation<
+      ResultAsync<void, Error>,
+      Error,
+      { email: string; redirectTo?: string }
+    >
+  >;
   isLoading: boolean;
 };
 
@@ -105,12 +123,28 @@ export default function AuthProvider({
     },
   });
 
+  const resetPasswordMutation = useMutation<
+    ResultAsync<void, Error>,
+    Error,
+    { email: string; redirectTo?: string }
+  >({
+    mutationFn: ({ email, redirectTo }) =>
+      authAPI.resetPasswordForEmail(email, redirectTo),
+    onSuccess: async (result) => {
+      // No specific action needed on success for password reset initiation
+    },
+    onError: (error) => {
+      console.error("Password reset error:", error);
+    },
+  });
+
   const isLoading = isSessionLoading;
 
   const isMutating =
     signInMutation.isPending ||
     signUpMutation.isPending ||
-    signOutMutation.isPending;
+    signOutMutation.isPending ||
+    resetPasswordMutation.isPending;
 
   const contextValue: AuthContextType = {
     session: session || null,
@@ -118,6 +152,7 @@ export default function AuthProvider({
     signInWithEmail: (creds) => signInMutation.mutateAsync(creds),
     signUpWithEmail: (creds) => signUpMutation.mutateAsync(creds),
     signOut: () => signOutMutation.mutateAsync(),
+    resetPasswordMutation: resetPasswordMutation,
   };
   return (
     <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>

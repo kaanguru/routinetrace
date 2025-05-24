@@ -63,6 +63,7 @@ function useInitializeDailyTasks() {
     user,
     initialized,
     healthAndHappiness,
+    hasTasksFromYesterday,
   ]);
 
   return { initialized, hasTasksFromYesterday };
