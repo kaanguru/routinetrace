@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router"; // Add useLocalSearchParams
 import { Button, Input } from "@rneui/themed";
@@ -6,7 +6,7 @@ import { useForm, Field } from "@tanstack/react-form";
 import { useResetPasswordMutation } from "@/hooks/useResetPasswordMutation";
 import * as Linking from "expo-linking";
 import { supabase } from "@/utils/supabase";
-import { ok, ResultAsync } from "neverthrow";
+import { ok, err, Result, ResultAsync, errAsync } from "neverthrow";
 import { reportError } from "@/utils/reportError";
 
 export default function ResetPasswordScreen() {
@@ -16,6 +16,7 @@ export default function ResetPasswordScreen() {
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
   const [error, setError] = useState<Error | null>(null); // Changed type to Error | null
+  const redirectTimerIdRef = useRef<number | null>(null);
 
   const resetPasswordMutation = useResetPasswordMutation();
 
@@ -37,97 +38,105 @@ export default function ResetPasswordScreen() {
     },
   });
 
+  const {
+    access_token: accessTokenFromParams,
+    refresh_token: refreshTokenFromParams,
+    type: typeFromParams,
+  } = localSearchParams;
+
   useEffect(() => {
-    const tokenFromRouter = localSearchParams.access_token as
-      | string
-      | undefined;
-    const refreshTokenFromRouter = localSearchParams.refresh_token as
-      | string
-      | undefined;
-    const typeFromRouter = localSearchParams.type as string | undefined;
+    const routerToken = accessTokenFromParams as string | undefined;
+    const routerRefreshToken = refreshTokenFromParams as string | undefined;
+    const routerType = typeFromParams as string | undefined;
 
-    const handleDeepLink = async (url: string | null): Promise<void> => {
-      const processLinkResult = await ResultAsync.fromPromise(
-        (async () => {
-          let tokenFromUrl: string | undefined;
-          let refreshTokenFromUrl: string | undefined;
-          let typeFromUrl: string | undefined;
-
-          if (url) {
-            try {
-              const parsedUrl = new URL(url);
-              if (parsedUrl.hash) {
-                const fragmentParams = new URLSearchParams(
-                  parsedUrl.hash.substring(1),
-                );
-                tokenFromUrl = fragmentParams.get("access_token") || undefined;
-                refreshTokenFromUrl =
-                  fragmentParams.get("refresh_token") || undefined;
-                typeFromUrl = fragmentParams.get("type") || undefined;
-              }
-            } catch (e) {
-              console.error("Error parsing deep link URL:", e);
-              throw new Error("Error parsing deep link URL.");
-            }
-          }
-
-          const finalToken = tokenFromRouter || tokenFromUrl;
-          const finalRefreshToken =
-            refreshTokenFromRouter || refreshTokenFromUrl;
-          const finalType = typeFromRouter || typeFromUrl;
-
-          if (finalToken && finalRefreshToken && finalType === "recovery") {
-            const { error: setSessionError } = await supabase.auth.setSession({
-              access_token: finalToken,
-              refresh_token: finalRefreshToken,
-            });
-
-            if (setSessionError) {
-              console.error("Error setting Supabase session:", setSessionError);
-              throw new Error(
-                `Failed to set session: ${setSessionError.message}`,
-              );
-            } else {
-              return ok(undefined); // Indicate success
-            }
-          } else {
-            throw new Error("Invalid password reset link.");
-          }
-        })(),
-        (e) => e as Error, // Error mapper: ensures the error is an Error object
-      );
-
-      setLoading(false); // Always set loading to false after processing
-
-      if (processLinkResult.isOk()) {
-        setMessage("Please enter your new password.");
-      } else {
-        setError(processLinkResult.error);
-        setMessage(
-          processLinkResult.error.message.includes(
-            "Invalid password reset link",
-          )
-            ? "The password reset link is invalid or has expired."
-            : "There was an issue with your session. Please try again.",
-        );
-        setTimeout(() => router.replace("/login"), 5000);
-      }
-
-      reportError(processLinkResult);
+    const currentRouterParams: Readonly<{
+      token?: string;
+      refreshToken?: string;
+      type?: string;
+    }> = {
+      token: routerToken,
+      refreshToken: routerRefreshToken,
+      type: routerType,
     };
 
-    Linking.getInitialURL().then((url) => {
-      handleDeepLink(url);
-    });
+    const clearRedirectTimer = () => {
+      if (redirectTimerIdRef.current) {
+        clearTimeout(redirectTimerIdRef.current);
+        redirectTimerIdRef.current = null;
+      }
+    };
 
-    const subscription = Linking.addEventListener("url", ({ url }) => {
-      handleDeepLink(url);
-    });
+    const handleUrl = async (url: string | null): Promise<void> => {
+      clearRedirectTimer();
+      setLoading(true);
+
+      const parsedUrlResult = parseUrlParams(url);
+
+      const finalResult: Result<void, Error> = await parsedUrlResult
+        .mapErr((e) => e) // Ensures type consistency, already Error
+        .asyncAndThen((urlParams) =>
+          processPasswordResetLinkInternal(urlParams, currentRouterParams),
+        );
+
+      setLoading(false);
+      reportError(finalResult);
+
+      if (finalResult.isOk()) {
+        setMessage("Please enter your new password.");
+        setError(null);
+      } else {
+        const anError = finalResult.error;
+        setError(anError);
+        if (anError.message.includes("Invalid password reset link")) {
+          setMessage("The password reset link is invalid or has expired.");
+        } else if (anError.message.includes("Error parsing deep link URL")) {
+          setMessage(
+            "There was an issue processing the link. Please ensure it's correct and try again.",
+          );
+        } else if (anError.message.includes("Failed to set session")) {
+          setMessage(
+            `Session setup failed: ${anError.message}. Please try again.`,
+          );
+        } else {
+          setMessage("An unexpected error occurred. Please try again.");
+        }
+        redirectTimerIdRef.current = setTimeout(
+          () => router.replace("/login"),
+          5000,
+        );
+      }
+    };
+
+    Linking.getInitialURL()
+      .then((initialUrl) => {
+        handleUrl(initialUrl);
+      })
+      .catch((linkError) => {
+        console.error("Error getting initial URL:", linkError);
+        setError(new Error("Failed to process application link."));
+        setMessage(
+          "Could not initialize password reset. Please try opening the link again.",
+        );
+        setLoading(false);
+        clearRedirectTimer();
+        redirectTimerIdRef.current = setTimeout(
+          () => router.replace("/login"),
+          5000,
+        );
+      });
+
+    const subscription = Linking.addEventListener(
+      "url",
+      ({ url: eventUrl }) => {
+        handleUrl(eventUrl);
+      },
+    );
 
     return () => {
       subscription.remove();
+      clearRedirectTimer();
     };
-  }, [router, localSearchParams]);
+  }, [router, accessTokenFromParams, refreshTokenFromParams, typeFromParams]);
 
   if (loading) {
     return (
@@ -141,8 +150,7 @@ export default function ResetPasswordScreen() {
   if (error) {
     return (
       <View style={styles.container}>
-        <Text style={styles.errorText}>Error: {error.message}</Text>{" "}
-        {/* Display error.message */}
+        <Text style={styles.errorText}>Error: {error.message}</Text>
         <Text style={styles.messageText}>{message}</Text>
       </View>
     );
@@ -258,3 +266,65 @@ const styles = StyleSheet.create({
     maxWidth: 400,
   },
 });
+
+// Helper pure function to parse URL parameters
+function parseUrlParams(
+  url: string | null,
+): Result<
+  Readonly<{ token?: string; refreshToken?: string; type?: string }>,
+  Error
+> {
+  if (!url) {
+    return ok({}); // No URL, no params from URL
+  }
+  try {
+    const parsedUrl = new URL(url);
+    if (parsedUrl.hash) {
+      const fragmentParams = new URLSearchParams(parsedUrl.hash.substring(1));
+      const token = fragmentParams.get("access_token") || undefined;
+      const refreshToken = fragmentParams.get("refresh_token") || undefined;
+      const type = fragmentParams.get("type") || undefined;
+      return ok({ token, refreshToken, type });
+    }
+    return ok({}); // URL has no hash, no params from hash
+  } catch (e) {
+    console.error("Error parsing deep link URL:", e);
+    return err(new Error("Error parsing deep link URL."));
+  }
+}
+
+// Helper function for processing the password reset link and setting Supabase session
+function processPasswordResetLinkInternal(
+  urlParams: Readonly<{ token?: string; refreshToken?: string; type?: string }>,
+  routerParams: Readonly<{
+    token?: string;
+    refreshToken?: string;
+    type?: string;
+  }>,
+): ResultAsync<void, Error> {
+  const finalToken = routerParams.token || urlParams.token;
+  const finalRefreshToken = routerParams.refreshToken || urlParams.refreshToken;
+  const finalType = routerParams.type || urlParams.type;
+
+  if (finalToken && finalRefreshToken && finalType === "recovery") {
+    return ResultAsync.fromPromise(
+      supabase.auth.setSession({
+        access_token: finalToken,
+        refresh_token: finalRefreshToken,
+      }),
+      (e) =>
+        new Error(
+          `Unexpected error during session setup: ${(e as Error).message}`,
+        ),
+    ).andThen((sessionResponse) => {
+      if (sessionResponse.error) {
+        console.error("Error setting Supabase session:", sessionResponse.error);
+        return err(
+          new Error(`Failed to set session: ${sessionResponse.error.message}`),
+        );
+      }
+      return ok(undefined); // Indicate success
+    });
+  }
+  return errAsync(new Error("Invalid password reset link."));
+}
