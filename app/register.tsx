@@ -4,25 +4,16 @@ import { useRouter } from "expo-router";
 import React, { useCallback } from "react";
 import { View, Alert, ActivityIndicator, StyleSheet } from "react-native";
 import { StandardSchemaV1Issue, useForm } from "@tanstack/react-form";
-import userSchema from "@/schemas/userSchema";
 import FormFieldInfo from "@/components/FormFieldInfo";
 
 import LogoPortrait from "@/components/lotties/LogoPortrait";
 import { useAuth, AuthCredentials } from "@/context/AuthenticationProvider";
 import Background from "@/components/Background";
-import { z } from "zod";
+import registrationSchema from "@/schemas/registrationSchema";
 
 export default function Register() {
   const router = useRouter();
   const { signUpWithEmail, isLoading: authLoading } = useAuth();
-  const registrationSchema = userSchema
-    .extend({
-      confirm_password: z.string().min(6),
-    })
-    .refine((data) => data.password === data.confirm_password, {
-      message: "Passwords do not match",
-      path: ["confirm_password"],
-    });
   const form = useForm({
     defaultValues: {
       email: "",

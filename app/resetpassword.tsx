@@ -1,13 +1,16 @@
 import React, { useEffect, useState, useRef } from "react";
-import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
+import { View, Text, ActivityIndicator } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router"; // Add useLocalSearchParams
 import { Button, Input } from "@rneui/themed";
 import { useForm, Field } from "@tanstack/react-form";
 import { useResetPasswordMutation } from "@/hooks/useResetPasswordMutation";
 import * as Linking from "expo-linking";
-import { supabase } from "@/utils/supabase";
-import { ok, err, Result, ResultAsync, errAsync } from "neverthrow";
+import { Result } from "neverthrow";
 import { reportError } from "@/utils/reportError";
+import parseUrlParams from "@/utils/auth/parseUrlParams";
+import processPasswordResetLinkInternal from "@/utils/auth/processPasswordResetLinkInternal";
+import styles from "@/theme/resetPasswordStyles";
+import passSchema from "@/schemas/passSchema";
 
 export default function ResetPasswordScreen() {
   const router = useRouter();
@@ -15,7 +18,7 @@ export default function ResetPasswordScreen() {
 
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
-  const [error, setError] = useState<Error | null>(null); // Changed type to Error | null
+  const [error, setError] = useState<Error | null>(null);
   const redirectTimerIdRef = useRef<number | null>(null);
 
   const resetPasswordMutation = useResetPasswordMutation();
@@ -32,6 +35,10 @@ export default function ResetPasswordScreen() {
       onChange: ({ value }) => {
         if (value.password !== value.confirmPassword) {
           return "Passwords do not match";
+        }
+        const result = passSchema.safeParse({ password: value });
+        if (!result.success) {
+          return result.error.errors[0].message;
         }
         return undefined;
       },
@@ -73,7 +80,7 @@ export default function ResetPasswordScreen() {
       const parsedUrlResult = parseUrlParams(url);
 
       const finalResult: Result<void, Error> = await parsedUrlResult
-        .mapErr((e) => e) // Ensures type consistency, already Error
+        .mapErr((e) => e)
         .asyncAndThen((urlParams) =>
           processPasswordResetLinkInternal(urlParams, currentRouterParams),
         );
@@ -167,11 +174,9 @@ export default function ResetPasswordScreen() {
           form={form}
           validators={{
             onChange: ({ value }) => {
-              if (!value) {
-                return "Password is required";
-              }
-              if (value.length < 6) {
-                return "Password must be at least 6 characters";
+              const result = passSchema.safeParse({ password: value });
+              if (!result.success) {
+                return result.error.errors[0].message;
               }
               return undefined;
             },
@@ -237,94 +242,4 @@ export default function ResetPasswordScreen() {
       )}
     </View>
   );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 20,
-  },
-  title: {
-    fontSize: 24,
-    marginBottom: 20,
-  },
-  messageText: {
-    fontSize: 16,
-    textAlign: "center",
-    marginBottom: 20,
-  },
-  errorText: {
-    fontSize: 16,
-    textAlign: "center",
-    color: "red",
-    marginBottom: 20,
-  },
-  formContainer: {
-    width: "100%",
-    maxWidth: 400,
-  },
-});
-
-// Helper pure function to parse URL parameters
-function parseUrlParams(
-  url: string | null,
-): Result<
-  Readonly<{ token?: string; refreshToken?: string; type?: string }>,
-  Error
-> {
-  if (!url) {
-    return ok({}); // No URL, no params from URL
-  }
-  try {
-    const parsedUrl = new URL(url);
-    if (parsedUrl.hash) {
-      const fragmentParams = new URLSearchParams(parsedUrl.hash.substring(1));
-      const token = fragmentParams.get("access_token") || undefined;
-      const refreshToken = fragmentParams.get("refresh_token") || undefined;
-      const type = fragmentParams.get("type") || undefined;
-      return ok({ token, refreshToken, type });
-    }
-    return ok({}); // URL has no hash, no params from hash
-  } catch (e) {
-    console.error("Error parsing deep link URL:", e);
-    return err(new Error("Error parsing deep link URL."));
-  }
-}
-
-// Helper function for processing the password reset link and setting Supabase session
-function processPasswordResetLinkInternal(
-  urlParams: Readonly<{ token?: string; refreshToken?: string; type?: string }>,
-  routerParams: Readonly<{
-    token?: string;
-    refreshToken?: string;
-    type?: string;
-  }>,
-): ResultAsync<void, Error> {
-  const finalToken = routerParams.token || urlParams.token;
-  const finalRefreshToken = routerParams.refreshToken || urlParams.refreshToken;
-  const finalType = routerParams.type || urlParams.type;
-
-  if (finalToken && finalRefreshToken && finalType === "recovery") {
-    return ResultAsync.fromPromise(
-      supabase.auth.setSession({
-        access_token: finalToken,
-        refresh_token: finalRefreshToken,
-      }),
-      (e) =>
-        new Error(
-          `Unexpected error during session setup: ${(e as Error).message}`,
-        ),
-    ).andThen((sessionResponse) => {
-      if (sessionResponse.error) {
-        console.error("Error setting Supabase session:", sessionResponse.error);
-        return err(
-          new Error(`Failed to set session: ${sessionResponse.error.message}`),
-        );
-      }
-      return ok(undefined); // Indicate success
-    });
-  }
-  return errAsync(new Error("Invalid password reset link."));
 }
