@@ -10,7 +10,6 @@ import { reportError } from "@/utils/reportError";
 import parseUrlParams from "@/utils/auth/parseUrlParams";
 import processPasswordResetLinkInternal from "@/utils/auth/processPasswordResetLinkInternal";
 import styles from "@/theme/resetPasswordStyles";
-import passSchema from "@/schemas/passSchema";
 
 export default function ResetPasswordScreen() {
   const router = useRouter();
@@ -30,18 +29,6 @@ export default function ResetPasswordScreen() {
     },
     onSubmit: async ({ value }) => {
       await resetPasswordMutation.mutateAsync(value);
-    },
-    validators: {
-      onChange: ({ value }) => {
-        if (value.password !== value.confirmPassword) {
-          return "Passwords do not match";
-        }
-        const result = passSchema.safeParse({ password: value });
-        if (!result.success) {
-          return result.error.errors[0].message;
-        }
-        return undefined;
-      },
     },
   });
 
@@ -174,9 +161,14 @@ export default function ResetPasswordScreen() {
           form={form}
           validators={{
             onChange: ({ value }) => {
-              const result = passSchema.safeParse({ password: value });
-              if (!result.success) {
-                return result.error.errors[0].message;
+              if (!value) {
+                return "Password is required";
+              }
+              if (value.length < 8) {
+                return "Password must be at least 8 characters";
+              }
+              if (!/[A-Za-z][0-9]|[0-9][A-Za-z]/.test(value)) {
+                return "Password must contain both letters and numbers";
               }
               return undefined;
             },

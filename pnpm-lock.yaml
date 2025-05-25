@@ -70,7 +70,7 @@ importers:
         version: 1.11.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@tanstack/react-query':
         specifier: ^5.76.1
-        version: 5.76.2(react@19.0.0)
+        version: 5.77.0(react@19.0.0)
       date-fns:
         specifier: ^4.1.0
         version: 4.1.0
@@ -1291,8 +1291,8 @@ packages:
     peerDependencies:
       '@rneui/base': 4.0.0-rc.7
 
-  '@rollup/rollup-linux-x64-gnu@4.41.0':
-    resolution: {integrity: sha512-XMLeKjyH8NsEDCRptf6LO8lJk23o9wvB+dJwcXMaH6ZQbbkHu2dbGIUindbMtRN6ux1xKi16iXWu6q9mu7gDhQ==}
+  '@rollup/rollup-linux-x64-gnu@4.41.1':
+    resolution: {integrity: sha512-cWBOvayNvA+SyeQMp79BHPK8ws6sHSsYnK5zDcsC3Hsxr1dgTABKjMnMslPq1DvZIp6uO7kIWhiGwaTdR4Og9A==}
     cpu: [x64]
     os: [linux]
 
@@ -1454,8 +1454,8 @@ packages:
   '@tanstack/form-core@1.11.3':
     resolution: {integrity: sha512-2CW7PBjeLUGIqiri5FQmFZ4E45M6qeZaziPWkCi9+JXfxHdOgprh3IjbOREAI4i9APIJ2cmGhOOWBoHu6NJOFA==}
 
-  '@tanstack/query-core@5.76.2':
-    resolution: {integrity: sha512-PFGwWh5ss9cJQ67l6bZ7hqXbisX2gy13G2jP+VGY1bgdbCfOMWh6UBVnN62QbFXro6CCoX9hYzTnZHr6Rz00YQ==}
+  '@tanstack/query-core@5.77.0':
+    resolution: {integrity: sha512-PFeWjgMQjOsnxBwnW/TJoO0pCja2dzuMQoZ3Diho7dPz7FnTUwTrjNmdf08evrhSE5nvPIKeqV6R0fvQfmhGeg==}
 
   '@tanstack/react-form@1.11.3':
     resolution: {integrity: sha512-wSH2lSiwddvwp/xCyE8tJkBgQ5jT44lJ86dYFuVXHyX5DTPP/dWJZBLQ7f/d30/+xLvnxvfJEiJvfiB0+JxGtw==}
@@ -1469,8 +1469,8 @@ packages:
       vinxi:
         optional: true
 
-  '@tanstack/react-query@5.76.2':
-    resolution: {integrity: sha512-rGkWberCrFdIxMdvSAJM/UOKeu0O/JVTbMmfhQoJpiU9Uq0EDx2EMCadnNuJWbXR4smDA2t7DY3NKkYFmDVS5A==}
+  '@tanstack/react-query@5.77.0':
+    resolution: {integrity: sha512-jX52ot8WxWzWnAknpRSEWj6PTR/7nkULOfoiaVPk6nKu0otwt30UMBC9PTg/m1x0uhz1g71/imwjViTm/oYHxA==}
     peerDependencies:
       react: ^18 || ^19
 
@@ -7129,7 +7129,7 @@ snapshots:
     dependencies:
       '@rneui/base': 4.0.0-rc.7(react-native-safe-area-context@5.4.0(react-native@0.79.2(@babel/core@7.27.1)(@react-native-community/cli@18.0.0(typescript@5.8.3))(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native-vector-icons@10.2.0)(react-native@0.79.2(@babel/core@7.27.1)(@react-native-community/cli@18.0.0(typescript@5.8.3))(@types/react@19.0.14)(react@19.0.0))(react@19.0.0)
 
-  '@rollup/rollup-linux-x64-gnu@4.41.0':
+  '@rollup/rollup-linux-x64-gnu@4.41.1':
     optional: true
 
   '@rtsao/scc@1.1.0': {}
@@ -7312,7 +7312,7 @@ snapshots:
     dependencies:
       '@tanstack/store': 0.7.0
 
-  '@tanstack/query-core@5.76.2': {}
+  '@tanstack/query-core@5.77.0': {}
 
   '@tanstack/react-form@1.11.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
@@ -7324,9 +7324,9 @@ snapshots:
     transitivePeerDependencies:
       - react-dom
 
-  '@tanstack/react-query@5.76.2(react@19.0.0)':
+  '@tanstack/react-query@5.77.0(react@19.0.0)':
     dependencies:
-      '@tanstack/query-core': 5.76.2
+      '@tanstack/query-core': 5.77.0
       react: 19.0.0
 
   '@tanstack/react-store@0.7.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
@@ -10512,7 +10512,7 @@ snapshots:
 
   neverthrow@8.2.0:
     optionalDependencies:
-      '@rollup/rollup-linux-x64-gnu': 4.41.0
+      '@rollup/rollup-linux-x64-gnu': 4.41.1
 
   nocache@3.0.4: {}
 

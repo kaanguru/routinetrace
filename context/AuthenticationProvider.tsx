@@ -131,7 +131,7 @@ export default function AuthProvider({
     mutationFn: ({ email, redirectTo }) =>
       authAPI.resetPasswordForEmail(email, redirectTo),
     onSuccess: async (result) => {
-      // No specific action needed on success for password reset initiation
+      await signOutMutation.mutateAsync();
     },
     onError: (error) => {
       console.error("Password reset error:", error);

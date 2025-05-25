@@ -7,6 +7,7 @@ interface SoundContextProps {
 }
 
 const SoundContext = createContext<SoundContextProps | undefined>(undefined);
+const SOUND_ENABLED_KEY = "@gorevizi:soundEnabled";
 
 export const SoundProvider = ({
   children,
@@ -16,7 +17,7 @@ export const SoundProvider = ({
   useEffect(() => {
     const loadSoundSetting = async () => {
       try {
-        const value = await AsyncStorage.getItem("soundEnabled");
+        const value = await AsyncStorage.getItem(SOUND_ENABLED_KEY);
         if (value !== null) {
           setIsSoundEnabled(JSON.parse(value));
         }
@@ -31,7 +32,7 @@ export const SoundProvider = ({
   const toggleSound = async () => {
     const newValue = !isSoundEnabled;
     try {
-      await AsyncStorage.setItem("soundEnabled", JSON.stringify(newValue));
+      await AsyncStorage.setItem(SOUND_ENABLED_KEY, JSON.stringify(newValue));
       setIsSoundEnabled(newValue);
     } catch (e) {
       console.error("Error saving sound setting:", e);

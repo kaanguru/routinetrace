@@ -27,15 +27,16 @@ const useResetPasswordMutation = () => {
       return ok(undefined);
     },
     onSuccess: async (result) => {
+      console.log("🚀 ~ useResetPasswordMutation ");
       if ((await result).isOk()) {
         console.log(
-          "Password reset successful (placeholder). Navigating to login.",
+          "Password reset successful. Signing out and navigating to login.",
         );
+        await supabase.auth.signOut();
         router.replace("/login");
       }
     },
     onError: (error) => {
-      reportError(error);
       console.error("Password reset error:", error);
     },
   });
