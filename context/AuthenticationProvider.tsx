@@ -1,8 +1,8 @@
-import { ok, err, ResultAsync } from "neverthrow";
+import { ok, err, errAsync, ResultAsync } from "neverthrow";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { supabase } from "~/utils/supabase";
-import { Session } from "@supabase/supabase-js";
+import { Session, User } from "@supabase/supabase-js";
 import React, { createContext, useContext, ReactNode } from "react";
 
 export type AuthCredentials = { email: string; password: string };
@@ -22,10 +22,12 @@ const authAPI = {
 
   async signUpWithEmail(
     creds: AuthCredentials,
-  ): Promise<ResultAsync<Session, Error>> {
+  ): Promise<
+    ResultAsync<{ user: User | null; session: Session | null }, Error>
+  > {
     const { data, error } = await supabase.auth.signUp(creds);
     if (error) return err(error);
-    return ok(data.session!);
+    return ok(data);
   },
 
   async signOut(): Promise<ResultAsync<void, Error>> {
@@ -54,7 +56,9 @@ type AuthContextType = {
   ) => Promise<ResultAsync<Session, Error>>;
   signUpWithEmail: (
     creds: AuthCredentials,
-  ) => Promise<ResultAsync<Session, Error>>;
+  ) => Promise<
+    ResultAsync<{ user: User | null; session: Session | null }, Error>
+  >;
   signOut: () => Promise<ResultAsync<void, Error>>;
   resetPasswordMutation: ReturnType<
     typeof useMutation<
@@ -90,8 +94,9 @@ export default function AuthProvider({
   const signInMutation = useMutation({
     mutationFn: authAPI.signInWithEmail,
     onSuccess: async (result) => {
-      if ((await result).isOk()) {
-        queryClient.setQueryData(authKeys.session, result);
+      const resolvedResult = await result;
+      if (resolvedResult.isOk()) {
+        queryClient.setQueryData(authKeys.session, resolvedResult.value);
       }
     },
     onError: (error) => {
@@ -99,12 +104,21 @@ export default function AuthProvider({
     },
   });
 
-  const signUpMutation = useMutation({
+  const signUpMutation = useMutation<
+    ResultAsync<{ user: User | null; session: Session | null }, Error>,
+    Error,
+    AuthCredentials
+  >({
     mutationFn: authAPI.signUpWithEmail,
     onSuccess: async (result) => {
-      if ((await result).isOk()) {
-        queryClient.setQueryData(authKeys.session, result);
+      const resolvedResult = await result;
+      if (resolvedResult.isOk() && resolvedResult.value.session) {
+        queryClient.setQueryData(
+          authKeys.session,
+          resolvedResult.value.session,
+        );
       }
+      // If isOk() but no session, it means email confirmation is needed, do nothing here regarding session state.
     },
     onError: (error) => {
       console.error("Sign up error:", error);

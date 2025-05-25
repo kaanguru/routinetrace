@@ -10,6 +10,7 @@ import LogoPortrait from "@/components/lotties/LogoPortrait";
 import { useAuth, AuthCredentials } from "@/context/AuthenticationProvider";
 import Background from "@/components/Background";
 import registrationSchema from "@/schemas/registrationSchema";
+import type { User, Session } from "@supabase/supabase-js";
 
 export default function Register() {
   const router = useRouter();
@@ -36,15 +37,27 @@ export default function Register() {
       });
 
       signUpResult.match(
-        () => {
-          console.log("Registration successful!");
+        (data: { user: User | null; session: Session | null }) => {
+          if (data.session) {
+            console.log("Registration successful and user signed in!");
+            router.push("/");
+          } else {
+            console.log(
+              "Registration successful, email confirmation required.",
+            );
+            Alert.alert(
+              "Registration Successful",
+              "Please check your email to confirm your account.",
+            );
+            router.push("/EmailConfirmationRequired");
+          }
         },
         (transformedError) => {
           Alert.alert("Register Failed", transformedError.message);
         },
       );
     },
-    [signUpWithEmail],
+    [signUpWithEmail, router],
   );
 
   const styles = StyleSheet.create({
