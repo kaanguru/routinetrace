@@ -1,9 +1,9 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Alert } from "react-native";
 import { Button } from "@rneui/themed";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { useAuth } from "@/context/AuthenticationProvider";
-import { ResultAsync, ok, err } from "neverthrow";
+import { ResultAsync } from "neverthrow";
 import { reportError } from "../utils/reportError";
 
 export default function EmailConfirmationRequired() {
@@ -13,22 +13,24 @@ export default function EmailConfirmationRequired() {
   const email = pendingEmail || (params?.email as string | undefined);
 
   const handleResendEmail = () => {
-    console.log("app/EmailConfirmationRequired.tsx landed");
     if (email) {
-      const mutationPromise = new Promise((resolve, reject) => {
-        try {
-          resetPasswordMutation.mutate({ email });
-          resolve(ok("Success"));
-        } catch (error) {
-          reject(err(error));
-        }
-      });
-
-      ResultAsync.fromPromise(mutationPromise, (error) =>
-        err(new Error(String(error))),
+      ResultAsync.fromPromise(
+        resetPasswordMutation.mutateAsync({ email }),
+        (e) =>
+          new Error(
+            `Failed to resend confirmation email: ${e instanceof Error ? e.message : String(e)}`,
+          ),
       ).then((result) => {
-        if (result.isErr()) {
-          reportError(result.error);
+        if (result.isOk()) {
+          Alert.alert(
+            "Email Sent",
+            "A new confirmation email has been sent. Please check your inbox.",
+          );
+          console.log("Confirmation email resent successfully.");
+        } else {
+          // result.isErr() is true
+          reportError(result); // Pass the entire Err Result to reportError
+          Alert.alert("Error", result.error.message);
         }
       });
     }
@@ -52,7 +54,7 @@ export default function EmailConfirmationRequired() {
     <View style={styles.container}>
       <Text style={styles.mainText}>
         Please confirm your email address to continue. We have sent a
-        confirmation link to your email.
+        confirmation link to <Text style={styles.emailText}>{email}</Text>.
       </Text>
       <Text style={styles.subText}>
         If you did not receive the email, check your spam folder or try
@@ -81,5 +83,9 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     textAlign: "center",
     color: "gray",
+  },
+  emailText: {
+    fontWeight: "bold",
+    color: "#007bff", // Or your app's primary color
   },
 });

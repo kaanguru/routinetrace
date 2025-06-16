@@ -40,7 +40,7 @@ export default function Register() {
         (data: { user: User | null; session: Session | null }) => {
           if (data.session) {
             console.log("Registration successful and user signed in!");
-            router.push("/");
+            // it is safer to direct to login page instead of letting in router.push("/");
           } else {
             console.log(
               "Registration successful, email confirmation required.",
@@ -68,23 +68,6 @@ export default function Register() {
     },
     [signUpWithEmail, router],
   );
-
-  const styles = StyleSheet.create({
-    registerButton: {
-      backgroundColor: "#00173D",
-    },
-    buttonText: {
-      color: "#FFFAEB",
-    },
-    heading: {
-      marginHorizontal: "auto",
-      fontFamily: "Ubuntu_400Regular",
-      fontSize: 36,
-      paddingHorizontal: 80,
-      textAlign: "center",
-      color: "#3E0C83",
-    },
-  });
 
   return (
     <Background>
@@ -205,3 +188,20 @@ export default function Register() {
     </Background>
   );
 }
+
+const styles = StyleSheet.create({
+  registerButton: {
+    backgroundColor: "#00173D",
+  },
+  buttonText: {
+    color: "#FFFAEB",
+  },
+  heading: {
+    marginHorizontal: "auto",
+    fontFamily: "Ubuntu_400Regular",
+    fontSize: 36,
+    paddingHorizontal: 80,
+    textAlign: "center",
+    color: "#3E0C83",
+  },
+});
