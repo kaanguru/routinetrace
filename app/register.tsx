@@ -48,8 +48,17 @@ export default function Register() {
             Alert.alert(
               "Registration Successful",
               "Please check your email to confirm your account.",
+              [
+                {
+                  text: "OK",
+                  onPress: () =>
+                    router.push({
+                      pathname: "/EmailConfirmationRequired",
+                      params: { email: value.email },
+                    }),
+                },
+              ],
             );
-            router.push("/EmailConfirmationRequired");
           }
         },
         (transformedError) => {

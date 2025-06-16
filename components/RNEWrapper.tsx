@@ -164,6 +164,11 @@ export default function RNEWrapper() {
                 animation: "slide_from_right",
               }}
             />
+            <Stack.Screen name="EmailConfirmationRequired" />
+            <Stack.Screen name="login" />
+            <Stack.Screen name="register" />
+            <Stack.Screen name="forgot-password" />
+            <Stack.Screen name="resetpassword" />
           </Stack>
         </SoundProvider>
       </GestureHandlerRootView>

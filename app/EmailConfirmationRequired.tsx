@@ -1,18 +1,20 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Button } from "@rneui/themed";
-import { useRouter } from "expo-router";
+import { useRouter, useLocalSearchParams } from "expo-router";
 import { useAuth } from "@/context/AuthenticationProvider";
 import { ResultAsync, ok, err } from "neverthrow";
 import { reportError } from "../utils/reportError";
 
 export default function EmailConfirmationRequired() {
   const router = useRouter();
-  const { session, resetPasswordMutation } = useAuth();
+  const params = useLocalSearchParams();
+  const { pendingEmail, resetPasswordMutation } = useAuth();
+  const email = pendingEmail || (params?.email as string | undefined);
 
   const handleResendEmail = () => {
-    if (session && session.user && session.user.email) {
-      const email = session.user.email;
+    console.log("app/EmailConfirmationRequired.tsx landed");
+    if (email) {
       const mutationPromise = new Promise((resolve, reject) => {
         try {
           resetPasswordMutation.mutate({ email });
@@ -31,6 +33,20 @@ export default function EmailConfirmationRequired() {
       });
     }
   };
+
+  if (!email) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.mainText}>
+          Unable to retrieve email address. Please try registering again.
+        </Text>
+        <Button
+          title="Back to Register"
+          onPress={() => router.push("/register")}
+        />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>

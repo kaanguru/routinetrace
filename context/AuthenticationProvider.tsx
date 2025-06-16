@@ -1,9 +1,9 @@
-import { ok, err, errAsync, ResultAsync } from "neverthrow";
+import { ok, err, ResultAsync } from "neverthrow";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { supabase } from "~/utils/supabase";
 import { Session, User } from "@supabase/supabase-js";
-import React, { createContext, useContext, ReactNode } from "react";
+import React, { createContext, useContext, ReactNode, useState } from "react";
 
 export type AuthCredentials = { email: string; password: string };
 
@@ -51,6 +51,7 @@ const authAPI = {
 
 type AuthContextType = {
   session: Session | null;
+  pendingEmail: string | null;
   signInWithEmail: (
     creds: AuthCredentials,
   ) => Promise<ResultAsync<Session, Error>>;
@@ -83,6 +84,7 @@ export default function AuthProvider({
 }: Readonly<{ children: ReactNode }>) {
   const queryClient = useQueryClient();
 
+  const [pendingEmail, setPendingEmail] = useState<string | null>(null);
   const { data: session, isLoading: isSessionLoading } = useQuery({
     queryKey: authKeys.session,
     queryFn: async () => {
@@ -112,13 +114,17 @@ export default function AuthProvider({
     mutationFn: authAPI.signUpWithEmail,
     onSuccess: async (result) => {
       const resolvedResult = await result;
-      if (resolvedResult.isOk() && resolvedResult.value.session) {
-        queryClient.setQueryData(
-          authKeys.session,
-          resolvedResult.value.session,
-        );
+      if (resolvedResult.isOk()) {
+        if (resolvedResult.value.session) {
+          queryClient.setQueryData(
+            authKeys.session,
+            resolvedResult.value.session,
+          );
+        } else {
+          // Store the email for confirmation flow
+          setPendingEmail(resolvedResult.value.user?.email || null);
+        }
       }
-      // If isOk() but no session, it means email confirmation is needed, do nothing here regarding session state.
     },
     onError: (error) => {
       console.error("Sign up error:", error);
@@ -162,6 +168,7 @@ export default function AuthProvider({
 
   const contextValue: AuthContextType = {
     session: session || null,
+    pendingEmail,
     isLoading: isLoading || isMutating,
     signInWithEmail: (creds) => signInMutation.mutateAsync(creds),
     signUpWithEmail: (creds) => signUpMutation.mutateAsync(creds),
