@@ -4,25 +4,17 @@ import { useRouter } from "expo-router";
 import React, { useCallback } from "react";
 import { View, Alert, ActivityIndicator, StyleSheet } from "react-native";
 import { StandardSchemaV1Issue, useForm } from "@tanstack/react-form";
-import userSchema from "@/schemas/userSchema";
 import FormFieldInfo from "@/components/FormFieldInfo";
 
 import LogoPortrait from "@/components/lotties/LogoPortrait";
 import { useAuth, AuthCredentials } from "@/context/AuthenticationProvider";
 import Background from "@/components/Background";
-import { z } from "zod";
+import registrationSchema from "@/schemas/registrationSchema";
+import type { User, Session } from "@supabase/supabase-js";
 
 export default function Register() {
   const router = useRouter();
   const { signUpWithEmail, isLoading: authLoading } = useAuth();
-  const registrationSchema = userSchema
-    .extend({
-      confirm_password: z.string().min(6),
-    })
-    .refine((data) => data.password === data.confirm_password, {
-      message: "Passwords do not match",
-      path: ["confirm_password"],
-    });
   const form = useForm({
     defaultValues: {
       email: "",
@@ -45,33 +37,37 @@ export default function Register() {
       });
 
       signUpResult.match(
-        () => {
-          console.log("Registration successful!");
+        (data: { user: User | null; session: Session | null }) => {
+          if (data.session) {
+            console.log("Registration successful and user signed in!");
+            // it is safer to direct to login page instead of letting in router.push("/");
+          } else {
+            console.log(
+              "Registration successful, email confirmation required.",
+            );
+            Alert.alert(
+              "Registration Successful",
+              "Please check your email to confirm your account.",
+              [
+                {
+                  text: "OK",
+                  onPress: () =>
+                    router.push({
+                      pathname: "/EmailConfirmationRequired",
+                      params: { email: value.email },
+                    }),
+                },
+              ],
+            );
+          }
         },
         (transformedError) => {
           Alert.alert("Register Failed", transformedError.message);
         },
       );
     },
-    [signUpWithEmail],
+    [signUpWithEmail, router],
   );
-
-  const styles = StyleSheet.create({
-    registerButton: {
-      backgroundColor: "#00173D",
-    },
-    buttonText: {
-      color: "#FFFAEB",
-    },
-    heading: {
-      marginHorizontal: "auto",
-      fontFamily: "Ubuntu_400Regular",
-      fontSize: 36,
-      paddingHorizontal: 80,
-      textAlign: "center",
-      color: "#3E0C83",
-    },
-  });
 
   return (
     <Background>
@@ -192,3 +188,20 @@ export default function Register() {
     </Background>
   );
 }
+
+const styles = StyleSheet.create({
+  registerButton: {
+    backgroundColor: "#00173D",
+  },
+  buttonText: {
+    color: "#FFFAEB",
+  },
+  heading: {
+    marginHorizontal: "auto",
+    fontFamily: "Ubuntu_400Regular",
+    fontSize: 36,
+    paddingHorizontal: 80,
+    textAlign: "center",
+    color: "#3E0C83",
+  },
+});

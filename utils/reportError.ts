@@ -14,7 +14,7 @@ import { Result, ResultAsync } from "neverthrow";
 export function reportError<T, E>(result: Result<T, E>): Result<T, E>;
 // Overload signature for asynchronous ResultAsync
 export function reportError<T, E>(result: ResultAsync<T, E>): ResultAsync<T, E>;
-export default function reportError<T, E>(
+export function reportError<T, E>(
   result: Result<T, E> | ResultAsync<T, E>,
 ): Result<T, E> | ResultAsync<T, E> {
   if (result instanceof ResultAsync) {

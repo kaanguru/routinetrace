@@ -15,8 +15,8 @@ import FormFieldInfo from "@/components/FormFieldInfo";
 
 import LogoPortrait from "@/components/lotties/LogoPortrait";
 import { useAuth, AuthCredentials } from "@/context/AuthenticationProvider";
-// import { resetFirstVisit } from "@/utils/isFirstVisit";
 import Background from "@/components/Background";
+import { resetFirstVisit } from "@/utils/isFirstVisit";
 
 export default function Login() {
   const router = useRouter();
@@ -183,9 +183,15 @@ export default function Login() {
               />
             </View>
           </View>
-          {/* <View style={{ position: "absolute", bottom: 10, right: 10 }}>
-        <Button type="clear" size="sm" color="#F04F05" onPress={resetFirstVisit} title="R-F-W" />
-      </View> */}
+          <View style={{ position: "absolute", bottom: 10, right: 10 }}>
+            <Button
+              type="clear"
+              size="sm"
+              color="#F04F05"
+              onPress={resetFirstVisit}
+              title="R-F-W"
+            />
+          </View>
         </ScrollView>
       </KeyboardAvoidingView>
     </Background>
