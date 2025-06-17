@@ -42,7 +42,6 @@ web-build/*
 dist/*
 .env
 .env.local
-
 .yarn/sdks/
 .pnp.cjs.d # If it exists
 .yarn/*

@@ -8,6 +8,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import GlobalErrorFallback from "@/components/error/GlobalErrorFallback";
 import handleErrorBoundaryError from "@/utils/errorHandler";
 import * as Sentry from "@sentry/react-native";
+import useGoogleSignInConfig from "@/hooks/useGoogleSignInConfig";
 
 Sentry.init({
   dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
@@ -22,8 +23,11 @@ if (__DEV__) {
 
 export default Sentry.wrap(function RootLayout() {
   const theme = createTheme(themeStyles);
-
   theme.mode = useColorScheme() ?? "light";
+  
+  // Initialize Google Sign-In configuration
+  useGoogleSignInConfig();
+  
   return (
     <QueryClientProvider client={queryClient}>
       <ErrorBoundary
@@ -32,13 +36,6 @@ export default Sentry.wrap(function RootLayout() {
       >
         <ThemeProvider theme={theme}>
           <AuthProvider>
-            {/* <Button
-              title="Sentry Try!"
-              onPress={() => {
-                Sentry.captureException(new Error("manuel error 24"));
-              }}
-              size="lg"
-            /> */}
             <RNEWrapper />
           </AuthProvider>
         </ThemeProvider>

@@ -14,6 +14,7 @@ import userSchema from "@/schemas/userSchema";
 import FormFieldInfo from "@/components/FormFieldInfo";
 
 import LogoPortrait from "@/components/lotties/LogoPortrait";
+import GoogleSignInButton from "@/components/GoogleSignInButton";
 import { useAuth, AuthCredentials } from "@/context/AuthenticationProvider";
 import Background from "@/components/Background";
 import { resetFirstVisit } from "@/utils/isFirstVisit";
@@ -181,6 +182,15 @@ export default function Login() {
                   fontFamily: "Ubuntu_700Bold",
                 }}
               />
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                marginTop: 10,
+              }}
+            >
+              <GoogleSignInButton />
             </View>
           </View>
           <View style={{ position: "absolute", bottom: 10, right: 10 }}>

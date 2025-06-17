@@ -23,5 +23,8 @@
   },
   "submit": {
     "production": {}
+  },
+  "extra": {
+    "googleWebClientId": "301230581086-52jbtli49k9g1ubs0kfpa2go87t95gq4.apps.googleusercontent.com"
   }
 }

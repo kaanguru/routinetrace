@@ -51,6 +51,13 @@
           "project": "routinetrace",
           "organization": "cemkaanguru"
         }
+      ],
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          "androidGoogleServicesFile": "./config/google-services.json",
+          "iosUrlScheme": "com.googleusercontent.apps.dummy" // Valid placeholder for iOS
+        }
       ]
     ],
     "experiments": {

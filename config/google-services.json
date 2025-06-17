@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "301230581086",
+    "project_id": "routinetrace-auth",
+    "storage_bucket": "routinetrace-auth.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:301230581086:android:908934C59280C341D8289F3DA369B7EDDE15CD3E",
+        "android_client_info": {
+          "package_name": "com.kaanguru.routinetrace"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "301230581086-52jbtli49k9g1ubs0kfpa2go87t95gq4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4KNlm_KKIREihtVuYgOXv0mhkYPfTBiE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "301230581086-52jbtli49k9g1ubs0kfpa2go87t95gq4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -4,6 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { supabase } from "~/utils/supabase";
 import { Session, User } from "@supabase/supabase-js";
 import React, { createContext, useContext, ReactNode, useState } from "react";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 
 export type AuthCredentials = { email: string; password: string };
 
@@ -47,6 +48,35 @@ const authAPI = {
     if (error) return err(error);
     return ok(undefined);
   },
+
+  async signInWithGoogle(): Promise<ResultAsync<Session, Error>> {
+    try {
+      // Ensure Google Play Services are available
+      await GoogleSignin.hasPlayServices();
+
+      // First sign in to get user credentials
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const userInfo = await GoogleSignin.signIn();
+
+      // Then get the ID token
+      const tokens = await GoogleSignin.getTokens();
+
+      if (!tokens.idToken) {
+        return err(new Error("Google Sign-In failed: No ID token received"));
+      }
+
+      // Sign in to Supabase with the ID token
+      const { data, error } = await supabase.auth.signInWithIdToken({
+        provider: "google",
+        token: tokens.idToken,
+      });
+
+      if (error) return err(error);
+      return ok(data.session!);
+    } catch (error) {
+      return err(error as Error);
+    }
+  },
 };
 
 type AuthContextType = {
@@ -55,6 +85,7 @@ type AuthContextType = {
   signInWithEmail: (
     creds: AuthCredentials,
   ) => Promise<ResultAsync<Session, Error>>;
+  signInWithGoogle: () => Promise<ResultAsync<Session, Error>>;
   signUpWithEmail: (
     creds: AuthCredentials,
   ) => Promise<
@@ -160,11 +191,25 @@ export default function AuthProvider({
 
   const isLoading = isSessionLoading;
 
+  const signInWithGoogleMutation = useMutation({
+    mutationFn: authAPI.signInWithGoogle,
+    onSuccess: async (result) => {
+      const resolvedResult = await result;
+      if (resolvedResult.isOk()) {
+        queryClient.setQueryData(authKeys.session, resolvedResult.value);
+      }
+    },
+    onError: (error) => {
+      console.error("Google Sign-In error:", error);
+    },
+  });
+
   const isMutating =
     signInMutation.isPending ||
     signUpMutation.isPending ||
     signOutMutation.isPending ||
-    resetPasswordMutation.isPending;
+    resetPasswordMutation.isPending ||
+    signInWithGoogleMutation.isPending;
 
   const contextValue: AuthContextType = {
     session: session || null,
@@ -172,6 +217,7 @@ export default function AuthProvider({
     isLoading: isLoading || isMutating,
     signInWithEmail: (creds) => signInMutation.mutateAsync(creds),
     signUpWithEmail: (creds) => signUpMutation.mutateAsync(creds),
+    signInWithGoogle: () => signInWithGoogleMutation.mutateAsync(),
     signOut: () => signOutMutation.mutateAsync(),
     resetPasswordMutation: resetPasswordMutation,
   };
