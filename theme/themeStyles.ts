@@ -1,3 +1,5 @@
+import { ButtonProps, Colors } from "@rneui/themed";
+
 const themeStyles = {
   lightColors: {
     primary: "#ff006e",
@@ -32,20 +34,40 @@ const themeStyles = {
     background: "#001029",
   },
   components: {
-    Button: {
-      color: "#FFEFC2AA",
-      titleStyle: {
-        fontFamily: "DelaGothicOne_400Regular",
-        fontSize: 16,
-        color: "#4F10A8",
-      },
-      containerStyle: {
-        margin: 12,
-        borderRadius: 8,
-        borderWidth: 4,
-        borderColor: "#FD590D",
-        backgroundColor: "#FFF4D655",
-      },
+    Button: (props: ButtonProps, theme: Colors) => {
+      if (props.type === "clear") {
+        return {
+          containerStyle: {
+            margin: 0,
+            borderWidth: 0,
+            borderColor: "transparent",
+            backgroundColor: "transparent",
+          },
+          buttonStyle: {
+            backgroundColor: "transparent",
+          },
+          titleStyle: {
+            fontSize: 14,
+            fontFamily: "Ubuntu_700Bold",
+            color: theme.black,
+          },
+        };
+      }
+      return {
+        color: theme.primary,
+        titleStyle: {
+          fontFamily: "DelaGothicOne_400Regular",
+          fontSize: 16,
+          color: theme.black,
+        },
+        containerStyle: {
+          margin: 12,
+          borderRadius: 8,
+          borderWidth: 4,
+          borderColor: "#FD590D",
+          backgroundColor: theme.grey4,
+        },
+      };
     },
     Input: {
       inputContainerStyle: {
