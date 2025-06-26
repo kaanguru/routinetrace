@@ -1,5 +1,5 @@
 import { FontAwesome6 } from "@expo/vector-icons";
-import { Button, Card, Text } from "@rneui/themed";
+import { Button, Card, Text }from "@rn-vui/themed";
 import { router } from "expo-router";
 
 import Header from "@/components/Header";

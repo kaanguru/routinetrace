@@ -1,5 +1,5 @@
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
-import { useThemeMode, FAB, useTheme } from "@rneui/themed";
+import { useThemeMode, FAB, useTheme }from "@rn-vui/themed";
 import { Stack, useRouter } from "expo-router";
 import * as R from "ramda";
 import React, { useCallback, useState, useEffect } from "react";

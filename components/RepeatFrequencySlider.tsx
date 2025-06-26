@@ -1,4 +1,4 @@
-import { Text } from "@rneui/themed";
+import { Text }from "@rn-vui/themed";
 import Slider from "@react-native-community/slider";
 import { View } from "react-native";
 

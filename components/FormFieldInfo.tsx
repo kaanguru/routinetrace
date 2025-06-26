@@ -1,5 +1,5 @@
 import { AnyFieldApi } from "@tanstack/react-form";
-import { Text } from "@rneui/themed";
+import { Text }from "@rn-vui/themed";
 
 export default function FormFieldInfo({ field }: { field: AnyFieldApi }) {
   return (

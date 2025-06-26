@@ -1,4 +1,4 @@
-import { createTheme, ThemeProvider } from "@rneui/themed";
+import { createTheme, ThemeProvider }from "@rn-vui/themed";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import RNEWrapper from "@/components/RNEWrapper";
 import AuthProvider from "@/context/AuthenticationProvider";

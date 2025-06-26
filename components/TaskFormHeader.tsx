@@ -1,5 +1,5 @@
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { Text, CheckBox, Icon } from "@rneui/themed";
+import { Text, CheckBox, Icon }from "@rn-vui/themed";
 import { View, Pressable } from "react-native";
 
 import TaskFormInput from "@/components/TaskFormInput";

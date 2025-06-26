@@ -1,5 +1,5 @@
 // app/login.tsx
-import { Button, Input, Text, useTheme } from "@rneui/themed";
+import { Button, Input, Text, useTheme }from "@rn-vui/themed";
 import { useRouter } from "expo-router";
 import { useCallback, useState } from "react";
 import {

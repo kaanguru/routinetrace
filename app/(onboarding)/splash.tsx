@@ -1,7 +1,7 @@
 import { Href, useRouter } from "expo-router";
 import { useEffect } from "react";
 import { Pressable } from "react-native";
-import { Text } from "@rneui/themed";
+import { Text } from "@rn-vui/themed";
 import LogoPortrait from "@/components/lotties/LogoPortrait";
 import Background from "@/components/Background";
 

@@ -34,7 +34,7 @@ The main objective of this project is to create a "routine to-do list" Android a
 ## Technical Stack Overview
 
 - **Frontend:** ReactNative Expo
-- **UI:** React Native Elements (`@rneui/themed`)
+- **UI:** React Native Elements (`@rn-vui/themed`)
 - **Navigation:** Expo Router (with drawer + tabs)
 - **State Management:**
   - TanStack Query (React Query) for server state.

@@ -1,5 +1,5 @@
 import { FontAwesome5, Ionicons } from "@expo/vector-icons";
-import { useThemeMode, Input } from "@rneui/themed";
+import { useThemeMode, Input }from "@rn-vui/themed";
 import { memo } from "react";
 import { Pressable, View } from "react-native";
 import Animated from "react-native-reanimated";

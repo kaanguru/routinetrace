@@ -1,4 +1,4 @@
-import { makeStyles } from "@rneui/themed";
+import { makeStyles }from "@rn-vui/themed";
 import type { ReactNode } from "react";
 import type { StyleProp, ViewStyle } from "react-native";
 import React from "react";

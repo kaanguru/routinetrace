@@ -1,5 +1,5 @@
 import { MaterialIcons, FontAwesome5 } from "@expo/vector-icons";
-import { Text, useTheme, useThemeMode } from "@rneui/themed";
+import { Text, useTheme, useThemeMode }from "@rn-vui/themed";
 import { memo } from "react";
 import { ActivityIndicator, Pressable, View, StyleSheet } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";

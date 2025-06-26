@@ -68,7 +68,7 @@ graph TD
 
 7.  **UI Components:**
 
-    - React Native Elements (`@rneui/themed`) is the chosen component library for building the UI.
+    - React Native Elements (`@rn-vui/themed`) is the chosen component library for building the UI.
 
 8.  **Forms:**
     - TanStack Form will be used for managing form state, validation, and submission.

@@ -9,7 +9,7 @@ import {
   Text,
   useTheme,
   useThemeMode,
-} from "@rneui/themed";
+}from "@rn-vui/themed";
 import { router } from "expo-router";
 import { useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";

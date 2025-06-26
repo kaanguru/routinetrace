@@ -8,8 +8,8 @@
 - **Package Manager:** pnpm
   - Ensure `pnpm-lock.yaml` is committed and used for consistent dependency installation.
   - Use `pnpm install <package>` to add dependencies.
-- **UI Library:** React Native Elements (`@rneui/themed`)
-  - Components should be imported from `@rneui/themed`.
+- **UI Library:** React Native Elements (`@rn-vui/themed`)
+  - Components should be imported from `@rn-vui/themed`.
 - **Navigation:** Expo Router
   - File-system based routing.
   - App structure includes drawer and tab navigation.

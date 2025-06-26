@@ -1,5 +1,5 @@
 import Background from "@/components/Background";
-import { Button, Text } from "@rneui/themed";
+import { Button, Text }from "@rn-vui/themed";
 import { useRouter } from "expo-router";
 import { View, ScrollView, KeyboardAvoidingView } from "react-native";
 

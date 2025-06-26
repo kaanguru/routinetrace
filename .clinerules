@@ -206,8 +206,8 @@ const task: Tables<"tasks"> = {
 ## UI and Styling
 
 - Use React Native Elements (RNE) for UI components.
-  `import { Button } from '@rneui/themed';`
-- Use the `@rneui/themed` package for UI components.
+  `import { Button } from '@rn-vui/themed';`
+- Use the `@rn-vui/themed` package for UI components.
 
 ## Fonts
 

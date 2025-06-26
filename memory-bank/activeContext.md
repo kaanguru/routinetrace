@@ -29,7 +29,7 @@
 - **Functional Programming:** Emphasize pure functions, immutability.
 - **Error Handling:** Use Neverthrow (`Result`, `ResultAsync`).
 - **State Management:** TanStack Query for server state, AsyncStorage for global, Context/useState for local.
-- **UI:** React Native Elements (`@rneui/themed`).
+- **UI:** React Native Elements (`@rn-vui/themed`).
 - **Database Types:** Use Supabase generated types (`database.types.ts`).
 - **No `utils/supabase.ts` Modification:** This file is considered stable.
 

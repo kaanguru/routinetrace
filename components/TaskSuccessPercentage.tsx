@@ -1,4 +1,4 @@
-import { Text, Card, LinearProgress } from "@rneui/themed";
+import { Text, Card, LinearProgress }from "@rn-vui/themed";
 import { useQuery } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { Pressable, View } from "react-native";
