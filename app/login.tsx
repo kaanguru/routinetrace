@@ -1,5 +1,5 @@
 // app/login.tsx
-import { Button, Input, Text } from "@rneui/themed";
+import { Button, Input, Text, useTheme } from "@rneui/themed";
 import { useRouter } from "expo-router";
 import { useCallback, useState } from "react";
 import {
@@ -20,6 +20,7 @@ import { resetFirstVisit } from "@/utils/isFirstVisit";
 
 export default function Login() {
   const router = useRouter();
+  const { theme } = useTheme();
 
   const [loading, setLoading] = useState(false);
   const { signInWithEmail, isLoading: authLoading } = useAuth();
@@ -75,7 +76,6 @@ export default function Login() {
               fontSize: 36,
               paddingHorizontal: 80,
               textAlign: "center",
-              color: "#3E0C83",
             }}
           >
             Welcome Back
@@ -149,10 +149,7 @@ export default function Login() {
                 type="clear"
                 onPress={() => router.push("/register")}
                 title="Register"
-                titleStyle={{
-                  fontSize: 14,
-                  fontFamily: "Ubuntu_700Bold",
-                }}
+                titleStyle={{ color: theme.colors.primary }}
               />
             </View>
             <View
@@ -176,14 +173,11 @@ export default function Login() {
                 size="sm"
                 onPress={() => router.push("/forgot-password")}
                 title="Send Reset Email"
-                titleStyle={{
-                  fontSize: 14,
-                  fontFamily: "Ubuntu_700Bold",
-                }}
+                titleStyle={{ color: theme.colors.primary }}
               />
             </View>
           </View>
-          <View style={{ position: "absolute", bottom: 10, right: 10 }}>
+          {/* <View style={{ position: "absolute", bottom: 10, right: 10 }}>
             <Button
               type="clear"
               size="sm"
@@ -191,7 +185,7 @@ export default function Login() {
               onPress={resetFirstVisit}
               title="R-F-W"
             />
-          </View>
+          </View> */}
         </ScrollView>
       </KeyboardAvoidingView>
     </Background>

@@ -1,5 +1,5 @@
 import { FontAwesome6 } from "@expo/vector-icons";
-import { BottomSheet, Button, ListItem } from "@rneui/themed";
+import { BottomSheet, Button, ListItem, useTheme } from "@rneui/themed";
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 
@@ -15,6 +15,7 @@ export default function RepeatPeriodSelector({
   setRepeatPeriod,
 }: Readonly<RepeatPeriodSelectorProps>) {
   const [isVisible, setIsVisible] = useState(false);
+  const { theme } = useTheme();
 
   const repeatOptions: { label: string; value: RepeatPeriod | "" | null }[] = [
     { label: "Do not Repeat", value: "" },
@@ -28,6 +29,50 @@ export default function RepeatPeriodSelector({
     repeatOptions.find((opt) => opt.value === repeatPeriod)?.label ||
     "Select Repeat Period";
 
+  const styles = StyleSheet.create({
+    container: {
+      marginVertical: 10,
+    },
+    pickerButton: {
+      justifyContent: "space-between",
+      borderColor: theme.colors.greyOutline,
+      borderWidth: 1,
+      borderRadius: 8,
+      backgroundColor: theme.colors.grey5, // Use a theme color for the button background
+      paddingHorizontal: 15,
+      paddingVertical: 12,
+    },
+    pickerButtonTitle: {
+      color: theme.colors.black, // Ensure good contrast with grey5 in both themes
+      fontFamily: "Ubuntu_400Regular",
+      fontSize: 16,
+    },
+    selectedOption: {
+      backgroundColor: theme.colors.grey4, // Highlight selected option with a theme color
+    },
+    optionText: {
+      fontSize: 16,
+      fontFamily: "Ubuntu_400Regular",
+      color: theme.colors.black, // Ensure text is visible
+    },
+    cancelButton: {
+      backgroundColor: theme.colors.warning, // Use a theme color for the cancel button
+      marginTop: 10,
+    },
+    cancelButtonText: {
+      textAlign: "center",
+      color: theme.colors.white, // Ensure text is visible
+      fontFamily: "Ubuntu_500Medium",
+      fontSize: 16,
+    },
+    bottomSheetContainer: {
+      backgroundColor: theme.colors.background, // Ensure bottom sheet background is themed
+    },
+    listItemContainer: {
+      backgroundColor: theme.colors.background, // Ensure list item background is themed
+    },
+  });
+
   return (
     <View style={styles.container}>
       <Button
@@ -37,7 +82,11 @@ export default function RepeatPeriodSelector({
         onPress={() => setIsVisible(true)}
         iconRight
         icon={
-          <FontAwesome6 name="circle-chevron-right" size={20} color="#00173D" />
+          <FontAwesome6
+            name="circle-chevron-right"
+            size={20}
+            color={theme.colors.black} // Ensure good contrast with grey5 in both themes
+          />
         }
       >
         {selectedLabel}
@@ -46,13 +95,18 @@ export default function RepeatPeriodSelector({
       <BottomSheet
         isVisible={isVisible}
         onBackdropPress={() => setIsVisible(false)}
+        containerStyle={styles.bottomSheetContainer} // Apply theme to bottom sheet container
       >
+        {/* TODO: The "key" warning is a known issue in @rneui/themed's BottomSheet.
+            This is a temporary workaround until the bug is fixed.
+            Track the issue here: https://github.com/react-native-elements/react-native-elements/issues/3968 */}
         {repeatOptions.map((option, index) => (
           <ListItem
-            key={option.label}
-            containerStyle={
-              option.value === repeatPeriod ? styles.selectedOption : {}
-            }
+            key={index}
+            containerStyle={[
+              styles.listItemContainer, // Apply theme to all list items
+              option.value === repeatPeriod ? styles.selectedOption : {},
+            ]}
             onPress={() => {
               setRepeatPeriod(option.value);
               setIsVisible(false);
@@ -65,7 +119,11 @@ export default function RepeatPeriodSelector({
               </ListItem.Title>
             </ListItem.Content>
             {option.value === repeatPeriod && (
-              <FontAwesome6 name="check" size={16} color="#8AC926" />
+              <FontAwesome6
+                name="check"
+                size={16}
+                color={theme.colors.success}
+              />
             )}
           </ListItem>
         ))}
@@ -84,40 +142,3 @@ export default function RepeatPeriodSelector({
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    marginVertical: 10,
-  },
-  pickerButton: {
-    justifyContent: "space-between",
-    borderColor: "#FEBA9A",
-    borderWidth: 0.25,
-    borderRadius: 8,
-    backgroundColor: "#FFFAEB",
-    paddingHorizontal: 15,
-    paddingVertical: 12,
-  },
-  pickerButtonTitle: {
-    color: "#00173D",
-    fontFamily: "Ubuntu_400Regular",
-    fontSize: 16,
-  },
-  selectedOption: {
-    backgroundColor: "#FFEFC2",
-  },
-  optionText: {
-    fontSize: 16,
-    fontFamily: "Ubuntu_400Regular",
-    color: "#00173D",
-  },
-  cancelButton: {
-    backgroundColor: "#FEBA9A",
-  },
-  cancelButtonText: {
-    textAlign: "center",
-    color: "#FFFAEB",
-    fontFamily: "Ubuntu_500Medium",
-    fontSize: 16,
-  },
-});

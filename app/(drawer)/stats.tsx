@@ -2,7 +2,7 @@ import { Card, Text, LinearProgress } from "@rneui/themed";
 import React, { useMemo } from "react";
 import { View, ActivityIndicator, StyleSheet } from "react-native";
 import { FlashList } from "@shopify/flash-list";
-
+import Background from "@/components/Background";
 import TaskSuccessPercentage from "@/components/TaskSuccessPercentage";
 import Happy from "@/components/lotties/Happy";
 import Healthy from "@/components/lotties/Healthy";
@@ -93,7 +93,7 @@ export default function Stats() {
     return renderErrorState(tasksError || healthError || undefined);
 
   return (
-    <View style={styles.container}>
+    <Background>
       <StatsLevelIndicator level={level} untilNext={untilNext} />
 
       <View style={styles.cardsContainer}>
@@ -119,15 +119,11 @@ export default function Stats() {
           estimatedItemSize={ESTIMATED_ITEM_HEIGHT}
         />
       </View>
-    </View>
+    </Background>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 5,
-  },
   centered: {
     flex: 1,
     justifyContent: "center",

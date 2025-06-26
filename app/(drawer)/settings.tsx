@@ -7,228 +7,375 @@ import {
   Input,
   Switch,
   Text,
+  useTheme,
   useThemeMode,
 } from "@rneui/themed";
 import { router } from "expo-router";
 import { useState } from "react";
-import { View } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 
-import LogoPortrait from "@/components/lotties/LogoPortrait";
+import Background from "@/components/Background";
 import { useSoundContext } from "@/context/SoundContext";
 import { useResetCompletionHistory } from "@/hooks/useTaskCompletionHistory";
 import useUser from "@/hooks/useUser";
 import changeEmail from "@/utils/auth/changeEmail";
 
 export default function SettingsScreen() {
+  const { theme } = useTheme();
   const { mode, setMode } = useThemeMode();
-  const [showModal, setShowModal] = useState(false);
+  const [showEmailModal, setShowEmailModal] = useState(false);
   const [newEmail, setNewEmail] = useState("");
+  const [isResetDialogVisible, setResetDialogVisible] = useState(false);
 
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const { mutate: resetStats, isPending } = useResetCompletionHistory();
+  const { mutate: resetStats, isPending: isResetting } =
+    useResetCompletionHistory();
   const { isSoundEnabled, toggleSound } = useSoundContext();
-
   const { data: user } = useUser();
-  const userEmail = user?.email;
 
-  function handleReset() {
+  const handleResetStats = () => {
     resetStats(undefined, {
-      onSuccess: () => setIsDialogOpen(false),
+      onSuccess: () => setResetDialogVisible(false),
     });
-  }
+  };
 
-  const handleSubmit = async () => {
-    console.log("🚀 ~ handleSubmit ~ newEmail:", newEmail);
+  const handleChangeEmail = async () => {
     const result = await changeEmail(newEmail);
     result.match(
       () => {
         alert("Check your inbox to confirm your new email address.");
-        setShowModal(false);
+        setShowEmailModal(false);
+        setNewEmail("");
       },
       (error) => {
-        console.log("🚀 ~ handleSubmit ~ error:", error);
         alert(`Failed to update email: ${error.message}`);
       },
     );
   };
-  return (
-    <View style={{ padding: 16 }}>
-      <View
-        id="theme-toggle"
-        style={{ position: "absolute", top: 10, right: 10, zIndex: 1 }}
-      >
-        <Button
-          onPress={(event) => setMode(mode === "light" ? "dark" : "light")}
-          buttonStyle={{
-            backgroundColor: "#FF006E",
-            width: 40,
-            height: 40,
-          }}
-        >
-          {mode === "light" ? (
-            <FontAwesome6 name="moon" size={16} color="#FFFAEB" />
-          ) : (
-            <FontAwesome6 name="sun" size={16} color="#FFFAEB" />
-          )}
-        </Button>
-      </View>
-      <LogoPortrait scale={0.33} />
-      <View style={{ width: "100%", marginTop: 10 }}>
-        <Button
-          containerStyle={{ marginBottom: 10 }}
-          buttonStyle={{
-            borderRadius: 10,
-            backgroundColor: "#FFEFC2",
-            height: 50,
-            paddingHorizontal: 15,
-          }}
-          onPress={() => router.push("/(tasks)/completed-tasks")}
-        >
-          <Ionicons name="checkmark-done-sharp" size={24} color="#00173D" />
-          <Text>Completed Tasks </Text>
-        </Button>
-        <Button
-          containerStyle={{ marginBottom: 10 }}
-          buttonStyle={{
-            borderRadius: 10,
-            backgroundColor: "#FFEFC2",
-            height: 50,
-            paddingHorizontal: 15,
-          }}
-          onPress={() => router.push("/(tasks)/tasks-of-yesterday")}
-          title="Yesterday's"
-          titleStyle={{ color: "#00173D", marginLeft: 10, fontSize: 16 }}
-          icon={<FontAwesome5 name="history" size={24} color="#4F10A8" />}
-        />
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-            padding: 15,
-            marginBottom: 10,
-          }}
-        >
-          <Text style={{ fontSize: 16, color: "#00173D" }}>{userEmail}</Text>
-          <Button type="clear" size="sm" onPress={() => setShowModal(true)}>
-            <FontAwesome6 name="user-pen" size={16} color="#4F10A8" />
-          </Button>
-        </View>
-        <Dialog
-          isVisible={showModal}
-          onBackdropPress={() => setShowModal(false)}
-          overlayStyle={{ backgroundColor: "white" }}
-        >
-          <Dialog.Title
-            title="Need to use a different email address?"
-            titleStyle={{ color: "black", fontWeight: "bold" }}
-          />
-          <Text>enter your new email address</Text>
-          <Input
-            placeholder="Enter your new email address"
-            value={newEmail}
-            onChangeText={setNewEmail}
-          />
-          <Dialog.Actions>
-            <Button
-              title="Cancel"
-              onPress={() => setShowModal(false)}
-              buttonStyle={{
-                backgroundColor: "transparent",
-                borderColor: "black",
-                borderWidth: 1,
-              }}
-              titleStyle={{ color: "black" }}
-              size="sm"
-            />
-            <Button
-              size="sm"
-              title="Submit"
-              onPress={handleSubmit}
-              buttonStyle={{ backgroundColor: "#ff006e" }}
-              titleStyle={{ color: "white" }}
-            />
-          </Dialog.Actions>
-        </Dialog>
-        <Button
-          containerStyle={{ marginBottom: 10 }}
-          buttonStyle={{
-            backgroundColor: "#FF006E",
-            height: 50,
-            paddingHorizontal: 15,
-          }}
-          onPress={() => setIsDialogOpen(true)}
-          disabled={isPending}
-          title="Reset Statistics"
-          titleStyle={{ color: "#FFFAEB", marginLeft: 10, fontSize: 16 }}
-          icon={<Ionicons name="trash-bin" size={16} color="#FFFAEB" />}
-        />
-      </View>
 
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      paddingHorizontal: 16,
+      paddingTop: 20,
+    },
+    section: {
+      marginBottom: 24,
+      backgroundColor: theme.colors.background,
+      borderRadius: 12,
+      padding: 16,
+      borderWidth: 1,
+      borderColor: theme.colors.greyOutline,
+    },
+    sectionTitle: {
+      fontSize: 20,
+      fontFamily: "DelaGothicOne_400Regular",
+      color: theme.colors.primary,
+      marginBottom: 16,
+    },
+    row: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      paddingVertical: 12,
+    },
+    rowLabel: {
+      fontSize: 16,
+      color: theme.colors.black,
+      fontFamily: "Ubuntu_500Medium",
+    },
+    emailText: {
+      fontSize: 16,
+      color: theme.colors.grey3,
+      fontFamily: "UbuntuMono_400Regular",
+    },
+    // --- Unified Button Styles ---
+    baseButtonContainer: {
+      borderRadius: 12,
+      borderWidth: 2,
+      marginVertical: 6,
+    },
+    baseButtonStyle: {
+      borderRadius: 9, // Inner radius
+    },
+    // --- Navigation Button ---
+    navButtonContainer: {
+      borderColor: theme.colors.greyOutline,
+    },
+    navButtonStyle: {
+      backgroundColor: theme.colors.grey5,
+      justifyContent: "flex-start",
+      paddingVertical: 12,
+      paddingHorizontal: 16,
+    },
+    navButtonTitle: {
+      color: theme.colors.black,
+      fontFamily: "Ubuntu_700Bold",
+      marginLeft: 16,
+      fontSize: 16,
+    },
+    // --- Primary Action Button (Theme) ---
+    primaryButtonContainer: {
+      borderColor: theme.colors.primary,
+    },
+    primaryButtonStyle: {
+      backgroundColor: theme.colors.primary,
+    },
+    // --- Warning Action Button (Reset) ---
+    warningButtonContainer: {
+      borderColor: theme.colors.warning,
+    },
+    warningButtonStyle: {
+      backgroundColor: theme.colors.warning,
+    },
+    // --- Shared Title Style for Action Buttons ---
+    actionButtonTitle: {
+      color: theme.colors.white,
+      fontFamily: "Ubuntu_700Bold",
+      marginLeft: 8,
+    },
+    // --- Dialog & Divider Styles ---
+    dialogOverlay: {
+      backgroundColor: theme.colors.background,
+      borderRadius: 12,
+      borderColor: theme.colors.primary,
+      borderWidth: 1,
+    },
+    dialogTitle: {
+      color: theme.colors.black,
+      fontFamily: "DelaGothicOne_400Regular",
+    },
+    dialogText: {
+      color: theme.colors.grey3,
+      marginBottom: 10,
+    },
+    dialogButton: {
+      borderRadius: 8,
+    },
+    divider: {
+      height: 1,
+      backgroundColor: theme.colors.greyOutline,
+      marginVertical: 8,
+    },
+  });
+
+  const renderSectionHeader = (title: string) => (
+    <Text style={styles.sectionTitle}>{title}</Text>
+  );
+
+  return (
+    <Background>
+      <ScrollView style={styles.container}>
+        {/* Account Section */}
+        <View style={styles.section}>
+          {renderSectionHeader("Account")}
+          <View style={styles.row}>
+            <Text style={styles.rowLabel}>Email</Text>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Text style={styles.emailText}>{user?.email}</Text>
+              <Button
+                type="clear"
+                size="sm"
+                onPress={() => setShowEmailModal(true)}
+                icon={
+                  <FontAwesome6
+                    name="user-pen"
+                    size={16}
+                    color={theme.colors.primary}
+                  />
+                }
+              />
+            </View>
+          </View>
+        </View>
+
+        {/* Navigation Section */}
+        <View style={styles.section}>
+          {renderSectionHeader("Navigation")}
+          <Button
+            onPress={() => router.push("/(tasks)/completed-tasks")}
+            containerStyle={[
+              styles.baseButtonContainer,
+              styles.navButtonContainer,
+            ]}
+            buttonStyle={[styles.baseButtonStyle, styles.navButtonStyle]}
+            titleStyle={styles.navButtonTitle}
+            icon={
+              <Ionicons
+                name="checkmark-done-sharp"
+                size={22}
+                color={theme.colors.success}
+              />
+            }
+            title="Completed Tasks"
+          />
+          <Button
+            onPress={() => router.push("/(tasks)/tasks-of-yesterday")}
+            containerStyle={[
+              styles.baseButtonContainer,
+              styles.navButtonContainer,
+            ]}
+            buttonStyle={[styles.baseButtonStyle, styles.navButtonStyle]}
+            titleStyle={styles.navButtonTitle}
+            icon={
+              <FontAwesome5
+                name="history"
+                size={20}
+                color={theme.colors.secondary}
+              />
+            }
+            title="Yesterday's Tasks"
+          />
+        </View>
+
+        {/* Application Settings Section */}
+        <View style={styles.section}>
+          {renderSectionHeader("Application Settings")}
+          <View style={styles.row}>
+            <Text style={styles.rowLabel}>Theme</Text>
+            <Button
+              onPress={() => setMode(mode === "light" ? "dark" : "light")}
+              title={mode === "light" ? "Switch to Dark" : "Switch to Light"}
+              icon={
+                mode === "light" ? (
+                  <FontAwesome6
+                    name="moon"
+                    size={16}
+                    color={theme.colors.white}
+                  />
+                ) : (
+                  <FontAwesome6
+                    name="sun"
+                    size={16}
+                    color={theme.colors.white}
+                  />
+                )
+              }
+              containerStyle={[
+                styles.baseButtonContainer,
+                styles.primaryButtonContainer,
+              ]}
+              buttonStyle={[styles.baseButtonStyle, styles.primaryButtonStyle]}
+              titleStyle={styles.actionButtonTitle}
+            />
+          </View>
+          <View style={styles.divider} />
+          <View style={styles.row}>
+            <View
+              style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
+            >
+              <FontAwesome6
+                name={isSoundEnabled ? "volume-high" : "volume-xmark"}
+                size={22}
+                color={theme.colors.secondary}
+              />
+              <Text style={styles.rowLabel}>Sound Effects</Text>
+            </View>
+            <Switch
+              value={isSoundEnabled}
+              onValueChange={toggleSound}
+              trackColor={{
+                true: theme.colors.primary,
+                false: theme.colors.grey4,
+              }}
+              thumbColor={theme.colors.white}
+            />
+          </View>
+          <View style={styles.divider} />
+          <View style={styles.row}>
+            <Text style={styles.rowLabel}>Statistics</Text>
+            <Button
+              onPress={() => setResetDialogVisible(true)}
+              disabled={isResetting}
+              loading={isResetting}
+              title="Reset"
+              icon={
+                <Ionicons
+                  name="trash-bin"
+                  size={16}
+                  color={theme.colors.white}
+                />
+              }
+              containerStyle={[
+                styles.baseButtonContainer,
+                styles.warningButtonContainer,
+              ]}
+              buttonStyle={[styles.baseButtonStyle, styles.warningButtonStyle]}
+              titleStyle={styles.actionButtonTitle}
+            />
+          </View>
+        </View>
+
+        {/* Spacer */}
+        <View style={{ height: 40 }} />
+      </ScrollView>
+
+      {/* Change Email Dialog */}
       <Dialog
-        isVisible={isDialogOpen}
-        onBackdropPress={() => setIsDialogOpen(false)}
-        overlayStyle={{ backgroundColor: "white" }}
+        isVisible={showEmailModal}
+        onBackdropPress={() => setShowEmailModal(false)}
+        overlayStyle={styles.dialogOverlay}
       >
         <Dialog.Title
-          title="Are you sure you want to Reset History?"
-          titleStyle={{ color: "black", fontWeight: "bold" }}
+          title="Update Email Address"
+          titleStyle={styles.dialogTitle}
         />
-        <Text>
-          This will permanently delete all task completion history and reset
-          statistics. This action cannot be undone.
+        <Text style={styles.dialogText}>
+          Enter your new email address below. A confirmation link will be sent.
         </Text>
+        <Input
+          placeholder="new.email@example.com"
+          value={newEmail}
+          onChangeText={setNewEmail}
+          autoCapitalize="none"
+          keyboardType="email-address"
+        />
         <Dialog.Actions>
           <Button
-            size="sm"
             title="Cancel"
-            onPress={() => setIsDialogOpen(false)}
-            buttonStyle={{
-              backgroundColor: "transparent",
-              borderColor: "black",
-              borderWidth: 1,
-            }}
-            titleStyle={{ color: "black" }}
+            type="outline"
+            onPress={() => setShowEmailModal(false)}
+            buttonStyle={styles.dialogButton}
           />
           <Button
-            size="sm"
-            title="Confirm"
-            onPress={handleReset}
-            buttonStyle={{ backgroundColor: "#ff006e" }}
-            titleStyle={{ color: "white" }}
+            title="Submit"
+            onPress={handleChangeEmail}
+            buttonStyle={styles.dialogButton}
           />
         </Dialog.Actions>
       </Dialog>
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
-          marginTop: 15,
-          padding: 15,
-          borderWidth: 0,
-          backgroundColor: "#FFEFC2",
-          borderRadius: 10,
-        }}
-      >
-        <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
-          {isSoundEnabled ? (
-            <FontAwesome6 name="volume-high" size={24} color="#4F10A8" />
-          ) : (
-            <FontAwesome6 name="volume-xmark" size={24} color="#4F10A8" />
-          )}
 
-          <Text style={{ fontSize: 16, color: "#00173D" }}>
-            {isSoundEnabled ? "Enabled" : "Disabled"}
-          </Text>
-        </View>
-        <Switch
-          value={isSoundEnabled}
-          onValueChange={toggleSound}
-          trackColor={{ true: "#4F10A8", false: "#E5E7EB" }}
-          thumbColor="#FFCA3A"
+      {/* Reset Statistics Dialog */}
+      <Dialog
+        isVisible={isResetDialogVisible}
+        onBackdropPress={() => setResetDialogVisible(false)}
+        overlayStyle={styles.dialogOverlay}
+      >
+        <Dialog.Title
+          title="Reset All Statistics?"
+          titleStyle={styles.dialogTitle}
         />
-      </View>
-    </View>
+        <Text style={styles.dialogText}>
+          This will permanently delete all task completion history. This action
+          cannot be undone.
+        </Text>
+        <Dialog.Actions>
+          <Button
+            title="Cancel"
+            type="outline"
+            onPress={() => setResetDialogVisible(false)}
+            buttonStyle={styles.dialogButton}
+          />
+          <Button
+            title="Confirm Reset"
+            onPress={handleResetStats}
+            loading={isResetting}
+            buttonStyle={[
+              styles.dialogButton,
+              { backgroundColor: theme.colors.warning },
+            ]}
+          />
+        </Dialog.Actions>
+      </Dialog>
+    </Background>
   );
 }

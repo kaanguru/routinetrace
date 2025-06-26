@@ -1,5 +1,5 @@
 // app/register.tsx
-import { Button, Text, Input } from "@rneui/themed";
+import { Button, Text, Input, useTheme } from "@rneui/themed";
 import { useRouter } from "expo-router";
 import React, { useCallback } from "react";
 import { View, Alert, ActivityIndicator, StyleSheet } from "react-native";
@@ -14,6 +14,7 @@ import type { User, Session } from "@supabase/supabase-js";
 
 export default function Register() {
   const router = useRouter();
+  const { theme } = useTheme();
   const { signUpWithEmail, isLoading: authLoading } = useAuth();
   const form = useForm({
     defaultValues: {
@@ -151,8 +152,6 @@ export default function Register() {
           <Button
             title="Register"
             disabled={authLoading}
-            buttonStyle={styles.registerButton}
-            titleStyle={styles.buttonText}
             onPress={() => form.handleSubmit()}
           />
         </View>
@@ -171,17 +170,14 @@ export default function Register() {
               textAlignVertical: "center",
             }}
           >
-            Already have an account?{" "}
+            Already have an account?
           </Text>
 
           <Button
             title="Login"
             onPress={() => router.push("/login")}
             type="clear"
-            titleStyle={{
-              fontSize: 14,
-              fontFamily: "Ubuntu_700Bold",
-            }}
+            titleStyle={{ color: theme.colors.primary }}
           />
         </View>
       </View>
@@ -190,18 +186,13 @@ export default function Register() {
 }
 
 const styles = StyleSheet.create({
-  registerButton: {
-    backgroundColor: "#00173D",
-  },
-  buttonText: {
-    color: "#FFFAEB",
-  },
+  registerButton: {},
+  buttonText: {},
   heading: {
     marginHorizontal: "auto",
     fontFamily: "Ubuntu_400Regular",
     fontSize: 36,
     paddingHorizontal: 80,
     textAlign: "center",
-    color: "#3E0C83",
   },
 });
