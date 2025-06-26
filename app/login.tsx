@@ -75,7 +75,6 @@ export default function Login() {
               fontSize: 36,
               paddingHorizontal: 80,
               textAlign: "center",
-              color: "#3E0C83",
             }}
           >
             Welcome Back
@@ -183,7 +182,7 @@ export default function Login() {
               />
             </View>
           </View>
-          <View style={{ position: "absolute", bottom: 10, right: 10 }}>
+          {/* <View style={{ position: "absolute", bottom: 10, right: 10 }}>
             <Button
               type="clear"
               size="sm"
@@ -191,7 +190,7 @@ export default function Login() {
               onPress={resetFirstVisit}
               title="R-F-W"
             />
-          </View>
+          </View> */}
         </ScrollView>
       </KeyboardAvoidingView>
     </Background>

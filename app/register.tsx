@@ -202,6 +202,5 @@ const styles = StyleSheet.create({
     fontSize: 36,
     paddingHorizontal: 80,
     textAlign: "center",
-    color: "#3E0C83",
   },
 });
