@@ -97,6 +97,9 @@ export default function RepeatPeriodSelector({
         onBackdropPress={() => setIsVisible(false)}
         containerStyle={styles.bottomSheetContainer} // Apply theme to bottom sheet container
       >
+        {/* TODO: The "key" warning is a known issue in @rneui/themed's BottomSheet.
+            This is a temporary workaround until the bug is fixed.
+            Track the issue here: https://github.com/react-native-elements/react-native-elements/issues/3968 */}
         {repeatOptions.map((option, index) => (
           <ListItem
             key={index}
