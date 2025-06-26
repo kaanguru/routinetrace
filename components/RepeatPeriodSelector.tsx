@@ -99,7 +99,7 @@ export default function RepeatPeriodSelector({
       >
         {repeatOptions.map((option, index) => (
           <ListItem
-            key={option.label}
+            key={index}
             containerStyle={[
               styles.listItemContainer, // Apply theme to all list items
               option.value === repeatPeriod ? styles.selectedOption : {},
