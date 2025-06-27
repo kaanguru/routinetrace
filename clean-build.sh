@@ -118,7 +118,15 @@ else
         exit 1
     fi
 fi
-
+# Increase Gradle Daemon Memory
+echo "💪 Increasing Gradle Daemon memory to 6GB..."
+if [ -d "android" ]; then
+    echo "org.gradle.jvmargs=-Xmx6g" >> android/gradle.properties
+    echo "✓ Gradle memory increased"
+else
+    echo "ERROR: android folder not found, cannot set Gradle memory"
+    exit 1
+fi
 # Clear any existing Android build artifacts
 if [ -d "android/app/build" ]; then
     echo "🧹 Clearing existing Android build artifacts..."
