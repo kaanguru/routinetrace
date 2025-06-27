@@ -1,5 +1,5 @@
 import Background from "@/components/Background";
-import { Button, Text }from "@rn-vui/themed";
+import { Button, Text } from "@rn-vui/themed";
 import { FlashList } from "@shopify/flash-list";
 import { Video, ResizeMode } from "expo-av";
 import { Href, useRouter } from "expo-router";

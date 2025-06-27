@@ -1,7 +1,7 @@
 // app/(tasks)/edit/[id].tsx
 // External Libraries
 import { Ionicons } from "@expo/vector-icons";
-import { Button, Text, useThemeMode }from "@rn-vui/themed";
+import { Button, Text, useThemeMode } from "@rn-vui/themed";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {

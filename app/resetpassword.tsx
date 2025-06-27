@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { View, Text, ActivityIndicator } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router"; // Add useLocalSearchParams
-import { Button, Input }from "@rn-vui/themed";
+import { Button, Input } from "@rn-vui/themed";
 import { useForm, Field } from "@tanstack/react-form";
 import { useResetPasswordMutation } from "@/hooks/useResetPasswordMutation";
 import * as Linking from "expo-linking";

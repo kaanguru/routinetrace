@@ -1,5 +1,5 @@
 // app/register.tsx
-import { Button, Text, Input, useTheme }from "@rn-vui/themed";
+import { Button, Text, Input, useTheme } from "@rn-vui/themed";
 import { useRouter } from "expo-router";
 import React, { useCallback } from "react";
 import { View, Alert, ActivityIndicator, StyleSheet } from "react-native";

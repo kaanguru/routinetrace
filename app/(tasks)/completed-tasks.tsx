@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import { Text, Card, Button, useTheme }from "@rn-vui/themed";
+import { Text, Card, Button, useTheme } from "@rn-vui/themed";
 import { router } from "expo-router";
 import { useCallback } from "react";
 import { Pressable, View, StyleSheet } from "react-native";

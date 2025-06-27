@@ -1,4 +1,4 @@
-import { Input }from "@rn-vui/themed";
+import { Input } from "@rn-vui/themed";
 import { TextInput, View } from "react-native";
 
 import { FormInputProps } from "@/types";

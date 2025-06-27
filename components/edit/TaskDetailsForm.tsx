@@ -1,7 +1,7 @@
 // components/edit/TaskDetailsForm.tsx
 import React, { useCallback } from "react";
 import { View } from "react-native";
-import { CheckBox, Text, Button }from "@rn-vui/themed";
+import { CheckBox, Text, Button } from "@rn-vui/themed";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { ErrorBoundary } from "react-error-boundary";
 

@@ -20,7 +20,7 @@ import {
   Card,
   CheckBox,
   Divider,
-}from "@rn-vui/themed";
+} from "@rn-vui/themed";
 import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import React, { useCallback, useState } from "react";
 

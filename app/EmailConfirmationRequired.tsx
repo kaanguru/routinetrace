@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet, Alert } from "react-native";
-import { Button }from "@rn-vui/themed";
+import { Button } from "@rn-vui/themed";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { useAuth } from "@/context/AuthenticationProvider";
 import { ResultAsync } from "neverthrow";

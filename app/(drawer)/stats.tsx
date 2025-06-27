@@ -1,4 +1,4 @@
-import { Card, Text, LinearProgress }from "@rn-vui/themed";
+import { Card, Text, LinearProgress } from "@rn-vui/themed";
 import React, { useMemo } from "react";
 import { View, ActivityIndicator, StyleSheet } from "react-native";
 import { FlashList } from "@shopify/flash-list";

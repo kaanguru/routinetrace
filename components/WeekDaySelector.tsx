@@ -1,4 +1,4 @@
-import { useTheme, Text }from "@rn-vui/themed";
+import { useTheme, Text } from "@rn-vui/themed";
 import { View, TouchableOpacity, StyleSheet } from "react-native";
 
 import { DayOfWeek } from "~/types";

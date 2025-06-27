@@ -1,5 +1,5 @@
 import { FontAwesome6 } from "@expo/vector-icons";
-import { BottomSheet, Button, ListItem, useTheme }from "@rn-vui/themed";
+import { BottomSheet, Button, ListItem, useTheme } from "@rn-vui/themed";
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 

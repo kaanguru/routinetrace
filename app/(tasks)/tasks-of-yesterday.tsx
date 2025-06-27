@@ -1,4 +1,4 @@
-import { Button, Card, Divider }from "@rn-vui/themed";
+import { Button, Card, Divider } from "@rn-vui/themed";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import { Text, Pressable, View, SafeAreaView } from "react-native";

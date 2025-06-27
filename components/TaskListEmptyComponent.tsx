@@ -1,4 +1,4 @@
-import { Text }from "@rn-vui/themed";
+import { Text } from "@rn-vui/themed";
 import { View } from "react-native";
 
 import BiriBirseyDesin from "~/components/lotties/BiriBirseyDesin";

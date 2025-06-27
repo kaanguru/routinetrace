@@ -1,4 +1,4 @@
-import { ButtonProps, Colors }from "@rn-vui/themed";
+import { ButtonProps, Colors } from "@rn-vui/themed";
 
 const themeStyles = {
   lightColors: {

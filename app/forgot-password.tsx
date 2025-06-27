@@ -1,4 +1,4 @@
-import { Button, Input, Text }from "@rn-vui/themed";
+import { Button, Input, Text } from "@rn-vui/themed";
 import { View, Alert } from "react-native";
 import { useForm } from "@tanstack/react-form";
 import userSchema from "@/schemas/userSchema";

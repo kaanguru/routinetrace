@@ -1,5 +1,5 @@
 import { FontAwesome6 } from "@expo/vector-icons";
-import { Text, useThemeMode }from "@rn-vui/themed";
+import { Text, useThemeMode } from "@rn-vui/themed";
 import { router } from "expo-router";
 import React from "react";
 import { Pressable, View } from "react-native";

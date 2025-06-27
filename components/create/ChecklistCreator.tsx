@@ -1,7 +1,7 @@
 // components/edit/ChecklistEditor.tsx
 import React from "react";
 import { View, TouchableOpacity } from "react-native";
-import { Input, Button, useThemeMode }from "@rn-vui/themed";
+import { Input, Button, useThemeMode } from "@rn-vui/themed";
 import { FontAwesome6, MaterialIcons } from "@expo/vector-icons";
 
 // Styles

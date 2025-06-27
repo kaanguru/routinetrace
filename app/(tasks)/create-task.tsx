@@ -1,4 +1,4 @@
-import { Button }from "@rn-vui/themed";
+import { Button } from "@rn-vui/themed";
 import { useRouter } from "expo-router";
 import { useCallback, useState } from "react";
 import { Alert, ScrollView, KeyboardAvoidingView } from "react-native";
