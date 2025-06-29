@@ -204,10 +204,6 @@ function getMoveButtonStyle(mode: "light" | "dark"): { button: object } {
 // Function to get dynamic styles for Action Buttons container based on mode
 function getActionButtonsContainerStyle(mode: "light" | "dark"): object {
   return {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
     flexDirection: "row",
     justifyContent: "space-between",
     padding: 16,

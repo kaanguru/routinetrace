@@ -237,7 +237,7 @@ export default function Index() {
             position: "absolute",
             margin: 32,
             right: 5,
-            bottom: 5,
+            bottom: 30,
             // boxShadow is not a valid React Native style property
             // boxShadow: [
             //   {
