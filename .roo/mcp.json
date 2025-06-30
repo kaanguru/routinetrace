@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "WatermelonDB Docs": {
+      "url": "https://gitmcp.io/Nozbe/WatermelonDB",
+      "disabled": false,
+      "autoApprove": [],
+      "alwaysAllow": [
+        "search_WatermelonDB_documentation",
+        "fetch_generic_url_content"
+      ]
+    },
+    "node-sqlite Docs": {
+      "url": "https://gitmcp.io/kriasoft/node-sqlite",
+      "disabled": false,
+      "autoApprove": []
+    }
+  }
+}
