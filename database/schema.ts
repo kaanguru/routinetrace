@@ -6,7 +6,7 @@ const schema = appSchema({
     tableSchema({
       name: "tasks",
       columns: [
-        { name: "id", type: "number" }, // isPrimaryKey removed from column definition as per error
+        { name: "id", type: "number" },
         { name: "supabase_id", type: "string", isIndexed: true },
         { name: "created_at", type: "string" },
         { name: "title", type: "string" },
@@ -19,12 +19,11 @@ const schema = appSchema({
         { name: "repeat_period", type: "string", isOptional: true },
         { name: "user_id", type: "string" },
       ],
-      // idColumn: "id", // Removed as it's not recognized by the types
     }),
     tableSchema({
       name: "checklistitems",
       columns: [
-        { name: "id", type: "number" }, // isPrimaryKey removed from column definition as per error
+        { name: "id", type: "number" },
         { name: "supabase_id", type: "string", isIndexed: true },
         { name: "created_at", type: "string" },
         { name: "content", type: "string" },
@@ -32,7 +31,6 @@ const schema = appSchema({
         { name: "is_complete", type: "boolean" },
         { name: "task_id", type: "number" },
       ],
-      // idColumn: "id", // Removed as it's not recognized by the types
     }),
   ],
 });

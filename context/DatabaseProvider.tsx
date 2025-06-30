@@ -1,5 +1,5 @@
 import React, { createContext, useContext, ReactNode } from "react";
-import { database } from "../database"; // Corrected import path
+import { database } from "~/database";
 
 // Define the context type
 interface DatabaseContextType {

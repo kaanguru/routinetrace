@@ -2,8 +2,6 @@ import { Model } from "@nozbe/watermelondb";
 import text from "@nozbe/watermelondb/decorators/text";
 import date from "@nozbe/watermelondb/decorators/date";
 import field from "@nozbe/watermelondb/decorators/field";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import json from "@nozbe/watermelondb/decorators/json";
 
 export class ChecklistItem extends Model {
   static table = "checklistitems";

@@ -6,7 +6,9 @@
       "autoApprove": [],
       "alwaysAllow": [
         "search_WatermelonDB_documentation",
-        "fetch_generic_url_content"
+        "fetch_generic_url_content",
+        "fetch_WatermelonDB_documentation",
+        "search_WatermelonDB_code"
       ]
     },
     "node-sqlite Docs": {
