@@ -1,4 +1,4 @@
-import { ButtonProps, Colors } from "@rneui/themed";
+import { ButtonProps } from "@rneui/themed";
 
 const themeStyles = {
   lightColors: {
@@ -34,7 +34,7 @@ const themeStyles = {
     background: "#001029",
   },
   components: {
-    Button: (props: ButtonProps, theme: Colors) => {
+    Button: (props: ButtonProps, theme: any) => {
       if (props.type === "clear") {
         return {
           containerStyle: {
