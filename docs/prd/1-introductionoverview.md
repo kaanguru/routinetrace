@@ -1,0 +1,2 @@
+# 1. Introduction/Overview
+RoutineTrace is a multi-platform mobile application, primarily targeting Android, designed to help users manage and track their daily, weekly, and monthly recurring tasks. Its core value proposition lies in providing clear visual feedback, such as success percentages, on adherence to routines. This document outlines the product's purpose, features, technical foundation, and current state, serving as a comprehensive guide for its continued development.
