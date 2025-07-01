@@ -1,15 +1,14 @@
-version: 4.20.0
-installed_at: '2025-06-29T17:56:32.393Z'
+version: 4.21.1
+installed_at: '2025-07-01T12:59:29.888Z'
 install_type: full
 agent: null
-ide_setup: null
 ides_setup:
   - roo
-expansion_packs:
-  - bmad-infrastructure-devops
+  - gemini
+expansion_packs: []
 files:
   - path: .bmad-core/core-config.yml
-    hash: 210b2294e9f96fb3
+    hash: 0fc7de6864683e72
     modified: false
   - path: .bmad-core/workflows/greenfield-ui.yml
     hash: fed0d7f34062ff95
@@ -96,7 +95,7 @@ files:
     hash: be7699b750a382e3
     modified: false
   - path: .bmad-core/tasks/create-doc.md
-    hash: 17b3f012e60e9c17
+    hash: aede560374bd48db
     modified: false
   - path: .bmad-core/tasks/create-deep-research-prompt.md
     hash: a104cb9b17cde3b7
@@ -120,7 +119,7 @@ files:
     hash: 6530bed845540b0d
     modified: false
   - path: .bmad-core/data/bmad-kb.md
-    hash: d222ee238b7b16d5
+    hash: 7795e838ee83dd16
     modified: false
   - path: .bmad-core/checklists/story-draft-checklist.md
     hash: 28d5c2d3e9088320
@@ -181,32 +180,4 @@ files:
     modified: false
   - path: .bmad-core/agent-teams/team-all.yml
     hash: 788067c0fd19c76d
-    modified: false
-  - path: .bmad-infrastructure-devops/agents/infra-devops-platform.md
-    hash: 063294311d03ebdf
-    modified: false
-  - path: >-
-      .bmad-infrastructure-devops/templates/infrastructure-platform-from-arch-tmpl.md
-    hash: b0a0f160b989cd68
-    modified: false
-  - path: .bmad-infrastructure-devops/templates/infrastructure-architecture-tmpl.md
-    hash: 1465d14985aca5cf
-    modified: false
-  - path: .bmad-infrastructure-devops/tasks/validate-infrastructure.md
-    hash: 204348a3617ee91b
-    modified: false
-  - path: .bmad-infrastructure-devops/tasks/review-infrastructure.md
-    hash: 16f31fb41114cbb2
-    modified: false
-  - path: .bmad-infrastructure-devops/checklists/infrastructure-checklist.md
-    hash: b3dc0a7ec1696c6c
-    modified: false
-  - path: .bmad-infrastructure-devops/data/bmad-kb.md
-    hash: ab414992de0d141a
-    modified: false
-  - path: .bmad-infrastructure-devops/config.yml
-    hash: d958cd04751ad66b
-    modified: false
-  - path: .bmad-infrastructure-devops/README.md
-    hash: 0286b59e5dce549e
     modified: false
