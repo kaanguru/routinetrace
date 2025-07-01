@@ -25,8 +25,8 @@
     - [x] Create `/database/schema.ts` with table schemas mirroring Supabase types.
     - [x] Create model files for each table inside `/database/models/`.
     - [x] Create `/database/index.ts` to initialize the database instance.
-- [x] Task 3 (AC: #6): Create and implement the `DatabaseProvider.tsx` in `/context/` and wrap the root application layout.
-- [x] Task 4 (AC: #7): Create a `docs/TESTING_STRATEGY.md` file and document a plan for simulating offline mode for development and testing purposes.
+- [ ] Task 3 (AC: #6): Create and implement the `DatabaseProvider.tsx` in `/context/` and wrap the root application layout.
+- [ ] Task 4 (AC: #7): Create a `docs/TESTING_STRATEGY.md` file and document a plan for simulating offline mode for development and testing purposes.
 - [ ] Task 5 (AC: All, IV: #1, 2): Verify the application builds and launches successfully on an Android emulator without errors.
 
 ## Dev Notes
