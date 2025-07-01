@@ -46,7 +46,7 @@ Dev Note: Story Requires the following tests:
     -   *Unit test the refactored mutation hooks. Mock the WatermelonDB `write` method and verify it is called with the correct data.*
 - [x] Jest with in memory db Integration Test (Test Location): location: `tests/integration/write-operations.test.ts`
     -   *Create an integration test that renders a component, simulates a user action (e.g., clicking 'Add Task'), and then queries the mock DB instance to assert that the new record was created correctly.*
-- [ ] Cypress E2E: location: `N/A`
+- [ ] Maestro E2E: location: `N/A`
 
 Manual Test Steps:
 1.  Enable airplane mode on the Android emulator to ensure the app is offline.

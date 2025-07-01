@@ -44,7 +44,7 @@ Dev Note: Story Requires the following tests:
     -   *Unit test the `syncService` functions. Mock the Supabase client and WatermelonDB queries. Verify that for a given "created" record, the service calls the Supabase `insert()` method and then updates the local record.*
 - [x] Jest with in memory db Integration Test (Test Location): location: `tests/integration/push-create-sync.test.ts`
     -   *Create an integration test that: 1. Creates a new record in a mock WatermelonDB instance. 2. Runs the push sync function. 3. Mocks a successful Supabase API response. 4. Asserts that the local record was updated with the new `supabase_id` and `synced` status.*
-- [ ] Cypress E2E: location: `N/A`
+- [ ] Maestro E2E: location: `N/A`
 
 Manual Test Steps:
 1.  Enable airplane mode on the Android emulator.

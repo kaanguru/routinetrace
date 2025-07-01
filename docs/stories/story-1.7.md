@@ -45,7 +45,7 @@ Dev Note: Story Requires the following tests:
     -   *Add unit tests for the pull logic. Mock AsyncStorage and the Supabase `select()` and `gt()` methods. Verify that the service calls the Supabase client with the correct timestamp filter.*
 - [x] Jest with in memory db Integration Test (Test Location): location: `tests/integration/pull-sync.test.ts`
     -   *Create an integration test that: 1. Mocks the Supabase API to return an array of new/updated records. 2. Runs the pull sync function. 3. Asserts that the new records were correctly created or updated in the local mock WatermelonDB instance.*
-- [ ] Cypress E2E: location: `N/A`
+- [ ] Maestro E2E: location: `N/A`
 
 Manual Test Steps:
 1.  Ensure the app is running and you are online. Let an initial sync (if any) complete.

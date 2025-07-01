@@ -37,7 +37,7 @@ Dev Note: Story Requires the following tests:
     -   *Add unit tests for the delete logic. Mock the Supabase `delete()` method and verify it is called with the correct ID. Verify the local `record.destroyPermanently()` method is called on success.*
 - [x] Jest with in memory db Integration Test (Test Location): location: `tests/integration/push-delete-sync.test.ts`
     -   *Create an integration test that: 1. Creates and syncs a record. 2. Marks it as deleted locally. 3. Runs the push sync function for deletions. 4. Mocks a successful Supabase API response. 5. Asserts that the record no longer exists in the local mock DB.*
-- [ ] Cypress E2E: location: `N/A`
+- [ ] Maestro E2E: location: `N/A`
 
 Manual Test Steps:
 1.  Ensure you have at least one task that is already synced with Supabase.

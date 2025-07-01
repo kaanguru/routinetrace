@@ -32,7 +32,7 @@ Dev Note: Story Requires the following tests:
 
 - [ ] {{type f.e. Jest}} Unit Tests: (nextToFile: {{true|false}}), coverage requirement: {{from strategy or default 80%}}
 - [ ] {{type f.e. Jest with in memory db}} Integration Test (Test Location): location: {{Integration test location f.e. `/tests/story-name/foo.spec.cs` or `next to handler`}}
-- [ ] {{type f.e. Cypress}} E2E: location: {{f.e. `/e2e/{epic-name/bar.test.ts`}}
+- [ ] {{type f.e. Maestro}} E2E: location: {{f.e. `/e2e/{epic-name/bar.test.ts`}}
 
 Manual Test Steps: [[LLM: Include how if possible the user can manually test the functionality when story is Ready for Review, if any]]
 

@@ -46,7 +46,7 @@ Dev Note: Story Requires the following tests:
     -   *Unit test the refactored hooks to ensure they call WatermelonDB query methods correctly and return data in the expected format.*
 - [x] Jest with in memory db Integration Test (Test Location): location: `tests/integration/read-operations.test.ts`
     -   *Create an integration test that seeds a mock WatermelonDB instance, renders the relevant components, and asserts that the seeded data is displayed correctly.*
-- [ ] Cypress E2E: location: `N/A`
+- [ ] Maestro E2E: location: `N/A`
 
 Manual Test Steps:
 1.  Implement a temporary method to seed the local WatermelonDB with 2-3 mock tasks and their corresponding checklist items.

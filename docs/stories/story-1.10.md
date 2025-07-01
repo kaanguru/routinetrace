@@ -44,7 +44,7 @@ Dev Note: Story Requires the following tests:
 - [x] Jest Unit Tests: (nextToFile: `true`), coverage requirement: 80%
     -   *Unit test the component containing the trigger logic. Mock the `AppState` and `useNetworkStatus` hook to verify that the `syncService` function is called under the correct conditions.*
 - [ ] Jest with in memory db Integration Test (Test Location): location: `N/A`
-- [x] Cypress E2E: location: `e2e/auto-sync.test.ts`
+- [x] Maestro E2E: location: `e2e/auto-sync.test.ts`
     -   *Create an E2E test that launches the app offline, creates data, then enables the network and asserts that the sync process runs automatically.*
 
 Manual Test Steps:

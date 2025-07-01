@@ -1,6 +1,6 @@
 # Story 1.1: Foundational Setup for WatermelonDB and Local Schema
 
-## Status: Draft
+## Status: Ready for Development
 
 ## Story
 
@@ -21,12 +21,12 @@
 ## Tasks / Subtasks
 
 - [x] Task 1 (AC: #1): Install WatermelonDB and SQLite adapter dependencies using pnpm.
-- [ ] Task 2 (AC: #2, 3, 4, 5): Create the directory structure and schema files.
-    - [ ] Create `/database/schema.ts` with table schemas mirroring Supabase types.
-    - [ ] Create model files for each table inside `/database/models/`.
-    - [ ] Create `/database/index.ts` to initialize the database instance.
-- [ ] Task 3 (AC: #6): Create and implement the `DatabaseProvider.tsx` in `/context/` and wrap the root application layout.
-- [ ] Task 4 (AC: #7): Create a `docs/TESTING_STRATEGY.md` file and document a plan for simulating offline mode for development and testing purposes.
+- [x] Task 2 (AC: #2, 3, 4, 5): Create the directory structure and schema files.
+    - [x] Create `/database/schema.ts` with table schemas mirroring Supabase types.
+    - [x] Create model files for each table inside `/database/models/`.
+    - [x] Create `/database/index.ts` to initialize the database instance.
+- [x] Task 3 (AC: #6): Create and implement the `DatabaseProvider.tsx` in `/context/` and wrap the root application layout.
+- [x] Task 4 (AC: #7): Create a `docs/TESTING_STRATEGY.md` file and document a plan for simulating offline mode for development and testing purposes.
 - [ ] Task 5 (AC: All, IV: #1, 2): Verify the application builds and launches successfully on an Android emulator without errors.
 
 ## Dev Notes
@@ -44,7 +44,7 @@ Dev Note: Story Requires the following tests:
 - [x] Jest Unit Tests: (nextToFile: `false`, location: `tests/unit/database.test.ts`), coverage requirement: 80%
     -   *Verify that the database instance initializes without throwing errors.*
 - [ ] Jest with in memory db Integration Test (Test Location): location: `N/A`
-- [ ] Cypress E2E: location: `N/A`
+- [ ] Maestro E2E: location: `N/A`
 
 Manual Test Steps:
 - Run the application on an Android emulator.

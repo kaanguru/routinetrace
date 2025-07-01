@@ -45,7 +45,7 @@ Dev Note: Story Requires the following tests:
 - [x] Jest Unit Tests: (nextToFile: `true`), coverage requirement: 80%
     -   *Unit test the new indicator components. Provide mock values for network and sync status and assert that they render the correct text or icons.*
 - [ ] Jest with in memory db Integration Test (Test Location): location: `N/A`
-- [x] Cypress E2E: location: `e2e/status-indicators.test.ts`
+- [x] Maestro E2E: location: `e2e/status-indicators.test.ts`
     -   *Create an E2E test that simulates toggling the device's network connection and asserts that the offline indicator appears and disappears correctly.*
 
 Manual Test Steps:

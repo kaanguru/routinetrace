@@ -40,7 +40,7 @@ Dev Note: Story Requires the following tests:
     -   *Add unit tests for the update logic. Mock the Supabase `update()` and `eq()` methods and verify they are called with the correct payload and ID.*
 - [x] Jest with in memory db Integration Test (Test Location): location: `tests/integration/push-update-sync.test.ts`
     -   *Create an integration test that: 1. Creates and syncs a record (simulating story 1.4). 2. Updates the record locally. 3. Runs the push sync function for updates. 4. Mocks a successful Supabase API response. 5. Asserts that the local record's `_status` is `synced`.*
-- [ ] Cypress E2E: location: `N/A`
+- [ ] Maestro E2E: location: `N/A`
 
 Manual Test Steps:
 1.  Ensure you have at least one task that is already synced with Supabase (it has a `supabase_id`).

@@ -37,7 +37,7 @@ Dev Note: Story Requires the following tests:
     -   *Add specific unit tests for the conflict resolution logic. Pass in mock local and remote records with different timestamps and assert that the correct outcome (update or skip) occurs.*
 - [x] Jest with in memory db Integration Test (Test Location): location: `tests/integration/conflict-resolution.test.ts`
     -   *Create an integration test that: 1. Seeds a record in the mock DB. 2. Simulates a remote record with an older timestamp. 3. Runs the pull sync. 4. Asserts that the local record was NOT updated. 5. Repeat with a newer remote timestamp and assert the local record WAS updated.*
-- [ ] Cypress E2E: location: `N/A`
+- [ ] Maestro E2E: location: `N/A`
 
 Manual Test Steps:
 This scenario is difficult to test manually but can be simulated:
