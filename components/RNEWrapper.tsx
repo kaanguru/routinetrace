@@ -23,6 +23,7 @@ import { isFirstVisit } from "~/utils/isFirstVisit";
 import { supabase } from "~/utils/supabase";
 import { Result, ok } from "neverthrow";
 import { reportError } from "@/utils/reportError";
+import { DatabaseProvider } from "@/context/DatabaseProvider";
 
 const InitializationContext = createContext<
   Readonly<{
@@ -150,26 +151,28 @@ export default function RNEWrapper() {
     >
       <GestureHandlerRootView style={{ flex: 1 }}>
         <SoundProvider>
-          <Stack
-            screenOptions={{
-              headerShown: false,
-              animation: "none",
-            }}
-          >
-            <Stack.Screen name="(drawer)" />
-            <Stack.Screen
-              name="(onboarding)"
-              options={{
+          <DatabaseProvider>
+            <Stack
+              screenOptions={{
                 headerShown: false,
-                animation: "slide_from_right",
+                animation: "none",
               }}
-            />
-            <Stack.Screen name="EmailConfirmationRequired" />
-            <Stack.Screen name="login" />
-            <Stack.Screen name="register" />
-            <Stack.Screen name="forgot-password" />
-            <Stack.Screen name="resetpassword" />
-          </Stack>
+            >
+              <Stack.Screen name="(drawer)" />
+              <Stack.Screen
+                name="(onboarding)"
+                options={{
+                  headerShown: false,
+                  animation: "slide_from_right",
+                }}
+              />
+              <Stack.Screen name="EmailConfirmationRequired" />
+              <Stack.Screen name="login" />
+              <Stack.Screen name="register" />
+              <Stack.Screen name="forgot-password" />
+              <Stack.Screen name="resetpassword" />
+            </Stack>
+          </DatabaseProvider>
         </SoundProvider>
       </GestureHandlerRootView>
     </InitializationContext.Provider>

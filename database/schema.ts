@@ -6,7 +6,6 @@ const schema = appSchema({
     tableSchema({
       name: "tasks",
       columns: [
-        { name: "id", type: "number" },
         { name: "supabase_id", type: "string", isIndexed: true },
         { name: "created_at", type: "string" },
         { name: "title", type: "string" },
@@ -23,7 +22,6 @@ const schema = appSchema({
     tableSchema({
       name: "checklistitems",
       columns: [
-        { name: "id", type: "number" },
         { name: "supabase_id", type: "string", isIndexed: true },
         { name: "created_at", type: "string" },
         { name: "content", type: "string" },
