@@ -8,6 +8,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import GlobalErrorFallback from "@/components/error/GlobalErrorFallback";
 import handleErrorBoundaryError from "@/utils/errorHandler";
 import * as Sentry from "@sentry/react-native";
+import DataSyncProvider from "@/context/DataSyncProvider";
 
 Sentry.init({
   dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
@@ -31,16 +32,18 @@ export default Sentry.wrap(function RootLayout() {
         onError={handleErrorBoundaryError}
       >
         <ThemeProvider theme={theme}>
-          <AuthProvider>
-            {/* <Button
-              title="Sentry Try!"
-              onPress={() => {
-                Sentry.captureException(new Error("manuel error 24"));
-              }}
-              size="lg"
-            /> */}
-            <RNEWrapper />
-          </AuthProvider>
+          <DataSyncProvider>
+            <AuthProvider>
+              {/* <Button
+                title="Sentry Try!"
+                onPress={() => {
+                  Sentry.captureException(new Error("manuel error 24"));
+                }}
+                size="lg"
+              /> */}
+              <RNEWrapper />
+            </AuthProvider>
+          </DataSyncProvider>
         </ThemeProvider>
       </ErrorBoundary>
     </QueryClientProvider>

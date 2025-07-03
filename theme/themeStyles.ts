@@ -34,7 +34,7 @@ const themeStyles = {
     background: "#001029",
   },
   components: {
-    Button: (props: ButtonProps, theme: Colors) => {
+    Button: (props: ButtonProps, { colors }: { colors: Colors }) => {
       if (props.type === "clear") {
         return {
           containerStyle: {
@@ -49,23 +49,23 @@ const themeStyles = {
           titleStyle: {
             fontSize: 14,
             fontFamily: "Ubuntu_700Bold",
-            color: theme.black,
+            color: colors.black,
           },
         };
       }
       return {
-        color: theme.primary,
+        color: colors.primary,
         titleStyle: {
           fontFamily: "DelaGothicOne_400Regular",
           fontSize: 16,
-          color: theme.black,
+          color: colors.black,
         },
         containerStyle: {
           margin: 12,
           borderRadius: 8,
           borderWidth: 4,
           borderColor: "#FD590D",
-          backgroundColor: theme.grey4,
+          backgroundColor: colors.grey4,
         },
       };
     },

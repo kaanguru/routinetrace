@@ -3,7 +3,12 @@
     "legend-state Docs": {
       "url": "https://gitmcp.io/LegendApp/legend-state",
       "disabled": false,
-      "autoApprove": []
+      "autoApprove": [],
+      "alwaysAllow": [
+        "fetch_legend_state_documentation",
+        "search_legend_state_code",
+        "search_legend_state_documentation"
+      ]
     }
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "routinetrace",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "main": "expo-router/entry",
   "scripts": {
@@ -23,7 +23,10 @@
     "resetpass": "npx uri-scheme open --android routinetrace://resetpassword?token=34c964676bbd0054c317bc18a4031186eaf860cf63c069469217bc5d&type=recovery "
   },
   "jest": {
-    "preset": "jest-expo"
+    "preset": "jest-expo",
+    "transformIgnorePatterns": [
+      "node_modules/(?!((jest-)?react-native|@react-native(-community)?|expo(nent)?|@expo(nent)?/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|sentry-react-native|sentry-runner|@legendapp/state|@gorhom/bottom-sheet|@react-native-community/datetimepicker|@react-native-community/slider|@react-native-async-storage/async-storage|@react-native-picker/picker|react-native-draggable-flatlist|@react-native/js-polyfills)/)"
+    ]
   },
   "dependencies": {
     "@expo-google-fonts/dela-gothic-one": "^0.2.3",
@@ -31,7 +34,9 @@
     "@expo-google-fonts/ubuntu": "^0.2.3",
     "@expo-google-fonts/ubuntu-mono": "^0.2.3",
     "@expo/vector-icons": "^14.1.0",
+    "@faker-js/faker": "^9.9.0",
     "@gorhom/bottom-sheet": "^5.1.6",
+    "@legendapp/state": "3.0.0-beta.31",
     "@react-native-async-storage/async-storage": "2.1.2",
     "@react-native-community/datetimepicker": "8.4.1",
     "@react-native-community/slider": "4.5.6",
@@ -87,6 +92,7 @@
   "devDependencies": {
     "@babel/core": "^7.27.4",
     "@react-native-community/cli": "latest",
+    "@testing-library/react-native": "^13.2.0",
     "@types/jest": "^29.5.14",
     "@types/ramda": "^0.30.2",
     "@types/react": "~19.0.14",
@@ -98,8 +104,8 @@
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-neverthrow": "^1.1.4",
     "eslint-plugin-prettier": "^5.4.1",
-    "jest": "^29.7.0",
-    "jest-expo": "~53.0.7",
+    "jest": "~29.7.0",
+    "jest-expo": "~53.0.8",
     "prettier": "^3.5.3",
     "react-test-renderer": "18.3.1",
     "reactotron-react-native": "^5.1.13",
