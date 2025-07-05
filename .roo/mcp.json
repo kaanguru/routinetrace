@@ -7,7 +7,8 @@
       "alwaysAllow": [
         "fetch_legend_state_documentation",
         "search_legend_state_code",
-        "search_legend_state_documentation"
+        "search_legend_state_documentation",
+        "fetch_generic_url_content"
       ]
     }
   }
