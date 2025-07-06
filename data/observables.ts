@@ -1,129 +1,202 @@
-import { useState } from "react";
-import { Alert, Keyboard, ScrollView, StyleSheet } from "react-native";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { router } from "expo-router";
-import { Controller, useForm } from "react-hook-form";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { observable } from "@legendapp/state";
+import { syncedQuery } from "@legendapp/state/sync-plugins/tanstack-query";
+import { QueryClient, QueryFunctionContext } from "@tanstack/react-query";
+import { supabase } from "~/utils/supabase";
+import { TaskFilter, TaskFormData } from "~/types";
+import { Tables } from "~/database.types";
 
-import { TaskFormData } from "~/types";
-import { taskFormSchema } from "~/schemas/taskFormSchema";
-import { editCreateStyles as styles } from "~/theme/editCreateStyles";
+// 1. Initialize a single QueryClient to be used throughout the app
+export const queryClient = new QueryClient();
 
-// Import the new createTask function instead of the old hook
-import { createTask } from "~/data/observables";
+// --- Query Functions ---
 
-import {
-  WeekDaySelector,
-  RepeatPeriodSelector,
-  RepeatFrequencySlider,
-  ChecklistCreator,
-  TaskFormInput,
-  TaskFormHeader,
-} from "~/components/create";
+async function fetchTasksByFilter(
+  context: QueryFunctionContext<[string, TaskFilter]>
+) {
+  const [, filter] = context.queryKey;
+  let query = supabase.from("tasks").select("*");
 
-export default function CreateTaskScreen() {
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-    watch,
-    setValue,
-  } = useForm<TaskFormData>({
-    resolver: zodResolver(taskFormSchema),
-    defaultValues: {
-      title: "",
-      notes: "",
-      repeatOnWk: [],
-      repeatPeriod: null,
-      repeatFrequency: 1,
-      checklistItems: [],
-    },
+  if (filter === "completed") {
+    query = query
+      .eq("is_complete", true)
+      .order("updated_at", { ascending: false });
+  } else if (filter === "not-completed") {
+    query = query.eq("is_complete", false);
+  }
+
+  const { data, error } = await query.order("position", {
+    ascending: true,
+    nullsFirst: true,
   });
 
-  // Use local state for loading instead of isPending from useMutation
-  const [isCreating, setIsCreating] = useState(false);
-  const checklistItems = watch("checklistItems");
+  if (error) throw new Error(error.message);
+  return data || [];
+}
 
-  const onSubmit = async (formData: TaskFormData) => {
-    Keyboard.dismiss();
-    setIsCreating(true);
-    try {
-      // Call the centralized createTask function
-      await createTask(formData);
+async function fetchChecklistItems(
+  context: QueryFunctionContext<[string, number | string]>
+) {
+  const [, taskID] = context.queryKey;
+  if (!taskID) return [];
+  const { data, error } = await supabase
+    .from("checklistitems")
+    .select("*")
+    .eq("task_id", +taskID)
+    .order("position", { ascending: true });
 
-      // Invalidation is handled in the createTask function, so we can just navigate back
-      if (router.canGoBack()) {
-        router.back();
-      }
-    } catch (error) {
-      console.error("Failed to create task", error);
-      Alert.alert("Error", error instanceof Error ? error.message : "An unknown error occurred.");
-    } finally {
-      setIsCreating(false);
-    }
-  };
+  if (error) throw new Error(error.message);
+  return data || [];
+}
 
-  return (
-    <KeyboardAwareScrollView
-      style={styles.container}
-      resetScrollToCoords={{ x: 0, y: 0 }}
-      scrollEnabled
-    >
-      <TaskFormHeader
-        isSaving={isCreating}
-        onSave={handleSubmit(onSubmit)}
-        title="Create New Task"
-      />
-      <ScrollView style={styles.formContainer}>
-        <TaskFormInput
-          name="title"
-          label="Title"
-          control={control}
-          error={errors.title?.message}
-          placeholder="e.g., Go for a run"
-        />
-        <TaskFormInput
-          name="notes"
-          label="Notes"
-          control={control}
-          error={errors.notes?.message}
-          placeholder="e.g., Around the park, 3 miles"
-          multiline
-        />
+async function fetchLastHealthAndHappiness(
+  context: QueryFunctionContext<[string, string | undefined]>
+) {
+  const [, user_id] = context.queryKey;
+  if (!user_id) return null;
 
-        <Controller
-          control={control}
-          name="repeatPeriod"
-          render={({ field: { onChange, value } }) => (
-            <RepeatPeriodSelector
-              selectedValue={value}
-              onValueChange={onChange}
-            />
-          )}
-        />
-        <Controller
-          control={control}
-          name="repeatOnWk"
-          render={({ field: { onChange, value } }) => (
-            <WeekDaySelector selectedDays={value || []} onDayPress={onChange} />
-          )}
-        />
-        <Controller
-          control={control}
-          name="repeatFrequency"
-          render={({ field: { onChange, value } }) => (
-            <RepeatFrequencySlider
-              frequency={value || 1}
-              onFrequencyChange={onChange}
-              period={watch("repeatPeriod")}
-            />
-          )}
-        />
-        <ChecklistCreator
-          checklistItems={checklistItems || []}
-          setChecklistItems={(items) => setValue("checklistItems", items)}
-        />
-      </ScrollView>
-    </KeyboardAwareScrollView>
+  const { data, error } = await supabase
+    .from("health_and_happiness")
+    .select("*")
+    .eq("user_id", user_id)
+    .order("updated_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (error) throw new Error(error.message);
+  return data;
+}
+
+// --- Synced Observables (for Queries) ---
+
+export const tasks$ = (filter: TaskFilter = "not-completed") =>
+  observable(
+    syncedQuery({
+      queryClient,
+      query: {
+        queryKey: ["tasks", filter],
+        queryFn: fetchTasksByFilter,
+      },
+    })
   );
+
+export const checklistItems$ = (taskID: number | string) =>
+  observable(
+    syncedQuery({
+      queryClient,
+      query: {
+        queryKey: ["checklistItems", taskID],
+        queryFn: fetchChecklistItems,
+        enabled: !!taskID,
+      },
+    })
+  );
+
+export const healthAndHappiness$ = (user_id: string | undefined) =>
+  observable(
+    syncedQuery({
+      queryClient,
+      query: {
+        queryKey: ["health-and-happiness", user_id],
+        queryFn: fetchLastHealthAndHappiness,
+        enabled: !!user_id,
+      },
+    })
+  );
+
+// --- Mutation Functions ---
+
+// Task Mutations
+export async function createTask(formData: Readonly<TaskFormData>) {
+  const { data: taskData, error: taskError } = await supabase
+    .from("tasks")
+    .insert({
+      title: formData.title.trim(),
+      notes: formData.notes.trim() || null,
+    })
+    .select()
+    .single();
+
+  if (taskError) throw new Error("Failed to create task.");
+  if (!taskData) throw new Error("No data returned after creating task.");
+
+  if (formData.checklistItems.length > 0) {
+    const checklistItems = formData.checklistItems.map((item, index) => ({
+      task_id: taskData.id,
+      content: item.content.trim(),
+      position: index,
+      is_complete: false,
+    }));
+    const { error: checklistError } = await supabase
+      .from("checklistitems")
+      .insert(checklistItems);
+    if (checklistError) throw new Error("Failed to create checklist items.");
+  }
+  await queryClient.invalidateQueries({ queryKey: ["tasks"] });
+  return taskData;
+}
+
+export async function updateTask(updatedTask: Readonly<Tables<"tasks">>) {
+  const { data, error } = await supabase
+    .from("tasks")
+    .update(updatedTask)
+    .eq("id", updatedTask.id)
+    .select()
+    .single();
+  if (error) throw new Error("Failed to update task.");
+  await queryClient.invalidateQueries({ queryKey: ["tasks"] });
+  if (data) {
+    await queryClient.invalidateQueries({ queryKey: ["task", data.id] });
+    queryClient.setQueryData(["tasks", data.id], data);
+  }
+  return data;
+}
+
+export async function deleteTask(taskID: number | string) {
+  const { error } = await supabase.from("tasks").delete().eq("id", +taskID);
+  if (error) throw new Error("Failed to delete task.");
+  await queryClient.invalidateQueries({ queryKey: ["tasks"] });
+}
+
+// Checklist Item Mutations
+export async function addChecklistItem(
+  taskID: number | string,
+  content: string
+) {
+  const { data, error } = await supabase
+    .from("checklistitems")
+    .insert({ content, task_id: +taskID })
+    .select()
+    .single();
+  if (error) throw new Error(error.message);
+  await queryClient.invalidateQueries({ queryKey: ["checklistItems", taskID] });
+  return data;
+}
+
+// Health and Happiness Mutations
+export async function upsertHealthAndHappiness(
+  user_id: string | undefined,
+  params: { health: number; happiness: number }
+) {
+  if (!user_id) throw new Error("User ID is required.");
+  const { data, error } = await supabase
+    .from("health_and_happiness")
+    .upsert(
+      {
+        user_id: user_id,
+        health: params.health,
+        happiness: params.happiness,
+        updated_at: new Date().toISOString(),
+      },
+      { onConflict: "user_id" }
+    )
+    .select()
+    .single();
+
+  if (error) throw new Error("Failed to update health and happiness.");
+
+  await queryClient.invalidateQueries({
+    queryKey: ["health-and-happiness", user_id],
+  });
+  queryClient.setQueryData(["health-and-happiness", user_id], data);
+  return data;
 }
