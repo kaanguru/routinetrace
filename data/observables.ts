@@ -11,7 +11,7 @@ export const queryClient = new QueryClient();
 // --- Query Functions ---
 
 async function fetchTasksByFilter(
-  context: QueryFunctionContext<[string, TaskFilter]>
+  context: QueryFunctionContext<[string, TaskFilter]>,
 ) {
   const [, filter] = context.queryKey;
   let query = supabase.from("tasks").select("*");
@@ -34,7 +34,7 @@ async function fetchTasksByFilter(
 }
 
 async function fetchChecklistItems(
-  context: QueryFunctionContext<[string, number | string]>
+  context: QueryFunctionContext<[string, number | string]>,
 ) {
   const [, taskID] = context.queryKey;
   if (!taskID) return [];
@@ -49,7 +49,7 @@ async function fetchChecklistItems(
 }
 
 async function fetchLastHealthAndHappiness(
-  context: QueryFunctionContext<[string, string | undefined]>
+  context: QueryFunctionContext<[string, string | undefined]>,
 ) {
   const [, user_id] = context.queryKey;
   if (!user_id) return null;
@@ -76,7 +76,7 @@ export const tasks$ = (filter: TaskFilter = "not-completed") =>
         queryKey: ["tasks", filter],
         queryFn: fetchTasksByFilter,
       },
-    })
+    }),
   );
 
 export const checklistItems$ = (taskID: number | string) =>
@@ -88,7 +88,7 @@ export const checklistItems$ = (taskID: number | string) =>
         queryFn: fetchChecklistItems,
         enabled: !!taskID,
       },
-    })
+    }),
   );
 
 export const healthAndHappiness$ = (user_id: string | undefined) =>
@@ -100,7 +100,10 @@ export const healthAndHappiness$ = (user_id: string | undefined) =>
         queryFn: fetchLastHealthAndHappiness,
         enabled: !!user_id,
       },
-    })
+      persist: {
+        name: "healthAndHappiness", // Add the missing name property
+      },
+    }),
   );
 
 // --- Mutation Functions ---
@@ -160,7 +163,7 @@ export async function deleteTask(taskID: number | string) {
 // Checklist Item Mutations
 export async function addChecklistItem(
   taskID: number | string,
-  content: string
+  content: string,
 ) {
   const { data, error } = await supabase
     .from("checklistitems")
@@ -175,7 +178,7 @@ export async function addChecklistItem(
 // Health and Happiness Mutations
 export async function upsertHealthAndHappiness(
   user_id: string | undefined,
-  params: { health: number; happiness: number }
+  params: { health: number; happiness: number },
 ) {
   if (!user_id) throw new Error("User ID is required.");
   const { data, error } = await supabase
@@ -187,7 +190,7 @@ export async function upsertHealthAndHappiness(
         happiness: params.happiness,
         updated_at: new Date().toISOString(),
       },
-      { onConflict: "user_id" }
+      { onConflict: "user_id" },
     )
     .select()
     .single();

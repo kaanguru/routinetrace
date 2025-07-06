@@ -1,25 +1,26 @@
 import { Button } from "@rneui/themed";
 import { useRouter } from "expo-router";
-import { useCallback, useState } from "react";
-import { Alert, ScrollView, KeyboardAvoidingView } from "react-native";
-
-import { ResultAsync, okAsync, err } from "neverthrow";
-import { reportError } from "@/utils/reportError";
+import { useState, useCallback } from "react";
+import {
+  Alert,
+  Keyboard,
+  ScrollView,
+  KeyboardAvoidingView,
+} from "react-native";
 
 import ChecklistCreator from "@/components/create/ChecklistCreator";
 import Header from "@/components/Header";
 import TaskFormHeader from "@/components/TaskFormHeader";
 import { useUpdateHealthAndHappiness } from "@/hooks/useHealthAndHappinessMutations";
-import useHealthAndHappinessQuery from "@/hooks/useHealthAndHappinessQueries";
-import { useCreateTask } from "@/hooks/useTasksMutations";
 import useUser from "@/hooks/useUser";
 import { TaskFormData } from "@/types";
 import genRandomInt from "@/utils/genRandomInt";
 import Background from "@/components/Background";
 import updateChecklistItemContentAtIndex from "@/utils/edit/updateChecklistItemContentAtIndex";
+import { createTask, healthAndHappiness$ } from "@/data/observables";
+import { use$ } from "@legendapp/state/react";
 
 export default function CreateTask() {
-  const router = useRouter();
   const [formData, setFormData] = useState<TaskFormData>({
     title: "",
     notes: "",
@@ -31,14 +32,16 @@ export default function CreateTask() {
     checklistItems: [],
   });
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const { mutateAsync: createTask, isPending: isCreatingTask } =
-    useCreateTask(); // Use mutateAsync
-  const { data: user } = useUser();
   const { mutateAsync: updateHealthAndHappiness } =
-    useUpdateHealthAndHappiness(); // Use mutateAsync
-  const { data: healthAndHappiness } = useHealthAndHappinessQuery(user?.id);
-  const [editingItemIndex, setEditingItemIndex] = useState<number | null>(null);
+    useUpdateHealthAndHappiness();
+  const { data: user } = useUser();
 
+  const healthAndHappiness = use$(healthAndHappiness$(user?.id));
+
+  const [editingItemIndex, setEditingItemIndex] = useState<number | null>(null);
+  const [isCreating, setIsCreating] = useState(false);
+
+  const router = useRouter(); // Re-add useRouter
   const handleCreate = async () => {
     if (!formData.title.trim()) {
       Alert.alert("Error", "Title is required");
@@ -49,30 +52,29 @@ export default function CreateTask() {
       return;
     }
 
-    ResultAsync.fromPromise(createTask(formData), (error) => error as Error)
-      .andThen(() => {
-        if (user?.id && healthAndHappiness) {
-          return ResultAsync.fromPromise(
-            updateHealthAndHappiness({
-              user_id: user.id,
-              health: (healthAndHappiness.health ?? 0) + genRandomInt(2, 4),
-              happiness:
-                (healthAndHappiness.happiness ?? 0) + genRandomInt(8, 24),
-            }),
-            (error) => error as Error,
-          );
-        }
-        return okAsync(undefined); // Return ok if no user or healthAndHappiness data
-      })
-      .match(
-        () => {
-          router.push("/(drawer)");
-        },
-        (error) => {
-          reportError(err(error));
-          Alert.alert("Error", error.message || "An unexpected error occurred");
-        },
+    Keyboard.dismiss();
+    setIsCreating(true);
+    try {
+      await createTask(formData);
+
+      if (user?.id && healthAndHappiness) {
+        await updateHealthAndHappiness({
+          user_id: user.id,
+          health: (healthAndHappiness.health ?? 0) + genRandomInt(2, 4),
+          happiness: (healthAndHappiness.happiness ?? 0) + genRandomInt(8, 24),
+        });
+      }
+
+      router.push("/(drawer)"); // Restore navigation
+    } catch (error: unknown) {
+      console.error("Failed to create task", error);
+      Alert.alert(
+        "Error",
+        error instanceof Error ? error.message : "An unknown error occurred.",
       );
+    } finally {
+      setIsCreating(false);
+    }
   };
   // --- Checklist Item Handlers (Passed to ChecklistCreator) ---
   const handleAddChecklistItem = useCallback(() => {
@@ -213,8 +215,8 @@ export default function CreateTask() {
         <Button
           onPress={handleCreate}
           testID="create-task-button"
-          disabled={isCreatingTask}
-          title={isCreatingTask ? "Creating..." : "Create"}
+          disabled={isCreating}
+          title={isCreating ? "Creating..." : "Create"}
         />
       </KeyboardAvoidingView>
     </Background>
