@@ -1,4 +1,4 @@
-version: 4.21.1
+version: 4.27.0
 markdownExploder: true
 prd:
   prdFile: docs/prd.md
@@ -18,3 +18,8 @@ devLoadAlwaysFiles:
   - docs/architecture/source-tree.md
 devDebugLog: .ai/debug-log.md
 devStoryLocation: docs/stories
+workflow:
+  planFile: docs/workflow-plan.md
+  trackProgress: true
+  enforceSequence: false
+  updateOnCompletion: true

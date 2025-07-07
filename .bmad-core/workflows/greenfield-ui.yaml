@@ -68,42 +68,92 @@ workflow:
       condition: user_has_generated_ui
       notes: "If user generated UI with v0/Lovable: For polyrepo setup, place downloaded project in separate frontend repo. For monorepo, place in apps/web or frontend/ directory. Review architecture document for specific guidance."
 
-    - workflow_end:
-      action: move_to_ide
+    - agent: po
+      action: shard_documents
+      creates: sharded_docs
+      requires: all_artifacts_in_project
       notes: |
-        Planning phase complete! Now transition to IDE Development:
-        
-        1. ENSURE DOCUMENTS ARE IN PROJECT:
-           - Copy final prd.md to project's docs/prd.md
-           - Copy final architecture.md to project's docs/architecture.md
-           - All documents must be in the project before proceeding
-        
-        2. SHARD DOCUMENTS (in IDE):
-           - Option A: Use PO agent to shard: @po then ask to shard docs/prd.md
-           - Option B: Manual: Drag shard-doc task + docs/prd.md into chat
-           - This creates docs/prd/ and docs/architecture/ folders with sharded content
-        
-        3. START DEVELOPMENT CYCLE:
-           a. SM Agent (New Chat): @sm → *create
-              - Creates next story from sharded docs
-              - Review and approve story (Draft → Approved)
-           
-           b. Dev Agent (New Chat): @dev
-              - Implements approved story
-              - Updates File List with all changes
-              - Marks story as "Review" when complete
-           
-           c. QA Agent (New Chat): @qa → review-story
-              - Senior dev review with refactoring ability
-              - Fixes small issues directly
-              - Leaves checklist for remaining items
-              - Updates story status (Review → Done or stays Review)
-           
-           d. If QA left unchecked items:
-              - Dev Agent (New Chat): Address remaining items
-              - Return to QA for final approval
-        
-        4. REPEAT: Continue cycle for all epic stories
+        Shard documents for IDE development:
+        - Option A: Use PO agent to shard: @po then ask to shard docs/prd.md
+        - Option B: Manual: Drag shard-doc task + docs/prd.md into chat
+        - Creates docs/prd/ and docs/architecture/ folders with sharded content
+
+    - agent: sm
+      action: create_story
+      creates: story.md
+      requires: sharded_docs
+      repeats: for_each_epic
+      notes: |
+        Story creation cycle:
+        - SM Agent (New Chat): @sm → *create
+        - Creates next story from sharded docs
+        - Story starts in "Draft" status
+
+    - agent: analyst/pm
+      action: review_draft_story
+      updates: story.md
+      requires: story.md
+      optional: true
+      condition: user_wants_story_review
+      notes: |
+        OPTIONAL: Review and approve draft story
+        - NOTE: story-review task coming soon
+        - Review story completeness and alignment
+        - Update story status: Draft → Approved
+
+    - agent: dev
+      action: implement_story
+      creates: implementation_files
+      requires: story.md
+      notes: |
+        Dev Agent (New Chat): @dev
+        - Implements approved story
+        - Updates File List with all changes
+        - Marks story as "Review" when complete
+
+    - agent: qa
+      action: review_implementation
+      updates: implementation_files
+      requires: implementation_files
+      optional: true
+      notes: |
+        OPTIONAL: QA Agent (New Chat): @qa → review-story
+        - Senior dev review with refactoring ability
+        - Fixes small issues directly
+        - Leaves checklist for remaining items
+        - Updates story status (Review → Done or stays Review)
+
+    - agent: dev
+      action: address_qa_feedback
+      updates: implementation_files
+      condition: qa_left_unchecked_items
+      notes: |
+        If QA left unchecked items:
+        - Dev Agent (New Chat): Address remaining items
+        - Return to QA for final approval
+
+    - repeat_development_cycle:
+      action: continue_for_all_stories
+      notes: |
+        Repeat story cycle (SM → Dev → QA) for all epic stories
+        Continue until all stories in PRD are complete
+
+    - agent: po
+      action: epic_retrospective
+      creates: epic-retrospective.md
+      condition: epic_complete
+      optional: true
+      notes: |
+        OPTIONAL: After epic completion
+        - NOTE: epic-retrospective task coming soon
+        - Validate epic was completed correctly
+        - Document learnings and improvements
+
+    - workflow_end:
+      action: project_complete
+      notes: |
+        All stories implemented and reviewed!
+        Project development phase complete.
         
         Reference: data#bmad-kb:IDE Development Workflow
 
@@ -124,21 +174,45 @@ workflow:
         G --> H
         H --> I{PO finds issues?}
         I -->|Yes| J[Return to relevant agent for fixes]
-        I -->|No| K[Move to IDE Environment]
+        I -->|No| K[po: shard documents]
         J --> H
+        
+        K --> L[sm: create story]
+        L --> M{Review draft story?}
+        M -->|Yes| N[analyst/pm: review & approve story]
+        M -->|No| O[dev: implement story]
+        N --> O
+        O --> P{QA review?}
+        P -->|Yes| Q[qa: review implementation]
+        P -->|No| R{More stories?}
+        Q --> S{QA found issues?}
+        S -->|Yes| T[dev: address QA feedback]
+        S -->|No| R
+        T --> Q
+        R -->|Yes| L
+        R -->|No| U{Epic retrospective?}
+        U -->|Yes| V[po: epic retrospective]
+        U -->|No| W[Project Complete]
+        V --> W
 
         B -.-> B1[Optional: brainstorming]
         B -.-> B2[Optional: market research]
         D -.-> D1[Optional: user research]
         E -.-> E1[Optional: technical research]
 
-        style K fill:#90EE90
+        style W fill:#90EE90
+        style K fill:#ADD8E6
+        style L fill:#ADD8E6
+        style O fill:#ADD8E6
         style D3 fill:#E6E6FA
         style D4 fill:#E6E6FA
         style B fill:#FFE4B5
         style C fill:#FFE4B5
         style D fill:#FFE4B5
         style E fill:#FFE4B5
+        style N fill:#F0E68C
+        style Q fill:#F0E68C
+        style V fill:#F0E68C
     ```
 
   decision_guidance:
