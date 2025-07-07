@@ -17,5 +17,5 @@ This plan involves maintaining the core stack while introducing a new, specializ
 |Technology|Purpose|
 |---|---|
 |**`@legendapp/state`**|Core state management and reactivity.|
-|**`@legendapp/state/sync/supabase`**|Supabase sync plugin for bi-directional data flow.|
+|**`@legendapp/state/sync-plugins/tanstack-query`**|tanstack-query sync plugin for bi-directional data flow.|
 |**`@legendapp/state/persist/async-storage`**|Persistence plugin for storing data offline in React Native.|
