@@ -1,123 +1,171 @@
 # Tanstack Query + Legend State Integration Guide
 
-This directory provides documentation to support developers adding the Tanstack Query Library for state synchronization with @legendapp/state in `RoutineTrace`'s backend. The library facilitates synchronizing state with remote API's, such as our Supabase backend. Using legendState and Tanstack Query is a two-step process: initial setup, followed by implementation inside our React components. 
+## **Tanstack Query + Legend State Integration Guide**
 
-## Setup Guide
+This guide provides documentation to support developers in adding the Tanstack Query legend-state plugin for state synchronization with `@legendapp/state` in `RoutineTrace`'s Supabase backend.
 
-### Step 1: Environment Setup
+### **1. Introduction**
 
-1. Ensure you have installed the `@tanstack/react-query` library as a dependency
-    ```
-    npm i @tanstack/react-query
-    ```
-   or (for ReactNative applications):
-    ```
-    npm i @tanstack/react-native-query
-    ```
-2. Next, initialize the package by initializing the QueryClient, which you can configure once at application bootup. For the `RoutineTrace` project, the client initialization will be located in our `context` folder, in a new file: `DataSyncProvider.tsx`
+The goal of this guide is to explain how to refactor the existing `useTasksQueries.ts` hook to use `@legendapp/state`'s TanStack Query sync plugin. This will enable offline-first capabilities in the `RoutineTrace` application, allowing users to interact with their tasks even when they don't have an internet connection.
 
-    ```jsx
-   // DataSyncProvider.tsx
+### **2. Existing `useTasksQueries.ts` Hook**
 
-    import React, { memo } from "react";
-    import { QueryClient, QueryClientProvider } from "@tanstack/react-native-query";
+The current `useTasksQueries.ts` hook uses `@tanstack/react-query` to fetch data directly from the Supabase backend. Here is a summary of its functionality:
 
-    // Initialize the query client
-    const queryClient = new QueryClient({
-        defaultOptions: {
-            // set up mutation/query defaults
-            mutations: {
-                retry: false
-            },
-            queries: {
-                retry: 2
-            }
-        }
-    });
+  * **`useTasksQuery(filter)`:** Fetches a list of tasks based on the provided filter (`completed`, `not-completed`, or `all`).
+  * **`useTaskById(taskID)`:** Fetches a single task by its ID.
 
-    // DataSyncProvider component
-    export const DataSyncProvider = ({children}) : React.FC => (
-       <QueryClientProvider client={queryClient}>
-           {children}
-       </QueryClientProvider>
-    );
-    ```
+This approach is effective for online-only scenarios, but it doesn't provide a seamless offline experience.
 
-3. Legendstate is configured separately. This guide explains how to integrate legend states with `tanstack-query` library. For the `RoutineTrace` project, the `legendStateConfig.ts` configuration file is stored in the `data` directory.
+### **3. Refactoring with `@legendapp/state`**
 
-    ```jsx
-    // legendStateConfig.ts
+To add offline-first capabilities, we will refactor the `useTasksQueries.ts` hook to use the `useObservableSyncedQuery` hook from `@legendapp/state/sync-plugins/tanstack-react-query`. This will allow us to synchronize the data with an observable, which can be persisted locally.
 
-    import { observe, unsubscribable } from '@legendapp/state/react';
-    import { observable } from '@legendapp/state';
+Here's how we'll approach the refactoring:
 
-    // Initialize the globalstate
-    const globalState$ = observable({
-        currentUser: { id: null, email: "", name: "" },
-        userTasks: {
-            overdueTasks: [],
-            todayTasks: [],
-            upcomingTasks: [],
-            completedTasks: []
-        },
-        loading: false,
-        error: null
-    });
+1.  **Create a new `useTasksState` hook:** This hook will encapsulate the `useObservableSyncedQuery` logic.
+2.  **Update the existing `useTasksQuery` hook:** This hook will now use the `useTasksState` hook to get the data from the synchronized observable.
+3.  **Add mutation functions:** We will add functions to handle creating, updating, and deleting tasks, which will be synchronized with the backend.
 
-    // Note: Our ReactNative application uses AsyncStorage as the main global state management library (in combination with context)
-    // LegendstateConfig.ts allows us to persist changes across sessions, through our backend's syncing of observables with remote updates, queries/mutations
-    ```
+### **4. Refactored `useTasksQueries.ts`**
 
-### Step 2: Component Implementation
+Here is the complete refactored `useTasksQueries.ts` file:
 
-In our React application, in each component where we need to initialize the Legend QuerySync and mutation, we will use the `useObservableSyncedQuery` hook, and `useMutation` and `useQuery` hooks. In addition, we will use `use$` to start the sync and return the updated state of the `legendState` hook. Finally, we will bind the value to our hook when using forms, checkboxes or inputs.
+```typescript
+import { useObservableSyncedQuery } from '@legendapp/state/sync-plugins/tanstack-react-query';
+import { useQueryClient } from '@tanstack/react-query';
+import { use$ } from '@legendapp/state/react';
 
-```jsx
-// In component
-function CreateNewUser() {
+import { Tables } from '~/database.types';
+import { TaskFilter, Task } from '~/types';
+import { supabase } from '~/utils/supabase';
 
-    // Initialize the query state
-    const userQuery = useObservableSyncedQuery({
-        observableState$: global.currentUser$, // initialized with legend observable, in our legendStateConfig file
-        query: {
-            queryKey: ["new-user"],
-            queryFunction: async () => {
-                const response = await axios.get("url to backend/new")
-               return response.data
-            }
-        },
-        mutation: {
-            mutationFn: async (variables) => {
-                const response = await axios.post("url to backend/create-new-user", variables)
-                return response.data
-            }
-        }
-    });
+// The new useTasksState hook
+export function useTasksState(filter: TaskFilter = 'not-completed') {
+  const queryClient = useQueryClient();
 
-    // Start the sync and return the updated state
-    const state = use$(userQuery);
+  const state$ = useObservableSyncedQuery<Tables<'tasks'>[]>({
+    queryClient,
+    query: {
+      queryKey: ['tasks', filter],
+      queryFn: async () => {
+        if (filter === 'completed') return fetchCompletedTasks();
+        if (filter === 'not-completed') return fetchNotCompletedTasks();
+        return fetchAllTasks();
+      },
+    },
+    mutation: {
+      mutationFn: async (variables: Partial<Task> & { id: number }) => {
+        const { error } = await supabase
+          .from('tasks')
+          .update(variables)
+          .eq('id', variables.id);
 
-    // Example state updates 
-    const handleSubmit = (variables) => {
-        state.mutate.mutations.createNewUser({
-            variables: variables
-        });
-        state.currentUser$.name = variables.username;
-    }
+        if (error) throw new Error(error.message);
+        return variables;
+      },
+    },
+  });
 
-    return (
-        <div>
-            <form onSubmit={handleSubmit}>
-                <input type="text" 
-                    value={state.currentUser.name}
-                    onChange={(e) => state.currentUser$.name = e.target.value} />
-               <button type="submit">Submit</button>
-            </form>
-        </div>
-    )
+  return state$;
+}
+
+// The updated useTasksQuery hook
+export default function useTasksQuery(filter: TaskFilter = 'not-completed') {
+  const state$ = useTasksState(filter);
+  return use$(state$);
+}
+
+// The rest of the functions remain the same
+async function fetchNotCompletedTasks(): Promise<Tables<'tasks'>[]> {
+  const { data, error } = await supabase
+    .from('tasks')
+    .select('*')
+    .eq('is_complete', false)
+    .order('position', { ascending: true, nullsFirst: true });
+
+  if (error) throw new Error(error.message);
+  return data;
+}
+
+async function fetchCompletedTasks(): Promise<Tables<'tasks'>[]> {
+  const { data, error } = await supabase
+    .from('tasks')
+    .select('*')
+    .eq('is_complete', true)
+    .order('position', { ascending: true, nullsFirst: true })
+    .order('updated_at', { ascending: false });
+
+  if (error) throw new Error(error.message);
+  return data;
+}
+
+async function fetchAllTasks(): Promise<Tables<'tasks'>[]> {
+  const { data, error } = await supabase
+    .from('tasks')
+    .select('*')
+    .order('position', { ascending: true, nullsFirst: true });
+
+  if (error) throw new Error(error.message);
+  return data;
+}
+
+export function useTaskById(taskID: string | number) {
+  // This hook can also be refactored to use useObservableSyncedQuery
+  // for offline support of individual tasks.
+  const state$ = useObservableSyncedQuery<Task>({
+    queryKey: ['task', taskID],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('tasks')
+        .select('*')
+        .eq('id', +taskID)
+        .single();
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      return data;
+    },
+    enabled: !!taskID,
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 10,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+  });
+
+  return use$(state$);
 }
 ```
 
-## Full Example
+### **5. How to Use the Refactored Hook**
 
-For a working implementation example of the `RoutineTrace` application's `legendState` and Tanstack Query setup, as well as it's integration with our backend, see the `legend-state-tanstack-integration-demo.md` and `legend-state-tanstack-setup-config.md` files within this directory.
+Now that we have our refactored hook, here's how you can use it in your components:
+
+```tsx
+import { useTasksQuery } from '~/hooks/useTasksQueries';
+import { $React } from '@legendapp/state/react';
+
+function TasksList() {
+  const tasks = useTasksQuery('not-completed');
+
+  return (
+    <div>
+      {tasks.map((task) => (
+        <div key={task.id}>
+          <$React.input $value={task.title} />
+          {/* Add more fields as needed */}
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+
+### **6. Conclusion**
+
+By following this guide, you can successfully integrate `@legendapp/state`'s TanStack Query sync plugin into your `RoutineTrace` application. This will provide a robust offline-first experience for your users, making your app more reliable and user-friendly.

@@ -13,7 +13,11 @@ export const queryClient = new QueryClient({
   },
 });
 
-export function DataSyncProvider({ children }: { children: React.ReactNode }) {
+export default function DataSyncProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
