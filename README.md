@@ -23,7 +23,6 @@ A multi-platform to-do list application focused on daily, weekly, and monthly ta
 
 sentry email: cemkaan@inbox.ru
 
-
 Do not forget to add the following environment variables to your `.env` file
 EXPO_PUBLIC_SUPABASE_URL
 EXPO_PUBLIC_SUPABASE_ANON_KEY
