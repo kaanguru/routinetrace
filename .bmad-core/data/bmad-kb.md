@@ -162,8 +162,8 @@ npx bmad-method install
 
 **CRITICAL RULE for Development**:
 
-- **ALWAYS use SM agent for story creation** - Never use bmad-master/orchestrator
-- **ALWAYS use Dev agent for implementation** - Never use bmad-master/orchestrator
+- **ALWAYS use SM agent for story creation** - Never use bmad-master or bmad-orchestrator
+- **ALWAYS use Dev agent for implementation** - Never use bmad-master or bmad-orchestrator
 - **Why this matters**: SM and Dev agents are specifically optimized for the development workflow
 - **No exceptions**: Even if using bmad-master for everything else, switch to SM → Dev for implementation
 
@@ -726,7 +726,7 @@ For full details, see `CONTRIBUTING.md`. Key points:
 - Atomic commits - one logical change per commit
 - Must align with guiding principles
 
-**Core Principles** (from GUIDING-PRINCIPLES.md):
+**Core Principles** (from docs/GUIDING-PRINCIPLES.md):
 
 - **Dev Agents Must Be Lean**: Minimize dependencies, save context for code
 - **Natural Language First**: Everything in markdown, no code in core
@@ -796,8 +796,8 @@ Use the **expansion-creator** pack to build your own:
 
 ## Getting Help
 
-- **Commands**: Use `/help` in any environment to see available commands
-- **Agent Switching**: Use `/switch agent-name` with orchestrator for role changes
+- **Commands**: Use `*/*help` in any environment to see available commands
+- **Agent Switching**: Use `*/*switch agent-name` with orchestrator for role changes
 - **Documentation**: Check `docs/` folder for project-specific context
 - **Community**: Discord and GitHub resources available for support
 - **Contributing**: See `CONTRIBUTING.md` for full guidelines

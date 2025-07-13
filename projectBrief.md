@@ -55,3 +55,33 @@ The main objective of this project is to create a "routine to-do list" Android a
 4.  Ensure a clean, user-friendly interface using React Native Elements.
 5.  Utilize Supabase for backend services (database and authentication).
 6.  Adhere to specified coding standards and patterns (functional paradigm, immutability, Neverthrow for error handling).
+
+## Target Audience and Pain Points
+
+-   **Target Audience:** Students or young adults looking to build better habits and track their progress in a motivational way.
+-   **Key Pain Points Addressed:** Struggling with consistency in daily habits and recurring tasks, often forgetting or procrastinating; needing motivation and a clear way to track progress.
+
+## User Experience and Interface Principles
+
+-   **Core Principle:** Incorporate gamification elements and motivational feedback to keep users engaged and encourage consistent task completion. This includes visual rewards, progress tracking, and supportive notifications.
+
+## Monetization Strategy
+
+-   **Initial Approach:** No direct monetization initially; the focus will be on user base growth and engagement. Future monetization strategies will be explored once a substantial user base is established.
+
+## Competitive Landscape and Differentiators
+
+-   **Primary Differentiator:** RoutineTrace will differentiate itself by its specific focus on the "success percentage of routine, recurring tasks" combined with engaging gamification tailored for young adults. While standard to-do apps (e.g., Todoist, Microsoft To Do) and habit trackers (e.g., Habitica) exist, RoutineTrace integrates these aspects with a strong emphasis on motivation through quantifiable success.
+
+## Key Success Metrics (KPIs)
+
+-   User retention rates (e.g., 7-day, 30-day retention).
+-   Daily Active Users (DAU) and Weekly Active Users (WAU).
+-   Average session duration.
+
+## Future Features/Roadmap (Potential)
+
+-   Social features like sharing progress, leaderboards, or group challenges to foster a community and increase engagement.
+-   **Notifications & Reminders**
+-   Login with Google
+-  if "task notes" has URL they will be clickable link.
