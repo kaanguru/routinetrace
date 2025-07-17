@@ -20,7 +20,10 @@ interface TaskFormData {
     position: number;
   }[];
 }
-type Task = Tables<"tasks">;
+interface ExtendedTask extends Tables<"tasks"> {
+  pendingSync?: boolean;
+}
+type Task = ExtendedTask;
 type Item = Tables<"checklistitems">;
 type Success = {
   success: boolean;
@@ -47,6 +50,7 @@ export type {
   DayOfWeek,
   TaskFormData,
   Task,
+  ExtendedTask,
   Success,
   Result,
   Item,
@@ -54,7 +58,7 @@ export type {
 };
 
 export interface TaskItemProps {
-  task: Readonly<Tables<"tasks">>;
+  task: ExtendedTask;
   index: number;
   onReorder: (from: number, to: number) => void;
   onToggleComplete: (

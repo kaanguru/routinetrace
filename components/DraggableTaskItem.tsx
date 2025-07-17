@@ -144,6 +144,18 @@ const DraggableTaskItem = memo(function TaskItem({
           <View style={styles.titleContainer}>
             <Text style={styles.titleText}>{task.title}</Text>
 
+            {task.pendingSync && (
+              <>
+                <Text>Pending Sync</Text>
+                <MaterialIcons
+                  name="sync"
+                  size={12}
+                  color="yellow"
+                  style={{ marginRight: 10 }}
+                />
+              </>
+            )}
+
             {taskHasChecklistItems && !isCheckListItemsLoading ? (
               <View
                 style={{

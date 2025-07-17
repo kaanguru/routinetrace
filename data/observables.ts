@@ -110,32 +110,67 @@ export const healthAndHappiness$ = (user_id: string | undefined) =>
 
 // Task Mutations
 export async function createTask(formData: Readonly<TaskFormData>) {
-  const { data: taskData, error: taskError } = await supabase
-    .from("tasks")
-    .insert({
-      title: formData.title.trim(),
-      notes: formData.notes.trim() || null,
-    })
-    .select()
-    .single();
+  // Generate a temporary ID for optimistic update
+  const tempId = Date.now();
+  const nowForCreation = new Date().toISOString();
+  const newTask = {
+    id: tempId,
+    title: formData.title.trim(),
+    notes: formData.notes.trim() || null,
+    is_complete: false,
+    pendingSync: true,
+    position: null,
+    created_at: nowForCreation,
+    updated_at: nowForCreation,
+  };
 
-  if (taskError) throw new Error("Failed to create task.");
-  if (!taskData) throw new Error("No data returned after creating task.");
+  // Optimistically update local state
+  const filter = "not-completed";
+  const tasksObservable = tasks$(filter);
+  tasksObservable.set((prevTasks: any) => [...prevTasks, newTask]);
 
-  if (formData.checklistItems.length > 0) {
-    const checklistItems = formData.checklistItems.map((item, index) => ({
-      task_id: taskData.id,
-      content: item.content.trim(),
-      position: index,
-      is_complete: false,
-    }));
-    const { error: checklistError } = await supabase
-      .from("checklistitems")
-      .insert(checklistItems);
-    if (checklistError) throw new Error("Failed to create checklist items.");
+  try {
+    // Attempt to sync with Supabase
+    const { data: taskData, error: taskError } = await supabase
+      .from("tasks")
+      .insert({
+        title: newTask.title,
+        notes: newTask.notes,
+      })
+      .select()
+      .single();
+
+    if (taskError) throw new Error("Failed to create task.");
+    if (!taskData) throw new Error("No data returned after creating task.");
+
+    // Update local task with real ID and remove pendingSync flag
+    tasksObservable.set((prevTasks) =>
+      prevTasks.map((task) =>
+        task.id === tempId ? { ...taskData, pendingSync: false } : task,
+      ),
+    );
+
+    // Handle checklist items if any
+    if (formData.checklistItems.length > 0) {
+      const checklistItems = formData.checklistItems.map((item, index) => ({
+        task_id: taskData.id,
+        content: item.content.trim(),
+        position: index,
+        is_complete: false,
+      }));
+      const { error: checklistError } = await supabase
+        .from("checklistitems")
+        .insert(checklistItems);
+      if (checklistError) throw new Error("Failed to create checklist items.");
+    }
+
+    await queryClient.invalidateQueries({ queryKey: ["tasks"] });
+    return taskData;
+  } catch (error) {
+    console.error("Task will be synced when online:", error);
+    // Task remains in local state with pendingSync: true
+    return newTask;
   }
-  await queryClient.invalidateQueries({ queryKey: ["tasks"] });
-  return taskData;
 }
 
 export async function updateTask(updatedTask: Readonly<Tables<"tasks">>) {

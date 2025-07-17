@@ -9,6 +9,7 @@ import GlobalErrorFallback from "@/components/error/GlobalErrorFallback";
 import handleErrorBoundaryError from "@/utils/errorHandler";
 import * as Sentry from "@sentry/react-native";
 import DataSyncProvider from "@/context/DataSyncProvider";
+import useSyncPendingTasks from "@/hooks/useSyncPendingTasks";
 
 Sentry.init({
   dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
@@ -25,6 +26,8 @@ export default Sentry.wrap(function RootLayout() {
   const theme = createTheme(themeStyles);
 
   theme.mode = useColorScheme() ?? "light";
+  useSyncPendingTasks();
+
   return (
     <QueryClientProvider client={queryClient}>
       <ErrorBoundary
